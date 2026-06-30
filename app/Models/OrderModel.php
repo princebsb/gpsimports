@@ -52,6 +52,7 @@ class OrderModel extends Model
         'admin_notes',
         'ip_address',
         'user_agent',
+        'mp_preference_id',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

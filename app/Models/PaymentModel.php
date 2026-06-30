@@ -37,6 +37,7 @@ class PaymentModel extends Model
         'error_message',
         'paid_at',
         'refunded_at',
+        'mp_preference_id',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
