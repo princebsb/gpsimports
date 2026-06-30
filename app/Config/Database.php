@@ -200,5 +200,30 @@ class Database extends Config
         if (ENVIRONMENT === 'testing') {
             $this->defaultGroup = 'tests';
         }
+
+        // Detectar ambiente automaticamente
+        $isProduction = (
+            isset($_SERVER['HTTP_HOST']) &&
+            strpos($_SERVER['HTTP_HOST'], 'gpsimports.com.br') !== false
+        ) || (
+            isset($_SERVER['SERVER_NAME']) &&
+            strpos($_SERVER['SERVER_NAME'], 'gpsimports.com.br') !== false
+        );
+
+        if ($isProduction) {
+            // Producao
+            $this->default['hostname'] = 'localhost';
+            $this->default['database'] = 'u699148595_gpsimports';
+            $this->default['username'] = 'u699148595_gpsimports';
+            $this->default['password'] = 'Gpsimports@2026';
+            $this->default['DBDebug']  = false;
+        } else {
+            // Local (WAMP)
+            $this->default['hostname'] = 'localhost';
+            $this->default['database'] = 'gpsimports';
+            $this->default['username'] = 'root';
+            $this->default['password'] = '';
+            $this->default['DBDebug']  = true;
+        }
     }
 }
