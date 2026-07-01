@@ -219,6 +219,16 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
 });
 
 // ============================================================================
+// MELHOR ENVIO ROUTES
+// ============================================================================
+
+$routes->group('melhor-envio', ['namespace' => 'App\Controllers'], static function ($routes) {
+    $routes->get('autorizar', 'MelhorEnvioController::authorize');
+    $routes->get('callback', 'MelhorEnvioController::callback');
+    $routes->get('desconectar', 'MelhorEnvioController::disconnect');
+});
+
+// ============================================================================
 // WEBHOOK ROUTES
 // ============================================================================
 
