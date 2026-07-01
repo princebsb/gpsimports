@@ -187,8 +187,9 @@
                         <?php if ($subtotal < $minSubtotal): ?>
                             <div class="alert alert-warning small mb-3" id="minValueAlert">
                                 <i class="bi bi-exclamation-triangle me-1"></i>
-                                <strong>Valor minimo: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
-                                <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar a compra.
+                                <strong>Valor minimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
+                                <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar.
+                                <br><small class="text-muted">(sem contar o frete)</small>
                             </div>
                             <div class="d-grid">
                                 <button class="btn btn-secondary btn-lg" disabled>
@@ -477,16 +478,18 @@
 
             document.getElementById('minValueAlert').innerHTML = `
                 <i class="bi bi-exclamation-triangle me-1"></i>
-                <strong>Valor minimo: R$ ${MIN_SUBTOTAL.toFixed(2).replace('.', ',')}</strong>
-                <br>Falta <strong>${formatMoney(falta)}</strong> para finalizar a compra.
+                <strong>Valor minimo em produtos: R$ ${MIN_SUBTOTAL.toFixed(2).replace('.', ',')}</strong>
+                <br>Falta <strong>${formatMoney(falta)}</strong> para finalizar.
+                <br><small class="text-muted">(sem contar o frete)</small>
             `;
 
             // Desabilitar botao
             btnContainer.innerHTML = `
                 <div class="alert alert-warning small mb-3" id="minValueAlert">
                     <i class="bi bi-exclamation-triangle me-1"></i>
-                    <strong>Valor minimo: R$ ${MIN_SUBTOTAL.toFixed(2).replace('.', ',')}</strong>
-                    <br>Falta <strong>${formatMoney(falta)}</strong> para finalizar a compra.
+                    <strong>Valor minimo em produtos: R$ ${MIN_SUBTOTAL.toFixed(2).replace('.', ',')}</strong>
+                    <br>Falta <strong>${formatMoney(falta)}</strong> para finalizar.
+                    <br><small class="text-muted">(sem contar o frete)</small>
                 </div>
                 <div class="d-grid">
                     <button class="btn btn-secondary btn-lg" disabled>
