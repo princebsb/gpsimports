@@ -154,6 +154,7 @@
                                     <?php
                                     $statusClass = match($order['status']) {
                                         'pending' => 'badge-pending',
+                                        'paid' => 'badge-processing',
                                         'processing' => 'badge-processing',
                                         'shipped' => 'badge-shipped',
                                         'delivered' => 'badge-delivered',
@@ -162,11 +163,12 @@
                                     };
                                     $statusLabel = match($order['status']) {
                                         'pending' => 'Pendente',
-                                        'processing' => 'Processando',
+                                        'paid' => 'Pago',
+                                        'processing' => 'Em Preparacao',
                                         'shipped' => 'Enviado',
                                         'delivered' => 'Entregue',
                                         'cancelled' => 'Cancelado',
-                                        default => $order['status']
+                                        default => ucfirst($order['status'] ?? 'Pendente')
                                     };
                                     ?>
                                     <span class="badge <?= $statusClass ?>"><?= $statusLabel ?></span>

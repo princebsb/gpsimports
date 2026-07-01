@@ -170,6 +170,7 @@
                 <?php
                 $statusClass = match($order['status']) {
                     'pending' => 'badge-pending',
+                    'paid' => 'badge-processing',
                     'processing' => 'badge-processing',
                     'shipped' => 'badge-shipped',
                     'delivered' => 'badge-delivered',
@@ -178,11 +179,12 @@
                 };
                 $statusLabel = match($order['status']) {
                     'pending' => 'Pendente',
-                    'processing' => 'Processando',
+                    'paid' => 'Pago',
+                    'processing' => 'Em Preparacao',
                     'shipped' => 'Enviado',
                     'delivered' => 'Entregue',
                     'cancelled' => 'Cancelado',
-                    default => $order['status']
+                    default => ucfirst($order['status'] ?? 'Pendente')
                 };
                 ?>
                 <div class="text-center mb-3">
@@ -196,7 +198,8 @@
                             <label class="form-label">Alterar Status</label>
                             <select name="status" class="form-select">
                                 <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pendente</option>
-                                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Processando</option>
+                                <option value="paid" <?= $order['status'] === 'paid' ? 'selected' : '' ?>>Pago</option>
+                                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Em Preparacao</option>
                                 <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Enviado</option>
                                 <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>Entregue</option>
                                 <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelado</option>
