@@ -296,7 +296,25 @@
                 <h5 class="mb-0"><i class="bi bi-truck me-1"></i>Fornecedor</h5>
             </div>
             <div class="card-body">
-                <a href="https://web.whatsapp.com/send/?phone=595982897556&text=Ola! Pedido %23<?= $order['order_number'] ?>" target="_blank" class="btn btn-success w-100">
+                <?php
+                // Montar lista de produtos
+                $produtosList = "";
+                foreach ($order['items'] as $item) {
+                    $produtosList .= "• " . ($item['name'] ?? 'Produto') . "%0A";
+                    $produtosList .= "  Qtd: " . $item['quantity'] . "%0A";
+                    $produtosList .= "  SKU: " . ($item['sku'] ?? '-') . "%0A%0A";
+                }
+
+                $msgWhatsApp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
+                $msgWhatsApp .= "🚚 Tenho pessoal que *retira mercadoria pra mim* toda *Terça*, *Quinta* e *Sábado*.%0A%0A";
+                $msgWhatsApp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
+                $msgWhatsApp .= "*Quero comprar com vocês!*%0A%0A";
+                $msgWhatsApp .= "Segue o produto:%0A%0A";
+                $msgWhatsApp .= $produtosList;
+                $msgWhatsApp .= "Favor gerar a NOTA.%0A%0A";
+                $msgWhatsApp .= "Obrigado. 🙏";
+                ?>
+                <a href="https://web.whatsapp.com/send/?phone=595982897556&text=<?= $msgWhatsApp ?>" target="_blank" class="btn btn-success w-100">
                     <i class="bi bi-whatsapp me-1"></i>WhatsApp Fornecedor
                 </a>
                 <small class="text-muted d-block mt-2 text-center">+595 982 897 556</small>
