@@ -184,25 +184,27 @@
                         $falta = $minSubtotal - $subtotal;
                         ?>
 
-                        <?php if ($subtotal < $minSubtotal): ?>
-                            <div class="alert alert-warning small mb-3" id="minValueAlert">
-                                <i class="bi bi-exclamation-triangle me-1"></i>
-                                <strong>Valor minimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
-                                <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar.
-                                <br><small class="text-muted">(sem contar o frete)</small>
-                            </div>
-                            <div class="d-grid">
-                                <button class="btn btn-secondary btn-lg" disabled>
-                                    <i class="bi bi-lock me-1"></i>Finalizar Compra
-                                </button>
-                            </div>
-                        <?php else: ?>
-                            <div class="d-grid">
-                                <a href="<?= base_url('checkout') ?>" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-lock me-1"></i>Finalizar Compra
-                                </a>
-                            </div>
-                        <?php endif; ?>
+                        <div id="checkoutBtnContainer">
+                            <?php if ($subtotal < $minSubtotal): ?>
+                                <div class="alert alert-warning small mb-3" id="minValueAlert">
+                                    <i class="bi bi-exclamation-triangle me-1"></i>
+                                    <strong>Valor minimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
+                                    <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar.
+                                    <br><small class="text-muted">(sem contar o frete)</small>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-secondary btn-lg" disabled>
+                                        <i class="bi bi-lock me-1"></i>Finalizar Compra
+                                    </button>
+                                </div>
+                            <?php else: ?>
+                                <div class="d-grid">
+                                    <a href="<?= base_url('checkout') ?>" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-lock me-1"></i>Finalizar Compra
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
                         <div class="text-center mt-3">
                             <small class="text-muted">
@@ -459,31 +461,12 @@
     }
 
     function updateMinValueAlert(subtotal) {
-        const checkoutBtn = document.querySelector('.d-grid a.btn-primary, .d-grid button.btn-secondary');
-        const alertDiv = document.getElementById('minValueAlert');
-        const btnContainer = checkoutBtn?.parentElement;
-
+        const btnContainer = document.getElementById('checkoutBtnContainer');
         if (!btnContainer) return;
 
+        const falta = MIN_SUBTOTAL - subtotal;
+
         if (subtotal < MIN_SUBTOTAL) {
-            const falta = MIN_SUBTOTAL - subtotal;
-
-            // Criar ou atualizar alerta
-            if (!alertDiv) {
-                const newAlert = document.createElement('div');
-                newAlert.id = 'minValueAlert';
-                newAlert.className = 'alert alert-warning small mb-3';
-                btnContainer.insertBefore(newAlert, btnContainer.firstChild);
-            }
-
-            document.getElementById('minValueAlert').innerHTML = `
-                <i class="bi bi-exclamation-triangle me-1"></i>
-                <strong>Valor minimo em produtos: R$ ${MIN_SUBTOTAL.toFixed(2).replace('.', ',')}</strong>
-                <br>Falta <strong>${formatMoney(falta)}</strong> para finalizar.
-                <br><small class="text-muted">(sem contar o frete)</small>
-            `;
-
-            // Desabilitar botao
             btnContainer.innerHTML = `
                 <div class="alert alert-warning small mb-3" id="minValueAlert">
                     <i class="bi bi-exclamation-triangle me-1"></i>
@@ -498,10 +481,6 @@
                 </div>
             `;
         } else {
-            // Habilitar botao
-            if (alertDiv) {
-                alertDiv.remove();
-            }
             btnContainer.innerHTML = `
                 <div class="d-grid">
                     <a href="<?= base_url('checkout') ?>" class="btn btn-primary btn-lg">
