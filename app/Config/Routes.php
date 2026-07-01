@@ -149,9 +149,16 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->get('pedidos', 'OrderController::index');
         $routes->get('pedidos/(:num)', 'OrderController::show/$1');
         $routes->post('pedidos/status/(:num)', 'OrderController::updateStatus/$1');
+        $routes->post('pedidos/(:num)/status', 'OrderController::updateStatus/$1');
         $routes->post('pedidos/rastreio/(:num)', 'OrderController::addTracking/$1');
         $routes->get('pedidos/imprimir/(:num)', 'OrderController::print/$1');
         $routes->get('pedidos/exportar', 'OrderController::export');
+
+        // Melhor Envio - Etiquetas
+        $routes->get('pedidos/(:num)/cotar-frete', 'OrderController::quotarFrete/$1');
+        $routes->post('pedidos/(:num)/gerar-etiqueta', 'OrderController::gerarEtiqueta/$1');
+        $routes->get('pedidos/(:num)/imprimir-etiqueta', 'OrderController::imprimirEtiqueta/$1');
+        $routes->get('pedidos/(:num)/rastrear-etiqueta', 'OrderController::rastrearEtiqueta/$1');
 
         // Customers
         $routes->get('clientes', 'CustomerController::index');

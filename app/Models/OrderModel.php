@@ -53,6 +53,7 @@ class OrderModel extends Model
         'ip_address',
         'user_agent',
         'mp_preference_id',
+        'me_label_id',
     ];
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

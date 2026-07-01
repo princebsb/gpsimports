@@ -336,6 +336,83 @@
             </div>
         </div>
 
+        <!-- Melhor Envio - Gerar Etiqueta -->
+        <?php if (in_array($order['status'], ['paid', 'processing']) && empty($order['tracking_code'])): ?>
+        <div class="table-card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-box-seam me-1"></i>Gerar Etiqueta</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-3">Gere a etiqueta de envio pelo Melhor Envio.</p>
+
+                <form action="<?= base_url('admin/pedidos/' . $order['id'] . '/gerar-etiqueta') ?>" method="post" id="formEtiqueta">
+                    <?= csrf_field() ?>
+
+                    <div class="mb-3">
+                        <label class="form-label">Transportadora</label>
+                        <select name="service_id" class="form-select" required id="selectTransportadora">
+                            <option value="">Selecione...</option>
+                            <option value="1">Correios PAC</option>
+                            <option value="2">Correios SEDEX</option>
+                            <option value="3">Jadlog .Package</option>
+                            <option value="4">Jadlog .Com</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Peso Total (kg)</label>
+                        <input type="number" name="weight" class="form-control" step="0.01" min="0.1" value="0.5" required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <label class="form-label">Altura (cm)</label>
+                            <input type="number" name="height" class="form-control" min="1" value="10" required>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">Largura (cm)</label>
+                            <input type="number" name="width" class="form-control" min="1" value="15" required>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">Compr. (cm)</label>
+                            <input type="number" name="length" class="form-control" min="1" value="20" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100" id="btnGerarEtiqueta">
+                        <i class="bi bi-printer me-1"></i>Gerar Etiqueta
+                    </button>
+                </form>
+
+                <div class="mt-3">
+                    <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/cotar-frete') ?>" class="btn btn-outline-secondary btn-sm w-100">
+                        <i class="bi bi-calculator me-1"></i>Cotar Frete
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Etiqueta Gerada -->
+        <?php if (!empty($order['me_label_id'])): ?>
+        <div class="table-card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-check-circle me-1"></i>Etiqueta Gerada</h5>
+            </div>
+            <div class="card-body">
+                <p class="small mb-2"><strong>ID:</strong> <?= esc($order['me_label_id']) ?></p>
+                <div class="d-grid gap-2">
+                    <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/imprimir-etiqueta') ?>" target="_blank" class="btn btn-success">
+                        <i class="bi bi-printer me-1"></i>Imprimir Etiqueta
+                    </a>
+                    <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/rastrear-etiqueta') ?>" target="_blank" class="btn btn-outline-primary">
+                        <i class="bi bi-geo-alt me-1"></i>Rastrear
+                    </a>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <!-- Shipping Tracking -->
         <?php if (($order['status'] ?? '') === 'shipped' || !empty($order['tracking_code'])): ?>
             <div class="table-card mb-4">

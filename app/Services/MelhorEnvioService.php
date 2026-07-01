@@ -154,6 +154,296 @@ class MelhorEnvioService
     /**
      * Fallback calculation when API is not available
      */
+    /**
+     * Get access token from settings
+     */
+    protected function getAccessToken(): string
+    {
+        if (!empty($this->token)) {
+            return $this->token;
+        }
+
+        $settingModel = model('SettingModel');
+        return $settingModel->get('melhorenvio_access_token') ?? '';
+    }
+
+    /**
+     * Add item to cart (first step to generate label)
+     */
+    public function addToCart(array $order, array $package, int $serviceId): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token do Melhor Envio nao configurado. Acesse /melhor-envio/autorizar'];
+        }
+
+        $payload = [
+            'service' => $serviceId,
+            'agency' => null,
+            'from' => [
+                'name' => env('melhorenvio.senderName', 'GPS Imports'),
+                'phone' => env('melhorenvio.senderPhone', ''),
+                'email' => env('melhorenvio.senderEmail', ''),
+                'document' => env('melhorenvio.senderCpf', ''),
+                'company_document' => env('melhorenvio.senderCnpj', ''),
+                'state_register' => '',
+                'address' => env('melhorenvio.senderStreet', ''),
+                'complement' => env('melhorenvio.senderComplement', ''),
+                'number' => env('melhorenvio.senderNumber', ''),
+                'district' => env('melhorenvio.senderDistrict', ''),
+                'city' => env('melhorenvio.senderCity', ''),
+                'country_id' => 'BR',
+                'postal_code' => $this->cepOrigem,
+                'note' => '',
+            ],
+            'to' => [
+                'name' => $order['shipping_name'] ?? '',
+                'phone' => $order['shipping_phone'] ?? '',
+                'email' => $order['customer']['email'] ?? '',
+                'document' => $order['billing_cpf'] ?? '',
+                'company_document' => '',
+                'state_register' => '',
+                'address' => $order['shipping_street'] ?? '',
+                'complement' => $order['shipping_complement'] ?? '',
+                'number' => $order['shipping_number'] ?? '',
+                'district' => $order['shipping_neighborhood'] ?? '',
+                'city' => $order['shipping_city'] ?? '',
+                'state_abbr' => $order['shipping_state'] ?? '',
+                'country_id' => 'BR',
+                'postal_code' => preg_replace('/\D/', '', $order['shipping_zipcode'] ?? ''),
+                'note' => '',
+            ],
+            'products' => [
+                [
+                    'name' => 'Pedido #' . $order['order_number'],
+                    'quantity' => 1,
+                    'unitary_value' => (float) $order['total'],
+                ]
+            ],
+            'volumes' => [
+                [
+                    'height' => (int) $package['height'],
+                    'width' => (int) $package['width'],
+                    'length' => (int) $package['length'],
+                    'weight' => (float) $package['weight'],
+                ]
+            ],
+            'options' => [
+                'insurance_value' => (float) $order['total'],
+                'receipt' => false,
+                'own_hand' => false,
+                'reverse' => false,
+                'non_commercial' => false,
+                'invoice' => [
+                    'key' => '',
+                ],
+                'platform' => 'GPS Imports',
+                'tags' => [
+                    [
+                        'tag' => 'Pedido #' . $order['order_number'],
+                        'url' => base_url('admin/pedidos/' . $order['id']),
+                    ]
+                ],
+            ],
+        ];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/cart', $payload);
+
+            if (!empty($response['id'])) {
+                return [
+                    'success' => true,
+                    'cart_id' => $response['id'],
+                    'data' => $response,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => $response['message'] ?? 'Erro ao adicionar ao carrinho',
+                'errors' => $response['errors'] ?? [],
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio addToCart Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Checkout cart (pay for label)
+     */
+    public function checkout(array $cartIds): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token nao configurado'];
+        }
+
+        $payload = ['orders' => $cartIds];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/shipment/checkout', $payload);
+
+            if (!empty($response['purchase'])) {
+                return [
+                    'success' => true,
+                    'purchase' => $response['purchase'],
+                    'data' => $response,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => $response['message'] ?? 'Erro no checkout',
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio checkout Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Generate label (after checkout)
+     */
+    public function generateLabel(array $cartIds): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token nao configurado'];
+        }
+
+        $payload = ['orders' => $cartIds];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/shipment/generate', $payload);
+
+            return [
+                'success' => true,
+                'data' => $response,
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio generateLabel Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Print label
+     */
+    public function printLabel(array $cartIds): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token nao configurado'];
+        }
+
+        $payload = [
+            'mode' => 'public',
+            'orders' => $cartIds,
+        ];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/shipment/print', $payload);
+
+            if (!empty($response['url'])) {
+                return [
+                    'success' => true,
+                    'url' => $response['url'],
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Erro ao gerar URL da etiqueta',
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio printLabel Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Track shipment
+     */
+    public function tracking(array $cartIds): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token nao configurado'];
+        }
+
+        $payload = ['orders' => $cartIds];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/shipment/tracking', $payload);
+
+            return [
+                'success' => true,
+                'data' => $response,
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio tracking Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Quote shipping for order
+     */
+    public function quoteForOrder(array $order, array $package): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return $this->fallbackCalculation($order['shipping_zipcode'], [
+                ['weight' => $package['weight'], 'width' => $package['width'], 'height' => $package['height'], 'length' => $package['length'], 'price' => $order['total'], 'quantity' => 1]
+            ]);
+        }
+
+        $payload = [
+            'from' => ['postal_code' => $this->cepOrigem],
+            'to' => ['postal_code' => preg_replace('/\D/', '', $order['shipping_zipcode'])],
+            'products' => [
+                [
+                    'id' => 'order_' . $order['id'],
+                    'width' => (int) $package['width'],
+                    'height' => (int) $package['height'],
+                    'length' => (int) $package['length'],
+                    'weight' => (float) $package['weight'],
+                    'insurance_value' => (float) $order['total'],
+                    'quantity' => 1,
+                ]
+            ],
+        ];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/shipment/calculate', $payload);
+
+            if (empty($response)) {
+                return [];
+            }
+
+            return $this->formatResponse($response, $order['total']);
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio quoteForOrder Error: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Fallback calculation when API is not available
+     */
     protected function fallbackCalculation(string $cepDestino, array $products): array
     {
         $cep = preg_replace('/[^0-9]/', '', $cepDestino);
