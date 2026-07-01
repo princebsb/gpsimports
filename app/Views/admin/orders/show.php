@@ -40,8 +40,12 @@
                                 <tr>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <?php if (!empty($item['image'])): ?>
-                                                <img src="<?= base_url('uploads/products/thumbs/' . $item['image']) ?>" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                            <?php
+                                            $itemImg = $item['image'] ?? $item['product_image'] ?? '';
+                                            if (!empty($itemImg)):
+                                                $imgUrl = (strpos($itemImg, 'http') === 0) ? $itemImg : base_url('uploads/products/thumbs/' . $itemImg);
+                                            ?>
+                                                <img src="<?= esc($imgUrl) ?>" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" onerror="this.src='https://placehold.co/50x50/e9ecef/495057?text=P'">
                                             <?php endif; ?>
                                             <div>
                                                 <strong><?= esc($item['name'] ?? $item['product_name'] ?? 'Produto') ?></strong>
