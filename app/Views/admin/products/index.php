@@ -121,10 +121,13 @@
                                         <strong class="text-success">R$ <?= number_format($salePrice, 2, ',', '.') ?></strong>
                                     <?php elseif ($price > 0): ?>
                                         <strong>R$ <?= number_format($price, 2, ',', '.') ?></strong>
+                                    <?php elseif ($precoUsd > 0): ?>
+                                        <strong class="text-primary">US$ <?= number_format($precoUsd, 2) ?></strong>
+                                        <br><small class="text-warning">Sem preço BRL</small>
                                     <?php else: ?>
-                                        <span class="text-muted">-</span>
+                                        <span class="badge bg-danger">Sem preço</span>
                                     <?php endif; ?>
-                                    <?php if ($precoUsd > 0): ?>
+                                    <?php if ($price > 0 && $precoUsd > 0): ?>
                                         <br><small class="text-primary">US$ <?= number_format($precoUsd, 2) ?></small>
                                     <?php endif; ?>
                                     <?php if ($costPrice > 0): ?>
