@@ -179,7 +179,7 @@
                         </div>
 
                         <?php
-                        $minSubtotal = 299.00;
+                        $minSubtotal = 300.00;
                         $subtotal = (float)($cart['subtotal'] ?? 0);
                         $falta = $minSubtotal - $subtotal;
                         ?>
@@ -439,7 +439,7 @@
         this.value = this.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').substring(0, 9);
     });
 
-    const MIN_SUBTOTAL = 299.00;
+    const MIN_SUBTOTAL = 300.00;
 
     function updateTotals(data) {
         const subtotal = data.subtotal || data.cart?.subtotal || 0;
