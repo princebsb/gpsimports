@@ -97,6 +97,14 @@
                                         <strong><?= esc($product['name']) ?></strong>
                                         <br>
                                         <small class="text-muted">SKU: <?= esc($product['sku']) ?></small>
+                                        <?php if (!empty($product['fonte'])): ?>
+                                            <br><span class="badge bg-info badge-sm"><?= esc($product['fonte']) ?></span>
+                                        <?php endif; ?>
+                                        <?php if (!empty($product['url_origem'])): ?>
+                                            <a href="<?= esc($product['url_origem']) ?>" target="_blank" class="ms-1" title="Ver produto original">
+                                                <i class="bi bi-box-arrow-up-right"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                                 <td><?= esc($product['category_name'] ?? '-') ?></td>
@@ -107,6 +115,12 @@
                                         <strong class="text-success">R$ <?= number_format($product['sale_price'], 2, ',', '.') ?></strong>
                                     <?php else: ?>
                                         <strong>R$ <?= number_format($product['price'], 2, ',', '.') ?></strong>
+                                    <?php endif; ?>
+                                    <?php if (!empty($product['preco_usd'])): ?>
+                                        <br><small class="text-muted">US$ <?= number_format($product['preco_usd'], 2) ?></small>
+                                    <?php endif; ?>
+                                    <?php if (!empty($product['cost_price'])): ?>
+                                        <br><small class="text-danger">Custo: R$ <?= number_format($product['cost_price'], 2, ',', '.') ?></small>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -128,6 +142,19 @@
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
+                                        <?php
+                                        $msgWpp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
+                                        $msgWpp .= "🚚 Tenho pessoal que *retira mercadoria pra mim* toda *Terça*, *Quinta* e *Sábado*.%0A%0A";
+                                        $msgWpp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
+                                        $msgWpp .= "*Quero comprar com vocês!*%0A%0A";
+                                        $msgWpp .= "Segue o produto:%0A%0A";
+                                        $msgWpp .= "• " . urlencode($product['name']) . "%0A";
+                                        $msgWpp .= "  SKU: " . urlencode($product['sku'] ?? '-') . "%0A%0A";
+                                        $msgWpp .= "Favor gerar a NOTA.%0A%0AObrigado. 🙏";
+                                        ?>
+                                        <a href="https://web.whatsapp.com/send/?phone=595982897556&text=<?= $msgWpp ?>" target="_blank" class="btn btn-outline-success" title="WhatsApp Fornecedor">
+                                            <i class="bi bi-whatsapp"></i>
+                                        </a>
                                         <a href="<?= base_url('admin/produtos/' . $product['id'] . '/editar') ?>" class="btn btn-outline-primary" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
