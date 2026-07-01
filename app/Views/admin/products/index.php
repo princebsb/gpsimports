@@ -76,11 +76,16 @@
                         <?php foreach ($products as $product): ?>
                             <tr>
                                 <td>
-                                    <?php if ($product['featured_image']): ?>
-                                        <img src="<?= base_url('uploads/products/thumbs/' . $product['featured_image']) ?>"
+                                    <?php
+                                    $img = $product['featured_image'] ?? '';
+                                    if ($img):
+                                        $imgUrl = (strpos($img, 'http') === 0) ? $img : base_url('uploads/products/thumbs/' . $img);
+                                    ?>
+                                        <img src="<?= esc($imgUrl) ?>"
                                              alt="<?= esc($product['name']) ?>"
                                              class="rounded"
-                                             style="width: 50px; height: 50px; object-fit: cover;">
+                                             style="width: 50px; height: 50px; object-fit: cover;"
+                                             onerror="this.src='https://placehold.co/50x50/e9ecef/495057?text=P'">
                                     <?php else: ?>
                                         <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                             <i class="bi bi-image text-muted"></i>
