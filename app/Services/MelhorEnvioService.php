@@ -103,6 +103,9 @@ class MelhorEnvioService
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        } elseif ($method === 'GET' && !empty($data)) {
+            $url .= '?' . http_build_query($data);
+            curl_setopt($ch, CURLOPT_URL, $url);
         }
 
         $response = curl_exec($ch);
@@ -167,6 +170,40 @@ class MelhorEnvioService
 
         $settingModel = model('SettingModel');
         return $settingModel->get('melhorenvio_access_token') ?? '';
+    }
+
+    /**
+     * Get wallet balance
+     */
+    public function getBalance(): ?float
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return null;
+        }
+
+        try {
+            $this->token = $token;
+            $response = $this->request('GET', '/me/balance', []);
+
+            if (isset($response['balance'])) {
+                return (float) $response['balance'];
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio getBalance Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Check if connected
+     */
+    public function isConnected(): bool
+    {
+        $token = $this->getAccessToken();
+        return !empty($token);
     }
 
     /**

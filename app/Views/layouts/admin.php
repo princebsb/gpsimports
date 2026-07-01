@@ -458,6 +458,21 @@
             </div>
 
             <div class="d-flex align-items-center">
+                <!-- Melhor Envio Balance -->
+                <?php
+                $melhorEnvio = new \App\Services\MelhorEnvioService();
+                if ($melhorEnvio->isConnected()):
+                    $meBalance = $melhorEnvio->getBalance();
+                ?>
+                <a href="<?= base_url('admin/configuracoes/frete') ?>" class="btn btn-sm me-3 d-flex align-items-center" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: #fff; border: none; border-radius: 20px; padding: 6px 14px;">
+                    <i class="bi bi-truck me-1"></i>
+                    <span>Melhor Envio</span>
+                    <span class="badge bg-light text-success ms-2" style="font-size: 0.75rem;">
+                        R$ <?= number_format($meBalance ?? 0, 2, ',', '.') ?>
+                    </span>
+                </a>
+                <?php endif; ?>
+
                 <!-- Store Link -->
                 <a href="<?= base_url() ?>" target="_blank" class="btn btn-outline-secondary btn-sm me-3">
                     <i class="bi bi-box-arrow-up-right me-1"></i> Ver Loja
