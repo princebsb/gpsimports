@@ -14,7 +14,9 @@ class MelhorEnvioService
         $this->cepOrigem = env('melhorenvio.cepOrigem', '01310100');
 
         // Sandbox or production URL
-        $sandbox = env('melhorenvio.sandbox', true);
+        $sandboxEnv = env('melhorenvio.sandbox', 'false');
+        $sandbox = ($sandboxEnv === true || $sandboxEnv === 'true' || $sandboxEnv === '1');
+
         $this->baseUrl = $sandbox
             ? 'https://sandbox.melhorenvio.com.br/api/v2'
             : 'https://melhorenvio.com.br/api/v2';

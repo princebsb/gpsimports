@@ -17,7 +17,11 @@ class MelhorEnvioController extends BaseController
         $this->clientId = env('melhorenvio.clientId', '26610');
         $this->clientSecret = env('melhorenvio.clientSecret', 'mffMk9gH5RVIge0qwJHTGxtIUThS5qZbothfu4yK');
         $this->redirectUri = base_url('melhor-envio/callback');
-        $this->sandbox = env('melhorenvio.sandbox', false);
+
+        // Verificar se é sandbox (string 'true' ou boolean true)
+        $sandboxEnv = env('melhorenvio.sandbox', 'false');
+        $this->sandbox = ($sandboxEnv === true || $sandboxEnv === 'true' || $sandboxEnv === '1');
+
         $this->baseUrl = $this->sandbox
             ? 'https://sandbox.melhorenvio.com.br'
             : 'https://melhorenvio.com.br';
