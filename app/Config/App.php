@@ -22,7 +22,15 @@ class App extends BaseConfig
     {
         parent::__construct();
 
-        // Detectar ambiente automaticamente
+        // Se o .env definiu o baseURL, usar ele
+        // Caso contrario, detectar automaticamente
+        $envBaseUrl = env('app.baseURL');
+        if (!empty($envBaseUrl)) {
+            $this->baseURL = $envBaseUrl;
+            return;
+        }
+
+        // Detectar ambiente automaticamente (fallback)
         $isProduction = (
             isset($_SERVER['HTTP_HOST']) &&
             strpos($_SERVER['HTTP_HOST'], 'gpsimports.com.br') !== false
