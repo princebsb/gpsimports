@@ -60,6 +60,15 @@ class CheckoutController extends BaseController
         $customerId = session()->get('customer_id');
         $customer = model('CustomerModel')->find($customerId);
 
+        // Validar se o metodo de envio foi selecionado
+        $cart = $this->cartService->getCurrentCart();
+        if (empty($cart['shipping_method']) || (float)($cart['shipping_cost'] ?? 0) <= 0) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Selecione um metodo de envio antes de finalizar.',
+            ]);
+        }
+
         // Get shipping address
         if (!empty($data['use_new_address']) && $data['use_new_address'] === '1') {
             // Novo endereco

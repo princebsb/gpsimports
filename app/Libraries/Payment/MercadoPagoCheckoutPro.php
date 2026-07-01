@@ -42,6 +42,19 @@ class MercadoPagoCheckoutPro
                 $mpItem->currency_id = 'BRL';
                 $preferenceItems[] = $mpItem;
             }
+
+            // Adicionar frete como item separado se houver custo de envio
+            $shippingCost = (float) ($order['shipping_cost'] ?? 0);
+            if ($shippingCost > 0) {
+                $shippingItem = new Item();
+                $shippingItem->id = 'FRETE';
+                $shippingItem->title = 'Frete - ' . ($order['shipping_method'] ?? 'Envio');
+                $shippingItem->quantity = 1;
+                $shippingItem->unit_price = $shippingCost;
+                $shippingItem->currency_id = 'BRL';
+                $preferenceItems[] = $shippingItem;
+            }
+
             $preference->items = $preferenceItems;
 
             // Dados do pagador

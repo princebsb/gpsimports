@@ -563,6 +563,14 @@
     document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
+        // Validar se um metodo de envio foi selecionado
+        const shippingSelected = document.querySelector('input[name="shipping_method"]:checked');
+        if (!shippingSelected) {
+            toastr.error('Selecione um metodo de envio antes de finalizar');
+            goToStep(1);
+            return;
+        }
+
         if (!document.getElementById('agreeTerms').checked) {
             toastr.error('Voce precisa aceitar os termos');
             return;
