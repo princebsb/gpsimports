@@ -114,7 +114,7 @@ class OrderModel extends Model
         $db = \Config\Database::connect();
 
         $items = $db->table('order_items')
-                    ->select('order_items.*, products.featured_image as product_image')
+                    ->select('order_items.*, products.featured_image as product_image, products.fonte, products.url_origem, products.preco_usd')
                     ->join('products', 'products.id = order_items.product_id', 'left')
                     ->where('order_items.order_id', $orderId)
                     ->get()

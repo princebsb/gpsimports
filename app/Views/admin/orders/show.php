@@ -53,6 +53,14 @@
                                                     <br><small class="text-muted"><?= esc($item['variation_name'] ?? $item['attributes'] ?? '') ?></small>
                                                 <?php endif; ?>
                                                 <br><small class="text-muted">SKU: <?= esc($item['sku'] ?? '-') ?></small>
+                                                <?php if (!empty($item['fonte'])): ?>
+                                                    <br><span class="badge bg-info badge-sm"><?= esc($item['fonte']) ?></span>
+                                                <?php endif; ?>
+                                                <?php if (!empty($item['url_origem'])): ?>
+                                                    <a href="<?= esc($item['url_origem']) ?>" target="_blank" class="ms-1" title="Ver produto original">
+                                                        <i class="bi bi-box-arrow-up-right"></i>
+                                                    </a>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </td>
@@ -279,6 +287,19 @@
                         <div class="small text-muted mt-2">ID: <?= esc($payment['transaction_id'] ?? $payment['id'] ?? '') ?></div>
                     <?php endif; ?>
                 <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Fornecedor -->
+        <div class="table-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-truck me-1"></i>Fornecedor</h5>
+            </div>
+            <div class="card-body">
+                <a href="https://web.whatsapp.com/send/?phone=595982897556&text=Ola! Pedido %23<?= $order['order_number'] ?>" target="_blank" class="btn btn-success w-100">
+                    <i class="bi bi-whatsapp me-1"></i>WhatsApp Fornecedor
+                </a>
+                <small class="text-muted d-block mt-2 text-center">+595 982 897 556</small>
             </div>
         </div>
 
