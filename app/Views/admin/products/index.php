@@ -42,8 +42,8 @@
             <div class="col-md-2">
                 <select name="status" class="form-select">
                     <option value="">Todos Status</option>
-                    <option value="1" <?= ($filters['status'] ?? '') === '1' ? 'selected' : '' ?>>Ativo</option>
-                    <option value="0" <?= ($filters['status'] ?? '') === '0' ? 'selected' : '' ?>>Inativo</option>
+                    <option value="active" <?= ($filters['status'] ?? '') === 'active' ? 'selected' : '' ?>>Ativo</option>
+                    <option value="inactive" <?= ($filters['status'] ?? '') === 'inactive' ? 'selected' : '' ?>>Inativo</option>
                 </select>
             </div>
             <div class="col-md-2">
