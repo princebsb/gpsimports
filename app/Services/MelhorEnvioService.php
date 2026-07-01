@@ -207,6 +207,48 @@ class MelhorEnvioService
     }
 
     /**
+     * Add credits to wallet
+     */
+    public function addCredits(float $value, string $method = 'pix'): array
+    {
+        $token = $this->getAccessToken();
+        if (empty($token)) {
+            return ['success' => false, 'message' => 'Token nao configurado'];
+        }
+
+        $payload = [
+            'value' => $value,
+            'payment_method' => $method, // pix or boleto
+        ];
+
+        try {
+            $this->token = $token;
+            $response = $this->request('POST', '/me/balance', $payload);
+
+            if (!empty($response['id'])) {
+                return [
+                    'success' => true,
+                    'id' => $response['id'],
+                    'pix_code' => $response['pix']['qrcode'] ?? $response['digitable_line'] ?? null,
+                    'qr_code' => $response['pix']['qrcode_image'] ?? null,
+                    'boleto_url' => $response['pdf'] ?? $response['link'] ?? null,
+                    'data' => $response,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => $response['message'] ?? 'Erro ao gerar pagamento',
+                'data' => $response,
+            ];
+
+        } catch (\Exception $e) {
+            log_message('error', 'MelhorEnvio addCredits Error: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
      * Add item to cart (first step to generate label)
      */
     public function addToCart(array $order, array $package, int $serviceId): array

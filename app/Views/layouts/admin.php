@@ -464,13 +464,13 @@
                 if ($melhorEnvio->isConnected()):
                     $meBalance = $melhorEnvio->getBalance();
                 ?>
-                <a href="<?= base_url('admin/configuracoes/frete') ?>" class="btn btn-sm me-3 d-flex align-items-center" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: #fff; border: none; border-radius: 20px; padding: 6px 14px;">
+                <button type="button" class="btn btn-sm me-3 d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modalMelhorEnvio" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: #fff; border: none; border-radius: 20px; padding: 6px 14px;">
                     <i class="bi bi-truck me-1"></i>
                     <span>Melhor Envio</span>
                     <span class="badge bg-light text-success ms-2" style="font-size: 0.75rem;">
                         R$ <?= number_format($meBalance ?? 0, 2, ',', '.') ?>
                     </span>
-                </a>
+                </button>
                 <?php endif; ?>
 
                 <!-- Store Link -->
@@ -585,5 +585,208 @@
     </script>
 
     <?= $this->renderSection('scripts') ?>
+
+    <!-- Modal Melhor Envio - Adicionar Creditos -->
+    <?php if (isset($melhorEnvio) && $melhorEnvio->isConnected()): ?>
+    <div class="modal fade" id="modalMelhorEnvio" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title">
+                        <i class="bi bi-currency-dollar text-success me-2"></i>
+                        Adicionar Creditos - Melhor Envio
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted mb-4">Saldo atual: <strong class="text-success">R$ <?= number_format($meBalance ?? 0, 2, ',', '.') ?></strong></p>
+
+                    <form id="formAdicionarCredito">
+                        <div class="mb-3">
+                            <label class="form-label">Valor a adicionar</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" name="valor" id="valorCredito" class="form-control form-control-lg" value="50" min="10" max="50000" step="1">
+                            </div>
+                            <small class="text-muted">Minimo: R$ 10,00 | Maximo: R$ 50.000,00</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <button type="button" class="btn btn-valor btn-outline-purple" onclick="setValor(50)">R$ 50</button>
+                                <button type="button" class="btn btn-valor btn-outline-secondary" onclick="setValor(100)">R$ 100</button>
+                                <button type="button" class="btn btn-valor btn-outline-secondary" onclick="setValor(200)">R$ 200</button>
+                                <button type="button" class="btn btn-valor btn-outline-secondary" onclick="setValor(500)">R$ 500</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Forma de pagamento</label>
+                            <div class="d-flex gap-3">
+                                <div class="form-check form-check-card flex-fill">
+                                    <input class="form-check-input" type="radio" name="metodo" id="metodoPix" value="pix" checked>
+                                    <label class="form-check-label w-100 text-center p-3 border rounded" for="metodoPix">
+                                        <i class="bi bi-qr-code fs-4 d-block mb-1"></i>
+                                        PIX
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-card flex-fill">
+                                    <input class="form-check-input" type="radio" name="metodo" id="metodoBoleto" value="boleto">
+                                    <label class="form-check-label w-100 text-center p-3 border rounded" for="metodoBoleto">
+                                        <i class="bi bi-upc-scan fs-4 d-block mb-1"></i>
+                                        Boleto
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-purple w-100 btn-lg" id="btnGerarPagamento">
+                            <i class="bi bi-qr-code me-2"></i>Gerar PIX
+                        </button>
+                    </form>
+
+                    <!-- Resultado do pagamento -->
+                    <div id="resultadoPagamento" class="d-none mt-4">
+                        <div class="text-center">
+                            <div id="pixQrCode" class="mb-3"></div>
+                            <div id="pixCopiaECola" class="mb-3">
+                                <input type="text" id="pixCode" class="form-control text-center" readonly>
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="copiarPix()">
+                                    <i class="bi bi-clipboard me-1"></i>Copiar codigo
+                                </button>
+                            </div>
+                            <div id="boletoLink" class="d-none">
+                                <a href="#" target="_blank" class="btn btn-outline-primary">
+                                    <i class="bi bi-file-pdf me-1"></i>Abrir Boleto
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .btn-purple {
+            background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+            border: none;
+            color: #fff;
+        }
+        .btn-purple:hover {
+            background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+            color: #fff;
+        }
+        .btn-outline-purple {
+            border-color: #7c3aed;
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        .btn-outline-purple:hover, .btn-valor.active {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            color: #fff;
+        }
+        .form-check-card .form-check-input {
+            display: none;
+        }
+        .form-check-card .form-check-label {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .form-check-card .form-check-input:checked + .form-check-label {
+            border-color: #7c3aed !important;
+            background: rgba(124, 58, 237, 0.1);
+            color: #7c3aed;
+        }
+    </style>
+
+    <script>
+        function setValor(valor) {
+            document.getElementById('valorCredito').value = valor;
+            document.querySelectorAll('.btn-valor').forEach(btn => {
+                btn.classList.remove('btn-outline-purple', 'active');
+                btn.classList.add('btn-outline-secondary');
+            });
+            event.target.classList.remove('btn-outline-secondary');
+            event.target.classList.add('btn-outline-purple', 'active');
+        }
+
+        // Atualizar texto do botao conforme metodo selecionado
+        document.querySelectorAll('input[name="metodo"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const btn = document.getElementById('btnGerarPagamento');
+                if (this.value === 'pix') {
+                    btn.innerHTML = '<i class="bi bi-qr-code me-2"></i>Gerar PIX';
+                } else {
+                    btn.innerHTML = '<i class="bi bi-upc-scan me-2"></i>Gerar Boleto';
+                }
+            });
+        });
+
+        // Submit form
+        document.getElementById('formAdicionarCredito')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const valor = document.getElementById('valorCredito').value;
+            const metodo = document.querySelector('input[name="metodo"]:checked').value;
+            const btn = document.getElementById('btnGerarPagamento');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gerando...';
+
+            fetch('<?= base_url('admin/melhor-envio/adicionar-credito') ?>', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ valor: valor, metodo: metodo })
+            })
+            .then(response => response.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = metodo === 'pix' ? '<i class="bi bi-qr-code me-2"></i>Gerar PIX' : '<i class="bi bi-upc-scan me-2"></i>Gerar Boleto';
+
+                if (data.success) {
+                    document.getElementById('formAdicionarCredito').classList.add('d-none');
+                    document.getElementById('resultadoPagamento').classList.remove('d-none');
+
+                    if (metodo === 'pix' && data.pix_code) {
+                        document.getElementById('pixCode').value = data.pix_code;
+                        if (data.qr_code) {
+                            document.getElementById('pixQrCode').innerHTML = '<img src="' + data.qr_code + '" class="img-fluid" style="max-width: 200px;">';
+                        }
+                    } else if (metodo === 'boleto' && data.boleto_url) {
+                        document.getElementById('pixCopiaECola').classList.add('d-none');
+                        document.getElementById('boletoLink').classList.remove('d-none');
+                        document.getElementById('boletoLink').querySelector('a').href = data.boleto_url;
+                    }
+
+                    toastr.success('Pagamento gerado com sucesso!');
+                } else {
+                    toastr.error(data.message || 'Erro ao gerar pagamento');
+                }
+            })
+            .catch(error => {
+                btn.disabled = false;
+                toastr.error('Erro de conexao');
+            });
+        });
+
+        function copiarPix() {
+            const input = document.getElementById('pixCode');
+            input.select();
+            document.execCommand('copy');
+            toastr.success('Codigo PIX copiado!');
+        }
+
+        // Reset modal ao fechar
+        document.getElementById('modalMelhorEnvio')?.addEventListener('hidden.bs.modal', function() {
+            document.getElementById('formAdicionarCredito').classList.remove('d-none');
+            document.getElementById('resultadoPagamento').classList.add('d-none');
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

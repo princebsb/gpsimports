@@ -325,4 +325,26 @@ class OrderController extends BaseController
 
         return redirect()->back()->with('error', 'Erro ao rastrear.');
     }
+
+    /**
+     * Adicionar credito Melhor Envio
+     */
+    public function adicionarCreditoME()
+    {
+        $json = $this->request->getJSON();
+        $valor = (float) ($json->valor ?? 0);
+        $metodo = $json->metodo ?? 'pix';
+
+        if ($valor < 10 || $valor > 50000) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Valor deve ser entre R$ 10,00 e R$ 50.000,00'
+            ]);
+        }
+
+        $melhorEnvio = new \App\Services\MelhorEnvioService();
+        $result = $melhorEnvio->addCredits($valor, $metodo);
+
+        return $this->response->setJSON($result);
+    }
 }
