@@ -28,7 +28,7 @@ try {
     }
 
     // Tentar inicializar
-    $accessToken = 'APP_USR-4714064342572260-063014-8c40d4428c1eb0393b3daea89d7ef8e5-48800322';
+    $accessToken = 'APP_USR-4071143035792177-061316-4c087c4dc3f9f4c34a7b90ade3c3a399-3468364664';
 
     echo "<h3>Inicializando SDK:</h3>";
     \MercadoPago\SDK::setAccessToken($accessToken);
