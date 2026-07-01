@@ -122,11 +122,10 @@ class MelhorEnvioController extends BaseController
     {
         $settingModel = model('SettingModel');
 
-        $settingModel->set('melhorenvio_access_token', $tokenData['access_token']);
-        $settingModel->set('melhorenvio_refresh_token', $tokenData['refresh_token'] ?? '');
-        $settingModel->set('melhorenvio_token_expires', date('Y-m-d H:i:s', time() + ($tokenData['expires_in'] ?? 2592000)));
+        $settingModel->setValue('melhorenvio_access_token', $tokenData['access_token'], 'melhorenvio', 'text');
+        $settingModel->setValue('melhorenvio_refresh_token', $tokenData['refresh_token'] ?? '', 'melhorenvio', 'text');
+        $settingModel->setValue('melhorenvio_token_expires', date('Y-m-d H:i:s', time() + ($tokenData['expires_in'] ?? 2592000)), 'melhorenvio', 'text');
 
-        // Atualizar o .env com o token (opcional - para compatibilidade)
         log_message('info', 'MelhorEnvio tokens salvos com sucesso.');
     }
 
