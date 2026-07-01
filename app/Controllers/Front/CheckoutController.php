@@ -30,6 +30,12 @@ class CheckoutController extends BaseController
         }
 
         $cart = $validation['cart'];
+
+        // Validar valor minimo
+        $minSubtotal = 299.00;
+        if ((float)($cart['subtotal'] ?? 0) < $minSubtotal) {
+            return redirect()->to('/carrinho')->with('error', 'O valor minimo para compra e de R$ ' . number_format($minSubtotal, 2, ',', '.') . '.');
+        }
         $customerId = session()->get('customer_id');
         $customer = model('CustomerModel')->find($customerId);
         $addresses = model('CustomerAddressModel')->getByCustomer($customerId);
@@ -60,8 +66,19 @@ class CheckoutController extends BaseController
         $customerId = session()->get('customer_id');
         $customer = model('CustomerModel')->find($customerId);
 
-        // Validar se o metodo de envio foi selecionado
+        // Validar carrinho
         $cart = $this->cartService->getCurrentCart();
+
+        // Validar valor minimo
+        $minSubtotal = 299.00;
+        if ((float)($cart['subtotal'] ?? 0) < $minSubtotal) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'O valor minimo para compra e de R$ ' . number_format($minSubtotal, 2, ',', '.') . '.',
+            ]);
+        }
+
+        // Validar se o metodo de envio foi selecionado
         if (empty($cart['shipping_method']) || (float)($cart['shipping_cost'] ?? 0) <= 0) {
             return $this->response->setJSON([
                 'success' => false,
