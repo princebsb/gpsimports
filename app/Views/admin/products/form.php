@@ -250,6 +250,37 @@
                 </div>
             </div>
 
+            <!-- Origem/Fonte -->
+            <?php if (isset($product) && (!empty($product['fonte']) || !empty($product['url_origem']))): ?>
+            <div class="table-card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-globe me-1"></i>Origem do Produto</h5>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($product['fonte'])): ?>
+                        <div class="mb-2">
+                            <strong>Fonte:</strong>
+                            <span class="badge bg-info"><?= esc($product['fonte']) ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($product['url_origem'])): ?>
+                        <div class="mb-2">
+                            <strong>Link Original:</strong><br>
+                            <a href="<?= esc($product['url_origem']) ?>" target="_blank" class="small text-truncate d-block" style="max-width: 100%;">
+                                <i class="bi bi-box-arrow-up-right me-1"></i><?= esc(substr($product['url_origem'], 0, 40)) ?>...
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($product['preco_usd'])): ?>
+                        <div class="mb-0">
+                            <strong>Preco USD:</strong>
+                            <span class="text-success">$ <?= number_format($product['preco_usd'], 2) ?></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <!-- SEO -->
             <div class="table-card mb-4">
                 <div class="card-header">
