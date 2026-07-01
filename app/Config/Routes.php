@@ -10,6 +10,11 @@ use CodeIgniter\Router\RouteCollection;
 // FRONTEND ROUTES
 // ============================================================================
 
+// Sitemap e Robots
+$routes->get('sitemap.xml', '\App\Controllers\SitemapController::index');
+$routes->get('sitemap', '\App\Controllers\SitemapController::index');
+$routes->get('robots.txt', '\App\Controllers\SitemapController::robots');
+
 $routes->group('', ['namespace' => 'App\Controllers\Front'], static function ($routes) {
     // Home
     $routes->get('/', 'HomeController::index');
