@@ -251,7 +251,7 @@
             </div>
 
             <!-- Origem/Fonte -->
-            <?php if (isset($product) && (!empty($product['fonte']) || !empty($product['url_origem']))): ?>
+            <?php if (isset($product)): ?>
             <div class="table-card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0"><i class="bi bi-globe me-1"></i>Origem do Produto</h5>
@@ -272,11 +272,18 @@
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($product['preco_usd'])): ?>
-                        <div class="mb-0">
+                        <div class="mb-2">
                             <strong>Preco USD:</strong>
                             <span class="text-success">$ <?= number_format($product['preco_usd'], 2) ?></span>
                         </div>
                     <?php endif; ?>
+                    <hr>
+                    <div class="mb-0">
+                        <strong>Fornecedor:</strong><br>
+                        <a href="https://web.whatsapp.com/send/?phone=595982897556" target="_blank" class="btn btn-success btn-sm mt-1">
+                            <i class="bi bi-whatsapp me-1"></i>WhatsApp Fornecedor
+                        </a>
+                    </div>
                 </div>
             </div>
             <?php endif; ?>
