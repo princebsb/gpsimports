@@ -119,30 +119,33 @@
                                 <td>
                                     <?php
                                     $paymentClass = match($order['payment_status']) {
-                                        'paid' => 'bg-success',
-                                        'pending' => 'bg-warning',
+                                        'paid', 'approved' => 'bg-success',
+                                        'pending', 'in_process' => 'bg-warning',
                                         'refunded' => 'bg-info',
-                                        'failed' => 'bg-danger',
+                                        'failed', 'rejected' => 'bg-danger',
                                         default => 'bg-secondary'
                                     };
                                     $paymentLabel = match($order['payment_status']) {
-                                        'paid' => 'Pago',
-                                        'pending' => 'Aguardando',
+                                        'paid', 'approved' => 'Pago',
+                                        'pending', 'in_process' => 'Aguardando',
                                         'refunded' => 'Reembolsado',
-                                        'failed' => 'Falhou',
-                                        default => $order['payment_status']
+                                        'failed', 'rejected' => 'Falhou',
+                                        'processing' => 'Processando',
+                                        default => ucfirst($order['payment_status'] ?? 'Pendente')
                                     };
                                     ?>
                                     <span class="badge <?= $paymentClass ?>"><?= $paymentLabel ?></span>
                                     <br>
                                     <small class="text-muted">
                                         <?php
-                                        echo match($order['payment_method']) {
+                                        echo match($order['payment_method'] ?? '') {
                                             'credit_card' => 'Cartao Credito',
                                             'debit_card' => 'Cartao Debito',
                                             'pix' => 'PIX',
                                             'boleto' => 'Boleto',
-                                            default => $order['payment_method']
+                                            'checkout_pro' => 'Mercado Pago',
+                                            'account_money' => 'Mercado Pago',
+                                            default => ucfirst($order['payment_method'] ?? '-')
                                         };
                                         ?>
                                     </small>

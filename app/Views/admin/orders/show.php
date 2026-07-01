@@ -128,13 +128,23 @@
                                     'cancelled' => 'danger',
                                     default => 'secondary'
                                 };
+                                $historyStatusLabel = match($history['status'] ?? 'pending') {
+                                    'pending' => 'Pendente',
+                                    'paid' => 'Pago',
+                                    'processing' => 'Em Preparacao',
+                                    'shipped' => 'Enviado',
+                                    'delivered' => 'Entregue',
+                                    'cancelled' => 'Cancelado',
+                                    'refunded' => 'Reembolsado',
+                                    default => ucfirst($history['status'] ?? 'Pendente')
+                                };
                                 ?>
                                 <span class="badge bg-<?= $color ?> rounded-circle p-2">
                                     <i class="bi bi-<?= $icon ?>"></i>
                                 </span>
                             </div>
                             <div class="timeline-content">
-                                <div class="fw-bold"><?= esc($history['status_label'] ?? ucfirst($history['status'] ?? 'Status')) ?></div>
+                                <div class="fw-bold"><?= esc($history['status_label'] ?? $historyStatusLabel) ?></div>
                                 <?php if (!empty($history['notes']) || !empty($history['comment'])): ?>
                                     <div class="text-muted small"><?= esc($history['notes'] ?? $history['comment'] ?? '') ?></div>
                                 <?php endif; ?>
@@ -271,6 +281,8 @@
                     'debit_card' => 'Cartao de Debito',
                     'pix' => 'PIX',
                     'boleto' => 'Boleto',
+                    'checkout_pro' => 'Mercado Pago',
+                    'account_money' => 'Saldo Mercado Pago',
                     default => ucfirst($paymentMethod)
                 };
                 ?>

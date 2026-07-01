@@ -304,6 +304,8 @@
                     'debit_card' => 'Cartao de Debito',
                     'pix' => 'PIX',
                     'boleto' => 'Boleto',
+                    'checkout_pro' => 'Mercado Pago',
+                    'account_money' => 'Saldo Mercado Pago',
                     default => ucfirst($paymentMethod)
                 };
                 ?>
