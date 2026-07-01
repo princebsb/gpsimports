@@ -109,18 +109,26 @@
                                 </td>
                                 <td><?= esc($product['category_name'] ?? '-') ?></td>
                                 <td>
-                                    <?php if ($product['sale_price'] && $product['sale_price'] < $product['price']): ?>
-                                        <span class="text-decoration-line-through text-muted small">R$ <?= number_format($product['price'], 2, ',', '.') ?></span>
+                                    <?php
+                                    $price = (float) ($product['price'] ?? 0);
+                                    $salePrice = (float) ($product['sale_price'] ?? 0);
+                                    $precoUsd = (float) ($product['preco_usd'] ?? 0);
+                                    $costPrice = (float) ($product['cost_price'] ?? 0);
+                                    ?>
+                                    <?php if ($salePrice > 0 && $salePrice < $price): ?>
+                                        <span class="text-decoration-line-through text-muted small">R$ <?= number_format($price, 2, ',', '.') ?></span>
                                         <br>
-                                        <strong class="text-success">R$ <?= number_format($product['sale_price'], 2, ',', '.') ?></strong>
+                                        <strong class="text-success">R$ <?= number_format($salePrice, 2, ',', '.') ?></strong>
+                                    <?php elseif ($price > 0): ?>
+                                        <strong>R$ <?= number_format($price, 2, ',', '.') ?></strong>
                                     <?php else: ?>
-                                        <strong>R$ <?= number_format($product['price'], 2, ',', '.') ?></strong>
+                                        <span class="text-muted">-</span>
                                     <?php endif; ?>
-                                    <?php if (!empty($product['preco_usd'])): ?>
-                                        <br><small class="text-muted">US$ <?= number_format($product['preco_usd'], 2) ?></small>
+                                    <?php if ($precoUsd > 0): ?>
+                                        <br><small class="text-primary">US$ <?= number_format($precoUsd, 2) ?></small>
                                     <?php endif; ?>
-                                    <?php if (!empty($product['cost_price'])): ?>
-                                        <br><small class="text-danger">Custo: R$ <?= number_format($product['cost_price'], 2, ',', '.') ?></small>
+                                    <?php if ($costPrice > 0): ?>
+                                        <br><small class="text-danger">Custo: R$ <?= number_format($costPrice, 2, ',', '.') ?></small>
                                     <?php endif; ?>
                                 </td>
                                 <td>
