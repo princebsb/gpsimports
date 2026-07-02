@@ -288,8 +288,11 @@
                             <li><i class="bi bi-qr-code me-1"></i>PIX (aprovacao instantanea)</li>
                             <li><i class="bi bi-upc me-1"></i>Boleto Bancario</li>
                         </ul>
-                        <div class="small opacity-75">
-                            <i class="bi bi-shield-check me-1"></i>Seus dados estao protegidos
+                        <div class="alert alert-info small mb-0">
+                            <i class="bi bi-shield-lock me-1"></i>
+                            <strong>Pagamento 100% Seguro:</strong> Nao armazenamos dados do seu cartao de credito.
+                            Todo o processo de pagamento e realizado diretamente pelo Mercado Pago,
+                            garantindo total seguranca nas suas transacoes.
                         </div>
                     </div>
 

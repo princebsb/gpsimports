@@ -98,7 +98,7 @@
                     <i class="bi bi-shield-check fs-1 text-primary me-3"></i>
                     <div>
                         <h6 class="mb-1">Compra Segura</h6>
-                        <small class="text-muted">Site 100% protegido</small>
+                        <small class="text-muted">Pagamento via Mercado Pago</small>
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                     <i class="bi bi-credit-card fs-1 text-primary me-3"></i>
                     <div>
                         <h6 class="mb-1">Parcele em ate 6x</h6>
-                        <small class="text-muted">No cartao de credito</small>
+                        <small class="text-muted">Sem armazenar dados do cartao</small>
                     </div>
                 </div>
             </div>
