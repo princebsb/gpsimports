@@ -860,16 +860,17 @@
                         <strong><?= setting('store_razao_social') ?></strong><br>
                         CNPJ: <?= setting('store_cnpj') ?>
                     </p>
+
+                    <div class="mt-4">
+                        <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 250px;">
+                    </div>
                 </div>
             </div>
 
             <div class="footer-bottom">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 mb-3 mb-lg-0">
+                    <div class="col-12 text-center">
                         <small>&copy; <?= date('Y') ?> <?= setting('store_name') ?? 'GPS Imports' ?>. Todos os direitos reservados.</small>
-                    </div>
-                    <div class="col-lg-6 text-lg-end">
-                        <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" height="80" class="img-fluid" style="max-width: 280px;">
                     </div>
                 </div>
             </div>
