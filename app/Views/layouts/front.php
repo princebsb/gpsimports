@@ -530,6 +530,54 @@
             border-bottom: 0.3em solid transparent;
             border-right: 0;
         }
+
+        /* Cookie Consent Banner */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(30, 41, 59, 0.98);
+            color: #fff;
+            padding: 1rem 0;
+            z-index: 9999;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+        }
+
+        .cookie-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .cookie-text {
+            flex: 1;
+            min-width: 300px;
+            font-size: 0.9rem;
+        }
+
+        .cookie-text a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            .cookie-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 
     <?= $this->renderSection('styles') ?>
@@ -850,6 +898,73 @@
         </a>
     <?php endif; ?>
 
+    <!-- Cookie Consent Banner (LGPD) -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+        <div class="container">
+            <div class="cookie-content">
+                <div class="cookie-text">
+                    <i class="bi bi-shield-lock me-2"></i>
+                    <span>
+                        Utilizamos cookies para melhorar sua experiencia em nosso site.
+                        Ao continuar navegando, voce concorda com nossa
+                        <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Politica de Privacidade</a>.
+                    </span>
+                </div>
+                <div class="cookie-buttons">
+                    <button type="button" class="btn btn-outline-light btn-sm" onclick="manageCookies()">
+                        Configurar
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm" onclick="acceptCookies()">
+                        Aceitar Todos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Settings Modal -->
+    <div class="modal fade" id="cookieSettingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-gear me-2"></i>Configuracoes de Cookies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Escolha quais cookies voce deseja permitir. Cookies essenciais sao necessarios para o funcionamento do site.</p>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="cookieEssential" checked disabled>
+                        <label class="form-check-label" for="cookieEssential">
+                            <strong>Cookies Essenciais</strong>
+                            <small class="d-block text-muted">Necessarios para o funcionamento basico do site (sempre ativos)</small>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="cookieAnalytics">
+                        <label class="form-check-label" for="cookieAnalytics">
+                            <strong>Cookies de Analise</strong>
+                            <small class="d-block text-muted">Nos ajudam a entender como voce usa o site</small>
+                        </label>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="cookieMarketing">
+                        <label class="form-check-label" for="cookieMarketing">
+                            <strong>Cookies de Marketing</strong>
+                            <small class="d-block text-muted">Usados para exibir anuncios relevantes</small>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="rejectAllCookies()">Rejeitar Opcionais</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCookieSettings()">Salvar Preferencias</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Cart Offcanvas (Mini Cart) -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
         <div class="offcanvas-header border-bottom">
@@ -1112,6 +1227,93 @@
                     toastr.success('Removido dos favoritos');
                 }
             });
+        }
+
+        // ========================================
+        // Cookie Consent (LGPD)
+        // ========================================
+        let cookieSettingsModal;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            cookieSettingsModal = new bootstrap.Modal(document.getElementById('cookieSettingsModal'));
+
+            // Verificar se ja aceitou os cookies
+            if (!getCookie('cookie_consent')) {
+                document.getElementById('cookieConsent').style.display = 'block';
+            } else {
+                // Carregar preferencias salvas
+                loadCookiePreferences();
+            }
+        });
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/;SameSite=Lax`;
+        }
+
+        function acceptCookies() {
+            setCookie('cookie_consent', 'all', 365);
+            setCookie('cookie_analytics', 'true', 365);
+            setCookie('cookie_marketing', 'true', 365);
+            document.getElementById('cookieConsent').style.display = 'none';
+            loadAnalytics();
+            toastr.success('Preferencias de cookies salvas!');
+        }
+
+        function manageCookies() {
+            // Carregar estado atual dos checkboxes
+            document.getElementById('cookieAnalytics').checked = getCookie('cookie_analytics') === 'true';
+            document.getElementById('cookieMarketing').checked = getCookie('cookie_marketing') === 'true';
+            cookieSettingsModal.show();
+        }
+
+        function saveCookieSettings() {
+            const analytics = document.getElementById('cookieAnalytics').checked;
+            const marketing = document.getElementById('cookieMarketing').checked;
+
+            setCookie('cookie_consent', 'custom', 365);
+            setCookie('cookie_analytics', analytics ? 'true' : 'false', 365);
+            setCookie('cookie_marketing', marketing ? 'true' : 'false', 365);
+
+            document.getElementById('cookieConsent').style.display = 'none';
+            cookieSettingsModal.hide();
+
+            if (analytics) loadAnalytics();
+            toastr.success('Preferencias de cookies salvas!');
+        }
+
+        function rejectAllCookies() {
+            setCookie('cookie_consent', 'essential', 365);
+            setCookie('cookie_analytics', 'false', 365);
+            setCookie('cookie_marketing', 'false', 365);
+
+            document.getElementById('cookieConsent').style.display = 'none';
+            cookieSettingsModal.hide();
+            toastr.info('Apenas cookies essenciais serao utilizados.');
+        }
+
+        function loadCookiePreferences() {
+            if (getCookie('cookie_analytics') === 'true') {
+                loadAnalytics();
+            }
+        }
+
+        function loadAnalytics() {
+            // Carregar Google Analytics ou outras ferramentas aqui
+            // Exemplo:
+            // if (typeof gtag === 'undefined') {
+            //     var script = document.createElement('script');
+            //     script.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
+            //     document.head.appendChild(script);
+            // }
         }
     </script>
 

@@ -186,4 +186,100 @@ class CustomerController extends BaseController
 
         return redirect()->back()->with('success', 'Produto removido dos favoritos.');
     }
+
+    /**
+     * LGPD - Exportar dados do cliente
+     */
+    public function exportData()
+    {
+        $customerId = session()->get('customer_id');
+        $customerModel = model('CustomerModel');
+        $customer = $customerModel->find($customerId);
+
+        if (!$customer) {
+            return redirect()->back()->with('error', 'Cliente nao encontrado.');
+        }
+
+        // Coletar todos os dados do cliente
+        $data = [
+            'dados_pessoais' => [
+                'nome' => $customer['name'],
+                'email' => $customer['email'],
+                'cpf' => $customer['cpf'],
+                'telefone' => $customer['phone'],
+                'celular' => $customer['mobile'],
+                'data_nascimento' => $customer['birth_date'],
+                'genero' => $customer['gender'],
+                'criado_em' => $customer['created_at'],
+            ],
+            'enderecos' => $this->customerService->getAddresses($customerId),
+            'pedidos' => model('OrderModel')->getByCustomer($customerId, 1000),
+            'favoritos' => model('WishlistModel')->getByCustomer($customerId),
+            'newsletter' => model('NewsletterModel')->where('email', $customer['email'])->first(),
+            'exportado_em' => date('Y-m-d H:i:s'),
+        ];
+
+        // Gerar JSON
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        // Retornar como download
+        return $this->response
+            ->setHeader('Content-Type', 'application/json')
+            ->setHeader('Content-Disposition', 'attachment; filename="meus_dados_' . date('Y-m-d') . '.json"')
+            ->setBody($json);
+    }
+
+    /**
+     * LGPD - Excluir conta do cliente
+     */
+    public function deleteAccount()
+    {
+        $customerId = session()->get('customer_id');
+        $customerModel = model('CustomerModel');
+        $customer = $customerModel->find($customerId);
+
+        if (!$customer) {
+            return redirect()->back()->with('error', 'Cliente nao encontrado.');
+        }
+
+        // Validar senha
+        $password = $this->request->getPost('password');
+        if (!password_verify($password, $customer['password'])) {
+            return redirect()->back()->with('error', 'Senha incorreta. A exclusao foi cancelada.');
+        }
+
+        // Validar checkbox de confirmacao
+        if (!$this->request->getPost('confirm_delete')) {
+            return redirect()->back()->with('error', 'Voce deve confirmar a exclusao.');
+        }
+
+        // Anonimizar dados do cliente (em vez de deletar completamente para manter historico de pedidos)
+        $anonymizedData = [
+            'name' => 'Usuario Excluido',
+            'email' => 'excluido_' . $customerId . '_' . time() . '@anonimo.local',
+            'cpf' => '000.000.000-00',
+            'phone' => '',
+            'mobile' => '',
+            'birth_date' => null,
+            'gender' => null,
+            'status' => 'deleted',
+            'deleted_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $customerModel->update($customerId, $anonymizedData);
+
+        // Excluir enderecos
+        model('CustomerAddressModel')->where('customer_id', $customerId)->delete();
+
+        // Excluir favoritos
+        model('WishlistModel')->where('customer_id', $customerId)->delete();
+
+        // Remover da newsletter
+        model('NewsletterModel')->where('email', $customer['email'])->delete();
+
+        // Deslogar
+        session()->destroy();
+
+        return redirect()->to('/')->with('success', 'Sua conta foi excluida com sucesso. Seus dados pessoais foram removidos conforme a LGPD.');
+    }
 }

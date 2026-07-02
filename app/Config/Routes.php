@@ -79,6 +79,10 @@ $routes->group('', ['namespace' => 'App\Controllers\Front'], static function ($r
         $routes->get('favoritos', 'CustomerController::wishlist');
         $routes->post('favoritos/adicionar/(:num)', 'CustomerController::addToWishlist/$1');
         $routes->post('favoritos/remover/(:num)', 'CustomerController::removeFromWishlist/$1');
+
+        // LGPD
+        $routes->get('exportar-dados', 'CustomerController::exportData');
+        $routes->post('excluir-conta', 'CustomerController::deleteAccount');
     });
 
     // Newsletter

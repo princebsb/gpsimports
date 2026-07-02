@@ -117,6 +117,111 @@
                     </div>
                 </div>
             </div>
+
+            <!-- LGPD - Exclusao de Conta -->
+            <div class="card mt-4 border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-exclamation me-2"></i>Privacidade e Dados (LGPD)</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        De acordo com a Lei Geral de Protecao de Dados (LGPD), voce tem o direito de solicitar a exclusao dos seus dados pessoais.
+                    </p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#exportDataModal">
+                                <i class="bi bi-download me-2"></i>Exportar Meus Dados
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                <i class="bi bi-trash me-2"></i>Excluir Minha Conta
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="small text-muted mb-0">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Para mais informacoes, consulte nossa <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Politica de Privacidade</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Exportar Dados -->
+<div class="modal fade" id="exportDataModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-download me-2"></i>Exportar Meus Dados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Voce pode baixar todos os seus dados pessoais em formato JSON. Isso inclui:</p>
+                <ul>
+                    <li>Dados cadastrais (nome, email, telefone)</li>
+                    <li>Enderecos salvos</li>
+                    <li>Historico de pedidos</li>
+                    <li>Lista de favoritos</li>
+                </ul>
+                <p class="text-muted small">O arquivo sera gerado e baixado automaticamente.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a href="<?= base_url('minha-conta/exportar-dados') ?>" class="btn btn-primary">
+                    <i class="bi bi-download me-2"></i>Baixar Dados
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Excluir Conta -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="bi bi-exclamation-triangle me-2"></i>Excluir Conta</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="<?= base_url('minha-conta/excluir-conta') ?>" method="post" id="deleteAccountForm">
+                <?= csrf_field() ?>
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        <strong><i class="bi bi-exclamation-triangle me-2"></i>Atencao!</strong>
+                        <p class="mb-0 mt-2">Esta acao e irreversivel. Ao excluir sua conta:</p>
+                    </div>
+                    <ul class="text-danger">
+                        <li>Todos os seus dados pessoais serao removidos</li>
+                        <li>Seu historico de pedidos sera anonimizado</li>
+                        <li>Voce perdera acesso a sua conta permanentemente</li>
+                        <li>Nao sera possivel recuperar os dados</li>
+                    </ul>
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Para confirmar, digite sua senha atual:</label>
+                        <input type="password" name="password" class="form-control" required placeholder="Sua senha">
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="confirm_delete" id="confirmDelete" class="form-check-input" required>
+                        <label class="form-check-label text-danger" for="confirmDelete">
+                            Entendo que esta acao e irreversivel e desejo excluir minha conta
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" id="btnDeleteAccount" disabled>
+                        <i class="bi bi-trash me-2"></i>Excluir Permanentemente
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -146,6 +251,18 @@
             value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
         }
         this.value = value;
+    });
+
+    // Habilitar botao de exclusao apenas com checkbox marcado
+    document.getElementById('confirmDelete')?.addEventListener('change', function() {
+        document.getElementById('btnDeleteAccount').disabled = !this.checked;
+    });
+
+    // Confirmar exclusao
+    document.getElementById('deleteAccountForm')?.addEventListener('submit', function(e) {
+        if (!confirm('Tem certeza absoluta que deseja excluir sua conta? Esta acao NAO pode ser desfeita!')) {
+            e.preventDefault();
+        }
     });
 </script>
 <?= $this->endSection() ?>

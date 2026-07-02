@@ -91,9 +91,9 @@
                         </div>
 
                         <div class="form-check mb-3">
-                            <input type="checkbox" name="newsletter" id="newsletter" class="form-check-input" value="1" checked>
+                            <input type="checkbox" name="newsletter" id="newsletter" class="form-check-input" value="1">
                             <label for="newsletter" class="form-check-label">
-                                Desejo receber ofertas e novidades por e-mail
+                                Desejo receber ofertas e novidades por e-mail (opcional)
                             </label>
                         </div>
 
