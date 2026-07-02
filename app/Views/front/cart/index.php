@@ -173,9 +173,19 @@
 
                         <hr>
 
-                        <div class="d-flex justify-content-between mb-3">
+                        <div class="d-flex justify-content-between mb-2">
                             <strong class="h5 mb-0">Total</strong>
                             <strong class="h5 mb-0 text-primary" id="total">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
+                        </div>
+
+                        <?php
+                        $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                        $pixTotal = $cart['total'] * (1 - $pixDiscount / 100);
+                        ?>
+                        <div class="d-flex justify-content-between mb-3 text-success">
+                            <span><i class="bi bi-qr-code me-1"></i>No PIX</span>
+                            <strong id="pix-total">R$ <?= number_format($pixTotal, 2, ',', '.') ?></strong>
+                            <span class="badge bg-success"><?= $pixDiscount ?>% OFF</span>
                         </div>
 
                         <?php
@@ -431,6 +441,12 @@
             if (data.success) {
                 document.getElementById('shipping').textContent = formatMoney(price);
                 document.getElementById('total').textContent = formatMoney(data.total);
+                // Atualizar preco PIX
+                const pixTotalEl = document.getElementById('pix-total');
+                if (pixTotalEl) {
+                    const pixTotal = data.total * (1 - PIX_DISCOUNT / 100);
+                    pixTotalEl.textContent = formatMoney(pixTotal);
+                }
                 toastr.success('Frete selecionado');
             }
         });
@@ -443,12 +459,21 @@
 
     const MIN_SUBTOTAL = 300.00;
 
+    const PIX_DISCOUNT = <?= (float) (setting('pix_discount') ?? 5) ?>;
+
     function updateTotals(data) {
         const subtotal = data.subtotal || data.cart?.subtotal || 0;
         const total = data.total || data.cart?.total || 0;
 
         document.getElementById('subtotal').textContent = formatMoney(subtotal);
         document.getElementById('total').textContent = formatMoney(total);
+
+        // Atualizar preco PIX
+        const pixTotalEl = document.getElementById('pix-total');
+        if (pixTotalEl) {
+            const pixTotal = total * (1 - PIX_DISCOUNT / 100);
+            pixTotalEl.textContent = formatMoney(pixTotal);
+        }
 
         // Atualizar desconto se existir
         const discountEl = document.getElementById('discount');

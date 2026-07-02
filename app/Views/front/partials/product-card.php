@@ -76,14 +76,22 @@
             <?php endif; ?>
         </div>
 
-        <div class="installments">
-            <?php if ($currentPrice > 0): ?>
+        <?php if ($currentPrice > 0): ?>
+            <?php
+            $pixDiscount = (float) (setting('pix_discount') ?? 5);
+            $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
+            ?>
+            <div class="pix-price text-success small">
+                <i class="bi bi-qr-code"></i>
+                <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
+            </div>
+            <div class="installments">
                 <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
                 <?php if ($installments > 1): ?>
                     ou <?= $installments ?>x de R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?>
                 <?php endif; ?>
-            <?php endif; ?>
-        </div>
+            </div>
+        <?php endif; ?>
 
         <?php if ($product['stock'] > 0): ?>
             <button type="button" class="btn btn-primary btn-sm w-100 mt-2" onclick="addToCart(<?= $product['id'] ?>)">

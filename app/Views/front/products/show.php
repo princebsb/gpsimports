@@ -119,6 +119,8 @@
             <div class="mb-4">
                 <?php
                 $currentPrice = $product['sale_price'] && $product['sale_price'] < $product['price'] ? $product['sale_price'] : $product['price'];
+                $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
                 ?>
                 <?php if ($currentPrice > 0): ?>
                     <?php if ($product['sale_price'] && $product['sale_price'] < $product['price']): ?>
@@ -127,9 +129,10 @@
                         </div>
                     <?php endif; ?>
                     <div class="h2 text-primary mb-1">R$ <?= number_format($currentPrice, 2, ',', '.') ?></div>
-                    <div class="text-success small">
-                        <i class="bi bi-check-circle me-1"></i>
-                        a vista no PIX com <?= setting('pix_discount') ?? 5 ?>% de desconto
+                    <div class="text-success mb-1">
+                        <i class="bi bi-qr-code me-1"></i>
+                        <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
+                        <span class="badge bg-success ms-1"><?= $pixDiscount ?>% OFF</span>
                     </div>
                     <div class="text-muted small">
                         <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
