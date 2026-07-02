@@ -869,12 +869,7 @@
                         <small>&copy; <?= date('Y') ?> <?= setting('store_name') ?? 'GPS Imports' ?>. Todos os direitos reservados.</small>
                     </div>
                     <div class="col-lg-6 text-lg-end">
-                        <div class="payment-icons d-flex justify-content-lg-end gap-1 flex-wrap align-items-center">
-                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/visa.svg" alt="Visa" height="32">
-                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/mastercard.svg" alt="Mastercard" height="32">
-                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/pix.svg" alt="PIX" height="32">
-                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/boleto.svg" alt="Boleto" height="32">
-                        </div>
+                        <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" height="80" class="img-fluid" style="max-width: 280px;">
                     </div>
                 </div>
             </div>
