@@ -71,7 +71,7 @@
                             <div class="d-flex align-items-center">
                                 <i class="bi bi-credit-card text-info fs-3 me-3"></i>
                                 <div>
-                                    <strong>Parcele em até 6x</strong>
+                                    <strong>Parcele em até 12x</strong>
                                     <p class="small text-muted mb-0">No cartão de crédito</p>
                                 </div>
                             </div>

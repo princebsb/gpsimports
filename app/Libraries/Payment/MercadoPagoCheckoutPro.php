@@ -100,10 +100,13 @@ class MercadoPagoCheckoutPro
             // Descricao no extrato
             $preference->statement_descriptor = 'GPS IMPORTS';
 
-            // Configuracao de pagamento
+            // Configuracao de pagamento - parcelas
             $preference->payment_methods = [
-                'installments' => 6, // Maximo 6 parcelas
+                'installments' => 12, // Maximo 12 parcelas
                 'default_installments' => 1,
+                'default_payment_method_id' => null,
+                'excluded_payment_types' => [],
+                'excluded_payment_methods' => [],
             ];
 
             // Expiracao

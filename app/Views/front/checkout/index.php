@@ -284,7 +284,7 @@
                         </div>
                         <p class="mb-2">Você será redirecionado ao Mercado Pago para escolher a forma de pagamento:</p>
                         <ul class="mb-3">
-                            <li><i class="bi bi-credit-card me-1"></i>Cartão de Crédito em até 6x</li>
+                            <li><i class="bi bi-credit-card me-1"></i>Cartão de Crédito em até 12x</li>
                             <li><i class="bi bi-qr-code me-1"></i>PIX (aprovação instantânea)</li>
                             <li><i class="bi bi-upc me-1"></i>Boleto Bancário</li>
                         </ul>

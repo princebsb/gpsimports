@@ -106,7 +106,7 @@
                 <div class="d-flex align-items-center p-3 bg-light rounded">
                     <i class="bi bi-credit-card fs-1 text-primary me-3"></i>
                     <div>
-                        <h6 class="mb-1">Parcele em até 6x</h6>
+                        <h6 class="mb-1">Parcele em até 12x</h6>
                         <small class="text-muted">Sem armazenar dados do cartão</small>
                     </div>
                 </div>

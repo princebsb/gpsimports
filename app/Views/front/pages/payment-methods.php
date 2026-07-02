@@ -14,7 +14,7 @@
                         Cartão de Crédito
                     </h5>
                     <p class="card-text">
-                        Parcele suas compras em até <strong>6x sem juros</strong> no cartão de crédito.
+                        Parcele suas compras em até <strong>12x sem juros</strong> no cartão de crédito.
                     </p>
                     <p class="mb-2"><strong>Bandeiras aceitas:</strong></p>
                     <div class="d-flex gap-2 flex-wrap mb-3">

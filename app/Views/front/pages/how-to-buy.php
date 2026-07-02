@@ -54,7 +54,7 @@
                         Você será redirecionado ao Mercado Pago, onde poderá escolher pagar com:
                     </p>
                     <ul>
-                        <li>Cartão de Crédito em até 6x</li>
+                        <li>Cartão de Crédito em até 12x</li>
                         <li>PIX (aprovação instantânea)</li>
                         <li>Boleto Bancário</li>
                     </ul>
