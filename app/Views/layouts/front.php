@@ -819,7 +819,8 @@
                         </p>
                     <?php endif; ?>
                     <p class="small text-muted mb-0">
-                        CNPJ: <?= setting('store_cnpj') ?: '00.000.000/0000-00' ?>
+                        <?= setting('store_razao_social') ?><br>
+                        CNPJ: <?= setting('store_cnpj') ?>
                     </p>
                 </div>
             </div>
