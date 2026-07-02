@@ -350,7 +350,7 @@ class PaymentService
     /**
      * Criar preferência do Checkout Pro
      */
-    public function createCheckoutPro(int $orderId): array
+    public function createCheckoutPro(int $orderId, string $paymentMethod = 'card'): array
     {
         $order = $this->orderModel->find($orderId);
         if (!$order) {
@@ -365,32 +365,57 @@ class PaymentService
         // Buscar itens do pedido
         $orderItems = $this->orderModel->getItems($orderId);
 
+        // Calcular desconto PIX se aplicavel
+        $pixDiscount = 0;
+        if ($paymentMethod === 'pix') {
+            $pixDiscountPercent = (float) (setting('pix_discount') ?? 5);
+            $pixDiscount = $pixDiscountPercent / 100;
+        }
+
         $items = [];
         foreach ($orderItems as $item) {
+            $price = (float) $item['price'];
+            // Aplicar desconto PIX no preco
+            if ($pixDiscount > 0) {
+                $price = $price * (1 - $pixDiscount);
+            }
             $items[] = [
                 'product_id' => $item['product_id'],
                 'name' => $item['name'],
                 'quantity' => (int) $item['quantity'],
-                'price' => (float) $item['price'],
+                'price' => round($price, 2),
             ];
         }
 
+        // Aplicar desconto no frete tambem se for PIX
+        $orderData = $order;
+        if ($pixDiscount > 0 && $order['shipping_cost'] > 0) {
+            $orderData['shipping_cost'] = round($order['shipping_cost'] * (1 - $pixDiscount), 2);
+        }
+
         $checkoutPro = new MercadoPagoCheckoutPro();
-        $result = $checkoutPro->createPreference($order, $items, $customer);
+        $result = $checkoutPro->createPreference($orderData, $items, $customer, $paymentMethod);
 
         if ($result['success']) {
+            // Calcular valor com desconto
+            $amount = $order['total'];
+            if ($pixDiscount > 0) {
+                $amount = round($amount * (1 - $pixDiscount), 2);
+            }
+
             // Salvar preference_id no pedido
             $this->orderModel->update($orderId, [
                 'mp_preference_id' => $result['preference_id'],
+                'pix_discount' => $pixDiscount > 0 ? round($order['total'] * $pixDiscount, 2) : 0,
             ]);
 
             // Criar registro de pagamento pendente
             $this->paymentModel->insert([
                 'order_id' => $orderId,
                 'gateway' => 'mercadopago',
-                'method' => 'checkout_pro',
+                'method' => $paymentMethod === 'pix' ? 'pix' : 'checkout_pro',
                 'status' => 'pending',
-                'amount' => $order['total'],
+                'amount' => $amount,
                 'mp_preference_id' => $result['preference_id'],
             ]);
         }

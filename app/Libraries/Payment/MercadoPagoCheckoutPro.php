@@ -19,7 +19,7 @@ class MercadoPagoCheckoutPro
     /**
      * Criar preferencia de pagamento para Checkout Pro (via API REST)
      */
-    public function createPreference(array $order, array $items, array $customer): array
+    public function createPreference(array $order, array $items, array $customer, string $paymentMethod = 'card'): array
     {
         try {
             // Preparar itens
@@ -74,6 +74,35 @@ class MercadoPagoCheckoutPro
             // URLs de retorno
             $baseUrl = base_url();
 
+            // Configurar metodos de pagamento baseado na selecao
+            $paymentMethods = [
+                'installments' => 12,
+                'default_installments' => 1,
+            ];
+
+            // Restringir metodo de pagamento conforme selecao
+            if ($paymentMethod === 'pix') {
+                // Somente PIX
+                $paymentMethods['excluded_payment_types'] = [
+                    ['id' => 'credit_card'],
+                    ['id' => 'debit_card'],
+                    ['id' => 'ticket'], // boleto
+                ];
+            } elseif ($paymentMethod === 'boleto') {
+                // Somente Boleto
+                $paymentMethods['excluded_payment_types'] = [
+                    ['id' => 'credit_card'],
+                    ['id' => 'debit_card'],
+                    ['id' => 'bank_transfer'], // pix
+                ];
+            } else {
+                // Cartao - excluir PIX e boleto
+                $paymentMethods['excluded_payment_types'] = [
+                    ['id' => 'bank_transfer'], // pix
+                    ['id' => 'ticket'], // boleto
+                ];
+            }
+
             // Montar payload da preferencia
             $preferenceData = [
                 'items' => $preferenceItems,
@@ -87,10 +116,7 @@ class MercadoPagoCheckoutPro
                 'external_reference' => $order['order_number'],
                 'notification_url' => $baseUrl . 'webhook/mercadopago',
                 'statement_descriptor' => 'GPS IMPORTS',
-                'payment_methods' => [
-                    'installments' => 12,
-                    'default_installments' => 1,
-                ],
+                'payment_methods' => $paymentMethods,
                 'expires' => true,
                 'expiration_date_from' => date('c'),
                 'expiration_date_to' => date('c', strtotime('+2 days')),

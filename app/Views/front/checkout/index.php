@@ -282,17 +282,80 @@
                             </svg>
                             <span class="ms-3 h5 mb-0">Mercado Pago - Pagamento Seguro</span>
                         </div>
-                        <p class="mb-2">Você será redirecionado ao Mercado Pago para escolher a forma de pagamento:</p>
-                        <ul class="mb-3">
-                            <li><i class="bi bi-credit-card me-1"></i>Cartão de Crédito em até 12x</li>
-                            <li><i class="bi bi-qr-code me-1"></i>PIX (aprovação instantânea)</li>
-                            <li><i class="bi bi-upc me-1"></i>Boleto Bancário</li>
-                        </ul>
-                        <div class="alert alert-info small mb-0">
+                        <p class="mb-3">Escolha como deseja pagar:</p>
+
+                        <?php
+                        $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                        $pixTotal = $cart['total'] * (1 - $pixDiscount / 100);
+                        ?>
+
+                        <!-- Opcao PIX com desconto -->
+                        <div class="card mb-3 border-success">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input type="radio" name="payment_method" id="payPix" value="pix" class="form-check-input" checked>
+                                    <label for="payPix" class="form-check-label w-100">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-qr-code text-success me-2 fs-4"></i>
+                                                <strong>PIX</strong>
+                                                <span class="badge bg-success ms-2"><?= $pixDiscount ?>% OFF</span>
+                                                <br><small class="text-muted">Aprovação instantânea</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <strong class="text-success fs-5">R$ <?= number_format($pixTotal, 2, ',', '.') ?></strong>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opcao Cartao -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input type="radio" name="payment_method" id="payCard" value="card" class="form-check-input">
+                                    <label for="payCard" class="form-check-label w-100">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-credit-card text-primary me-2 fs-4"></i>
+                                                <strong>Cartão de Crédito</strong>
+                                                <br><small class="text-muted">Em até 12x sem juros</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <strong class="fs-5">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Opcao Boleto -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input type="radio" name="payment_method" id="payBoleto" value="boleto" class="form-check-input">
+                                    <label for="payBoleto" class="form-check-label w-100">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <i class="bi bi-upc text-secondary me-2 fs-4"></i>
+                                                <strong>Boleto Bancário</strong>
+                                                <br><small class="text-muted">Aprovação em até 2 dias úteis</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <strong class="fs-5">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info small mb-3">
                             <i class="bi bi-shield-lock me-1"></i>
-                            <strong>Pagamento 100% Seguro:</strong> Não armazenamos dados do seu cartão de crédito.
-                            Todo o processo de pagamento é realizado diretamente pelo Mercado Pago,
-                            garantindo total segurança nas suas transações.
+                            <strong>Pagamento 100% Seguro:</strong> Todo o processo é realizado pelo Mercado Pago.
                         </div>
                     </div>
 
@@ -308,7 +371,7 @@
                             <i class="bi bi-arrow-left me-1"></i>Voltar
                         </button>
                         <button type="submit" class="btn btn-success btn-lg" id="submitBtn">
-                            <i class="bi bi-lock me-1"></i>Ir para Pagamento
+                            <i class="bi bi-lock me-1"></i>Finalizar Pedido
                         </button>
                     </div>
                 </div>

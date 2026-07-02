@@ -140,6 +140,18 @@ class CheckoutController extends BaseController
         $data['shipping_phone'] = $customer['phone'] ?? $customer['mobile'] ?? '';
         $data['billing_cpf'] = $customer['cpf'] ?? '';
 
+        // Verificar metodo de pagamento selecionado
+        $paymentMethod = $data['payment_method'] ?? 'card';
+        $pixDiscount = 0;
+
+        // Aplicar desconto PIX se selecionado
+        if ($paymentMethod === 'pix') {
+            $pixDiscountPercent = (float) (setting('pix_discount') ?? 5);
+            $pixDiscount = $cart['total'] * ($pixDiscountPercent / 100);
+            $data['pix_discount'] = $pixDiscount;
+            $data['payment_method_selected'] = 'pix';
+        }
+
         // Create order
         $orderResult = $this->orderService->createFromCart($data);
 
@@ -152,8 +164,8 @@ class CheckoutController extends BaseController
 
         $order = $orderResult['order'];
 
-        // Criar preferencia do Checkout Pro
-        $checkoutProResult = $this->paymentService->createCheckoutPro($order['id']);
+        // Criar preferencia do Checkout Pro (com ou sem desconto PIX)
+        $checkoutProResult = $this->paymentService->createCheckoutPro($order['id'], $paymentMethod);
 
         if (!$checkoutProResult['success']) {
             return $this->response->setJSON([
