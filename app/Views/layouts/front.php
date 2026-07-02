@@ -818,11 +818,9 @@
                             CEP: <?= setting('store_zipcode') ?>
                         </p>
                     <?php endif; ?>
-                    <?php if (setting('store_cnpj')): ?>
-                        <p class="small text-muted mb-0">
-                            CNPJ: <?= setting('store_cnpj') ?>
-                        </p>
-                    <?php endif; ?>
+                    <p class="small text-muted mb-0">
+                        CNPJ: <?= setting('store_cnpj') ?: '00.000.000/0000-00' ?>
+                    </p>
                 </div>
             </div>
 
