@@ -256,12 +256,7 @@
             <div class="card">
                 <div class="card-body">
                     <h6 class="card-title"><i class="bi bi-credit-card me-2"></i>Formas de Pagamento</h6>
-                    <div class="d-flex flex-wrap gap-2">
-                        <img src="<?= base_url('assets/images/payments/visa.svg') ?>" alt="Visa" height="24">
-                        <img src="<?= base_url('assets/images/payments/mastercard.svg') ?>" alt="Mastercard" height="24">
-                        <img src="<?= base_url('assets/images/payments/pix.svg') ?>" alt="PIX" height="24">
-                        <img src="<?= base_url('assets/images/payments/boleto.svg') ?>" alt="Boleto" height="24">
-                    </div>
+                    <img src="<?= base_url('assets/images/pagamento_mp.png') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 200px;">
                 </div>
             </div>
         </div>
