@@ -95,6 +95,9 @@ $routes->group('', ['namespace' => 'App\Controllers\Front'], static function ($r
     $routes->get('politica-privacidade', 'HomeController::privacy');
     $routes->get('termos-uso', 'HomeController::terms');
     $routes->get('trocas-devolucoes', 'HomeController::returns');
+    $routes->get('como-comprar', 'HomeController::howToBuy');
+    $routes->get('formas-pagamento', 'HomeController::paymentMethods');
+    $routes->get('frete-entrega', 'HomeController::shipping');
 });
 
 // ============================================================================

@@ -60,21 +60,29 @@
         <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title mb-4">Informacoes de Contato</h5>
+                    <h5 class="card-title mb-4">Informações de Contato</h5>
 
                     <div class="d-flex mb-3">
                         <i class="bi bi-geo-alt fs-4 text-primary me-3"></i>
                         <div>
-                            <h6 class="mb-1">Endereco</h6>
-                            <p class="text-muted mb-0"><?= setting('address') ?? 'Av. Paulista, 1000 - Sao Paulo, SP' ?></p>
+                            <h6 class="mb-1">Endereço</h6>
+                            <p class="text-muted mb-0">
+                                <?= setting('store_address') ?><br>
+                                <?= setting('store_neighborhood') ?> - <?= setting('store_city') ?>/<?= setting('store_state') ?><br>
+                                CEP: <?= setting('store_zipcode') ?>
+                            </p>
                         </div>
                     </div>
 
                     <div class="d-flex mb-3">
-                        <i class="bi bi-telephone fs-4 text-primary me-3"></i>
+                        <i class="bi bi-whatsapp fs-4 text-success me-3"></i>
                         <div>
-                            <h6 class="mb-1">Telefone</h6>
-                            <p class="text-muted mb-0"><?= setting('phone') ?? '(11) 99999-9999' ?></p>
+                            <h6 class="mb-1">WhatsApp</h6>
+                            <p class="text-muted mb-0">
+                                <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank">
+                                    <?= format_phone(setting('store_whatsapp') ?? '') ?>
+                                </a>
+                            </p>
                         </div>
                     </div>
 
@@ -82,35 +90,26 @@
                         <i class="bi bi-envelope fs-4 text-primary me-3"></i>
                         <div>
                             <h6 class="mb-1">Email</h6>
-                            <p class="text-muted mb-0"><?= setting('email') ?? 'contato@gpsimports.com.br' ?></p>
+                            <p class="text-muted mb-0">
+                                <a href="mailto:<?= setting('store_email') ?>"><?= setting('store_email') ?></a>
+                            </p>
                         </div>
                     </div>
 
                     <div class="d-flex mb-3">
                         <i class="bi bi-clock fs-4 text-primary me-3"></i>
                         <div>
-                            <h6 class="mb-1">Horario de Atendimento</h6>
-                            <p class="text-muted mb-0">Segunda a Sexta: 9h as 18h<br>Sabado: 9h as 13h</p>
+                            <h6 class="mb-1">Horário de Atendimento</h6>
+                            <p class="text-muted mb-0">Segunda a Sexta: 9h às 18h</p>
                         </div>
                     </div>
 
                     <hr>
 
-                    <h6 class="mb-3">Redes Sociais</h6>
-                    <div class="d-flex gap-2">
-                        <a href="<?= setting('facebook') ?? '#' ?>" class="btn btn-outline-primary btn-sm" target="_blank">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="<?= setting('instagram') ?? '#' ?>" class="btn btn-outline-primary btn-sm" target="_blank">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="<?= setting('youtube') ?? '#' ?>" class="btn btn-outline-primary btn-sm" target="_blank">
-                            <i class="bi bi-youtube"></i>
-                        </a>
-                        <a href="https://wa.me/<?= preg_replace('/\D/', '', setting('whatsapp') ?? '') ?>" class="btn btn-outline-success btn-sm" target="_blank">
-                            <i class="bi bi-whatsapp"></i>
-                        </a>
-                    </div>
+                    <p class="small text-muted mb-0">
+                        <strong><?= setting('store_razao_social') ?></strong><br>
+                        CNPJ: <?= setting('store_cnpj') ?>
+                    </p>
                 </div>
             </div>
         </div>

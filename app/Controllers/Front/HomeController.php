@@ -90,6 +90,21 @@ class HomeController extends BaseController
 
     public function returns()
     {
-        return view('front/pages/returns', ['title' => 'Trocas e Devolucoes']);
+        return view('front/pages/returns', ['title' => 'Trocas e Devoluções']);
+    }
+
+    public function howToBuy()
+    {
+        return view('front/pages/how-to-buy', ['title' => 'Como Comprar']);
+    }
+
+    public function paymentMethods()
+    {
+        return view('front/pages/payment-methods', ['title' => 'Formas de Pagamento']);
+    }
+
+    public function shipping()
+    {
+        return view('front/pages/shipping', ['title' => 'Frete e Entrega']);
     }
 }

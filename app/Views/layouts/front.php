@@ -707,10 +707,10 @@
                     <a class="nav-link" href="<?= base_url('produtos') ?>">Todos os Produtos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('promocoes') ?>">Promocoes</a>
+                    <a class="nav-link" href="<?= base_url('promocoes') ?>">Promoções</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('lancamentos') ?>">Lancamentos</a>
+                    <a class="nav-link" href="<?= base_url('lancamentos') ?>">Lançamentos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= base_url('contato') ?>">Contato</a>
@@ -748,7 +748,7 @@
                     </li>
                 <?php endforeach; ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= base_url('promocoes') ?>">Promocoes</a>
+                    <a class="nav-link" href="<?= base_url('promocoes') ?>">Promoções</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="<?= base_url('contato') ?>">Contato</a>
@@ -813,18 +813,7 @@
             <div class="row">
                 <div class="col-lg-4 mb-4">
                     <h5><?= setting('store_name') ?? 'GPS Imports' ?></h5>
-                    <p><?= setting('about_short') ?? 'Sua loja online de confianca.' ?></p>
-                    <div class="social-icons">
-                        <?php if (setting('facebook')): ?>
-                            <a href="<?= setting('facebook') ?>" target="_blank" class="me-2"><i class="bi bi-facebook fs-5"></i></a>
-                        <?php endif; ?>
-                        <?php if (setting('instagram')): ?>
-                            <a href="<?= setting('instagram') ?>" target="_blank" class="me-2"><i class="bi bi-instagram fs-5"></i></a>
-                        <?php endif; ?>
-                        <?php if (setting('youtube')): ?>
-                            <a href="<?= setting('youtube') ?>" target="_blank" class="me-2"><i class="bi bi-youtube fs-5"></i></a>
-                        <?php endif; ?>
-                    </div>
+                    <p><?= setting('about_short') ?? 'Sua loja online de confiança.' ?></p>
                 </div>
                 <div class="col-6 col-lg-2 mb-4">
                     <h5>Institucional</h5>
