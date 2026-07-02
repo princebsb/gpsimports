@@ -114,8 +114,14 @@ class MercadoPagoCheckoutPro
             $preference->expiration_date_from = date('c');
             $preference->expiration_date_to = date('c', strtotime('+2 days'));
 
+            // Log para debug
+            log_message('debug', 'MercadoPago Preference payment_methods: ' . json_encode($preference->payment_methods));
+
             // Salvar preferencia
             $preference->save();
+
+            // Log da preferencia criada
+            log_message('debug', 'MercadoPago Preference created: ID=' . ($preference->id ?? 'null') . ' init_point=' . ($preference->init_point ?? 'null'));
 
             if ($preference->id) {
                 return [
