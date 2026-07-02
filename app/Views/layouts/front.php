@@ -855,7 +855,7 @@
                 </div>
                 <div class="col-6 col-lg-2 mb-4">
                     <h5>Formas de Pagamento</h5>
-                    <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 200px;">
+                    <img src="<?= base_url('assets/images/pagamento_mp.png') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 180px;">
                 </div>
             </div>
 
