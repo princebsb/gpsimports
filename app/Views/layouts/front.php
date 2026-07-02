@@ -799,19 +799,33 @@
                 <div class="col-lg-4 mb-4">
                     <h5>Contato</h5>
                     <ul class="list-unstyled">
-                        <?php if (setting('email')): ?>
-                            <li><i class="bi bi-envelope me-2"></i><?= setting('email') ?></li>
+                        <?php if (setting('store_email')): ?>
+                            <li><i class="bi bi-envelope me-2"></i><?= setting('store_email') ?></li>
                         <?php endif; ?>
-                        <?php if (setting('phone')): ?>
-                            <li><i class="bi bi-telephone me-2"></i><?= setting('phone') ?></li>
+                        <?php if (setting('store_phone')): ?>
+                            <li><i class="bi bi-telephone me-2"></i><?= setting('store_phone') ?></li>
                         <?php endif; ?>
-                        <?php if (setting('whatsapp')): ?>
-                            <li><i class="bi bi-whatsapp me-2"></i><?= setting('whatsapp') ?></li>
-                        <?php endif; ?>
-                        <?php if (setting('address')): ?>
-                            <li class="mt-2"><i class="bi bi-geo-alt me-2"></i><?= setting('address') ?></li>
+                        <?php if (setting('store_whatsapp')): ?>
+                            <li><i class="bi bi-whatsapp me-2"></i>
+                                <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank" class="text-decoration-none">
+                                    <?= setting('store_phone') ?>
+                                </a>
+                            </li>
                         <?php endif; ?>
                     </ul>
+                    <?php if (setting('store_address')): ?>
+                        <p class="small mt-3 mb-1">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            <?= setting('store_address') ?><br>
+                            <?= setting('store_neighborhood') ?> - <?= setting('store_city') ?>/<?= setting('store_state') ?><br>
+                            CEP: <?= setting('store_zipcode') ?>
+                        </p>
+                    <?php endif; ?>
+                    <?php if (setting('store_cnpj')): ?>
+                        <p class="small text-muted mb-0">
+                            CNPJ: <?= setting('store_cnpj') ?>
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -834,8 +848,8 @@
     </footer>
 
     <!-- WhatsApp Button -->
-    <?php if (setting('whatsapp')): ?>
-        <a href="https://wa.me/<?= preg_replace('/\D/', '', setting('whatsapp')) ?>" target="_blank" class="whatsapp-button">
+    <?php if (setting('store_whatsapp')): ?>
+        <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank" class="whatsapp-button">
             <i class="bi bi-whatsapp"></i>
         </a>
     <?php endif; ?>
