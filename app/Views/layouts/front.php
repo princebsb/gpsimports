@@ -544,7 +544,7 @@
                 </div>
                 <div class="col-6 text-end">
                     <a href="<?= base_url('rastrear-pedido') ?>" class="me-3"><i class="bi bi-geo-alt me-1"></i>Rastrear Pedido</a>
-                    <a href="tel:<?= setting('phone') ?>"><i class="bi bi-telephone me-1"></i><?= setting('phone') ?? '(11) 99999-9999' ?></a>
+                    <a href="tel:<?= setting('store_phone') ?>"><i class="bi bi-telephone me-1"></i><?= setting('store_phone') ?: '(11) 99999-9999' ?></a>
                 </div>
             </div>
         </div>
