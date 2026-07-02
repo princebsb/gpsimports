@@ -834,36 +834,28 @@
                         <li><a href="<?= base_url('trocas-devolucoes') ?>">Trocas</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4 mb-4">
+                <div class="col-6 col-lg-2 mb-4">
                     <h5>Contato</h5>
-                    <ul class="list-unstyled">
+                    <ul class="list-unstyled small">
                         <?php if (setting('store_email')): ?>
-                            <li><i class="bi bi-envelope me-2"></i><?= setting('store_email') ?></li>
+                            <li class="mb-1"><i class="bi bi-envelope me-1"></i><?= setting('store_email') ?></li>
                         <?php endif; ?>
                         <?php if (setting('store_whatsapp')): ?>
-                            <li><i class="bi bi-whatsapp me-2"></i>
+                            <li class="mb-1"><i class="bi bi-whatsapp me-1"></i>
                                 <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank" class="text-decoration-none">
-                                    <?= format_phone(setting('store_whatsapp') ?? '') ?: setting('store_whatsapp') ?>
+                                    <?= format_phone(setting('store_whatsapp') ?? '') ?>
                                 </a>
                             </li>
                         <?php endif; ?>
                     </ul>
-                    <?php if (setting('store_address')): ?>
-                        <p class="small mt-3 mb-1">
-                            <i class="bi bi-geo-alt me-1"></i>
-                            <?= setting('store_address') ?><br>
-                            <?= setting('store_neighborhood') ?> - <?= setting('store_city') ?>/<?= setting('store_state') ?><br>
-                            CEP: <?= setting('store_zipcode') ?>
-                        </p>
-                    <?php endif; ?>
-                    <p class="small mt-3 mb-0">
+                    <p class="small mb-0">
                         <strong><?= setting('store_razao_social') ?></strong><br>
                         CNPJ: <?= setting('store_cnpj') ?>
                     </p>
-
-                    <div class="mt-4">
-                        <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 250px;">
-                    </div>
+                </div>
+                <div class="col-6 col-lg-2 mb-4">
+                    <h5>Formas de Pagamento</h5>
+                    <img src="<?= base_url('assets/images/pagamentos-mercadopago.webp') ?>" alt="Formas de Pagamento - Mercado Pago" class="img-fluid" style="max-width: 200px;">
                 </div>
             </div>
 
