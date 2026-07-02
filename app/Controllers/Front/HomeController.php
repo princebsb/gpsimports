@@ -43,7 +43,7 @@ class HomeController extends BaseController
 
     public function about()
     {
-        return view('front/pages/about', ['title' => 'Sobre Nos']);
+        return view('front/pages/about', ['title' => 'Sobre Nós']);
     }
 
     public function contact()
