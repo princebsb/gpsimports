@@ -282,17 +282,17 @@
                             </svg>
                             <span class="ms-3 h5 mb-0">Mercado Pago - Pagamento Seguro</span>
                         </div>
-                        <p class="mb-2">Voce sera redirecionado ao Mercado Pago para escolher a forma de pagamento:</p>
+                        <p class="mb-2">Você será redirecionado ao Mercado Pago para escolher a forma de pagamento:</p>
                         <ul class="mb-3">
-                            <li><i class="bi bi-credit-card me-1"></i>Cartao de Credito em ate 6x</li>
-                            <li><i class="bi bi-qr-code me-1"></i>PIX (aprovacao instantanea)</li>
-                            <li><i class="bi bi-upc me-1"></i>Boleto Bancario</li>
+                            <li><i class="bi bi-credit-card me-1"></i>Cartão de Crédito em até 6x</li>
+                            <li><i class="bi bi-qr-code me-1"></i>PIX (aprovação instantânea)</li>
+                            <li><i class="bi bi-upc me-1"></i>Boleto Bancário</li>
                         </ul>
                         <div class="alert alert-info small mb-0">
                             <i class="bi bi-shield-lock me-1"></i>
-                            <strong>Pagamento 100% Seguro:</strong> Nao armazenamos dados do seu cartao de credito.
-                            Todo o processo de pagamento e realizado diretamente pelo Mercado Pago,
-                            garantindo total seguranca nas suas transacoes.
+                            <strong>Pagamento 100% Seguro:</strong> Não armazenamos dados do seu cartão de crédito.
+                            Todo o processo de pagamento é realizado diretamente pelo Mercado Pago,
+                            garantindo total segurança nas suas transações.
                         </div>
                     </div>
 

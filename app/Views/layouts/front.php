@@ -617,7 +617,7 @@
                 <div class="col-lg-6 d-none d-lg-block">
                     <form action="<?= base_url('busca') ?>" method="get" class="search-form position-relative" id="searchForm">
                         <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="O que voce procura?" id="searchInput" autocomplete="off">
+                            <input type="text" name="q" class="form-control" placeholder="O que você procura?" id="searchInput" autocomplete="off">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search"></i>
                             </button>
@@ -829,10 +829,11 @@
                 <div class="col-6 col-lg-2 mb-4">
                     <h5>Institucional</h5>
                     <ul class="list-unstyled">
-                        <li><a href="<?= base_url('sobre') ?>">Sobre Nos</a></li>
+                        <li><a href="<?= base_url('sobre') ?>">Sobre Nós</a></li>
                         <li><a href="<?= base_url('contato') ?>">Contato</a></li>
                         <li><a href="<?= base_url('politica-privacidade') ?>">Privacidade</a></li>
                         <li><a href="<?= base_url('termos-uso') ?>">Termos de Uso</a></li>
+                        <li><a href="<?= base_url('minha-conta/dados') ?>">Excluir Conta (LGPD)</a></li>
                     </ul>
                 </div>
                 <div class="col-6 col-lg-2 mb-4">
@@ -906,8 +907,8 @@
                     <i class="bi bi-shield-lock me-2"></i>
                     <span>
                         Utilizamos cookies para melhorar sua experiencia em nosso site.
-                        Ao continuar navegando, voce concorda com nossa
-                        <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Politica de Privacidade</a>.
+                        Ao continuar navegando, você concorda com nossa
+                        <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Política de Privacidade</a>.
                     </span>
                 </div>
                 <div class="cookie-buttons">
@@ -927,25 +928,25 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-gear me-2"></i>Configuracoes de Cookies</h5>
+                    <h5 class="modal-title"><i class="bi bi-gear me-2"></i>Configurações de Cookies</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted small">Escolha quais cookies voce deseja permitir. Cookies essenciais sao necessarios para o funcionamento do site.</p>
+                    <p class="text-muted small">Escolha quais cookies você deseja permitir. Cookies essenciais são necessários para o funcionamento do site.</p>
 
                     <div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" id="cookieEssential" checked disabled>
                         <label class="form-check-label" for="cookieEssential">
                             <strong>Cookies Essenciais</strong>
-                            <small class="d-block text-muted">Necessarios para o funcionamento basico do site (sempre ativos)</small>
+                            <small class="d-block text-muted">Necessários para o funcionamento básico do site (sempre ativos)</small>
                         </label>
                     </div>
 
                     <div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" id="cookieAnalytics">
                         <label class="form-check-label" for="cookieAnalytics">
-                            <strong>Cookies de Analise</strong>
-                            <small class="d-block text-muted">Nos ajudam a entender como voce usa o site</small>
+                            <strong>Cookies de Análise</strong>
+                            <small class="d-block text-muted">Nos ajudam a entender como você usa o site</small>
                         </label>
                     </div>
 
@@ -1020,7 +1021,7 @@
                 <div class="modal-body">
                     <form action="<?= base_url('busca') ?>" method="get">
                         <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="O que voce procura?" autofocus>
+                            <input type="text" name="q" class="form-control" placeholder="O que você procura?" autofocus>
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-search"></i>
                             </button>
@@ -1297,7 +1298,7 @@
 
             document.getElementById('cookieConsent').style.display = 'none';
             cookieSettingsModal.hide();
-            toastr.info('Apenas cookies essenciais serao utilizados.');
+            toastr.info('Apenas cookies essenciais serão utilizados.');
         }
 
         function loadCookiePreferences() {

@@ -125,7 +125,7 @@
                 </div>
                 <div class="card-body">
                     <p class="text-muted mb-3">
-                        De acordo com a Lei Geral de Protecao de Dados (LGPD), voce tem o direito de solicitar a exclusao dos seus dados pessoais.
+                        De acordo com a Lei Geral de Proteção de Dados (LGPD), você tem o direito de solicitar a exclusão dos seus dados pessoais.
                     </p>
 
                     <div class="row">
@@ -143,7 +143,7 @@
 
                     <p class="small text-muted mb-0">
                         <i class="bi bi-info-circle me-1"></i>
-                        Para mais informacoes, consulte nossa <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Politica de Privacidade</a>.
+                        Para mais informações, consulte nossa <a href="<?= base_url('politica-privacidade') ?>" target="_blank">Política de Privacidade</a>.
                     </p>
                 </div>
             </div>
@@ -160,7 +160,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Voce pode baixar todos os seus dados pessoais em formato JSON. Isso inclui:</p>
+                <p>Você pode baixar todos os seus dados pessoais em formato JSON. Isso inclui:</p>
                 <ul>
                     <li>Dados cadastrais (nome, email, telefone)</li>
                     <li>Enderecos salvos</li>
@@ -191,13 +191,13 @@
                 <?= csrf_field() ?>
                 <div class="modal-body">
                     <div class="alert alert-danger">
-                        <strong><i class="bi bi-exclamation-triangle me-2"></i>Atencao!</strong>
-                        <p class="mb-0 mt-2">Esta acao e irreversivel. Ao excluir sua conta:</p>
+                        <strong><i class="bi bi-exclamation-triangle me-2"></i>Atenção!</strong>
+                        <p class="mb-0 mt-2">Esta ação é irreversível. Ao excluir sua conta:</p>
                     </div>
                     <ul class="text-danger">
                         <li>Todos os seus dados pessoais serao removidos</li>
-                        <li>Seu historico de pedidos sera anonimizado</li>
-                        <li>Voce perdera acesso a sua conta permanentemente</li>
+                        <li>Seu histórico de pedidos será anonimizado</li>
+                        <li>Você perderá acesso à sua conta permanentemente</li>
                         <li>Nao sera possivel recuperar os dados</li>
                     </ul>
 
@@ -211,7 +211,7 @@
                     <div class="form-check">
                         <input type="checkbox" name="confirm_delete" id="confirmDelete" class="form-check-input" required>
                         <label class="form-check-label text-danger" for="confirmDelete">
-                            Entendo que esta acao e irreversivel e desejo excluir minha conta
+                            Entendo que esta ação é irreversível e desejo excluir minha conta
                         </label>
                     </div>
                 </div>
