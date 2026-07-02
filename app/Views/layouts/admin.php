@@ -655,6 +655,12 @@
                                     <i class="bi bi-clipboard me-1"></i>Copiar codigo
                                 </button>
                             </div>
+                            <div id="pagamentoLink" class="d-none">
+                                <p class="text-muted mb-3">Clique no botao abaixo para realizar o pagamento via Mercado Pago:</p>
+                                <a href="#" id="linkPagamento" target="_blank" class="btn btn-purple btn-lg">
+                                    <i class="bi bi-box-arrow-up-right me-2"></i>Ir para Pagamento
+                                </a>
+                            </div>
                             <div id="boletoLink" class="d-none">
                                 <a href="#" target="_blank" class="btn btn-outline-primary">
                                     <i class="bi bi-file-pdf me-1"></i>Abrir Boleto
@@ -752,20 +758,37 @@
                     document.getElementById('formAdicionarCredito').classList.add('d-none');
                     document.getElementById('resultadoPagamento').classList.remove('d-none');
 
-                    if (metodo === 'pix' && data.pix_code) {
+                    // Esconder todas as opcoes primeiro
+                    document.getElementById('pixCopiaECola').classList.add('d-none');
+                    document.getElementById('pixQrCode').classList.add('d-none');
+                    document.getElementById('pagamentoLink').classList.add('d-none');
+                    document.getElementById('boletoLink').classList.add('d-none');
+
+                    // Se tem link de pagamento (Mercado Pago)
+                    if (data.link) {
+                        document.getElementById('pagamentoLink').classList.remove('d-none');
+                        document.getElementById('linkPagamento').href = data.link;
+                        toastr.success('Link de pagamento gerado! Clique para pagar.');
+                    }
+                    // Se tem codigo PIX
+                    else if (data.pix_code) {
+                        document.getElementById('pixCopiaECola').classList.remove('d-none');
                         document.getElementById('pixCode').value = data.pix_code;
                         if (data.qr_code) {
+                            document.getElementById('pixQrCode').classList.remove('d-none');
                             document.getElementById('pixQrCode').innerHTML = '<img src="' + data.qr_code + '" class="img-fluid" style="max-width: 200px;">';
                         }
-                    } else if (metodo === 'boleto' && data.boleto_url) {
-                        document.getElementById('pixCopiaECola').classList.add('d-none');
+                        toastr.success('PIX gerado com sucesso!');
+                    }
+                    // Se tem URL de boleto
+                    else if (data.boleto_url) {
                         document.getElementById('boletoLink').classList.remove('d-none');
                         document.getElementById('boletoLink').querySelector('a').href = data.boleto_url;
+                        toastr.success('Boleto gerado com sucesso!');
                     }
-
-                    toastr.success('Pagamento gerado com sucesso!');
                 } else {
                     toastr.error(data.message || 'Erro ao gerar pagamento');
+                    console.log('Erro detalhes:', data);
                 }
             })
             .catch(error => {

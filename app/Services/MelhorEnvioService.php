@@ -216,19 +216,28 @@ class MelhorEnvioService
             return ['success' => false, 'message' => 'Token nao configurado'];
         }
 
+        // Formato correto da API Melhor Envio
         $payload = [
+            'gateway' => 'mercadopago',
             'value' => $value,
-            'payment_method' => $method, // pix or boleto
         ];
 
         try {
             $this->token = $token;
-            $response = $this->request('POST', '/me/balance', $payload);
 
-            if (!empty($response['id'])) {
+            // Log para debug
+            log_message('debug', 'MelhorEnvio addCredits Request: ' . json_encode($payload));
+
+            $response = $this->requestWithDetails('POST', '/me/balance', $payload);
+
+            log_message('debug', 'MelhorEnvio addCredits Response: ' . json_encode($response));
+
+            // A API retorna um link para pagamento
+            if (!empty($response['id']) || !empty($response['link'])) {
                 return [
                     'success' => true,
-                    'id' => $response['id'],
+                    'id' => $response['id'] ?? null,
+                    'link' => $response['link'] ?? null,
                     'pix_code' => $response['pix']['qrcode'] ?? $response['digitable_line'] ?? null,
                     'qr_code' => $response['pix']['qrcode_image'] ?? null,
                     'boleto_url' => $response['pdf'] ?? $response['link'] ?? null,
@@ -236,9 +245,15 @@ class MelhorEnvioService
                 ];
             }
 
+            // Se a resposta tem erro
+            $errorMsg = $response['message'] ?? $response['error'] ?? 'Erro ao gerar pagamento';
+            if (isset($response['errors']) && is_array($response['errors'])) {
+                $errorMsg = implode(', ', array_values($response['errors']));
+            }
+
             return [
                 'success' => false,
-                'message' => $response['message'] ?? 'Erro ao gerar pagamento',
+                'message' => $errorMsg,
                 'data' => $response,
             ];
 
@@ -246,6 +261,55 @@ class MelhorEnvioService
             log_message('error', 'MelhorEnvio addCredits Error: ' . $e->getMessage());
             return ['success' => false, 'message' => $e->getMessage()];
         }
+    }
+
+    /**
+     * Make API request with full response details
+     */
+    protected function requestWithDetails(string $method, string $endpoint, array $data = []): array
+    {
+        $ch = curl_init();
+
+        $url = $this->baseUrl . $endpoint;
+
+        $headers = [
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->token,
+            'User-Agent: GPSImports/1.0',
+        ];
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => true,
+        ]);
+
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+
+        curl_close($ch);
+
+        if ($error) {
+            throw new \Exception('cURL Error: ' . $error);
+        }
+
+        $decoded = json_decode($response, true) ?? [];
+
+        // Log HTTP errors but return response for better error handling
+        if ($httpCode >= 400) {
+            log_message('error', "MelhorEnvio API Error HTTP {$httpCode}: " . $response);
+        }
+
+        return $decoded;
     }
 
     /**
