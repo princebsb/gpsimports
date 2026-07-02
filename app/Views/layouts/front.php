@@ -880,11 +880,19 @@
                         <small>&copy; <?= date('Y') ?> <?= setting('store_name') ?? 'GPS Imports' ?>. Todos os direitos reservados.</small>
                     </div>
                     <div class="col-lg-6 text-lg-end">
-                        <div class="payment-icons">
-                            <img src="<?= base_url('assets/images/payments/visa.svg') ?>" alt="Visa">
-                            <img src="<?= base_url('assets/images/payments/mastercard.svg') ?>" alt="Mastercard">
-                            <img src="<?= base_url('assets/images/payments/pix.svg') ?>" alt="PIX">
-                            <img src="<?= base_url('assets/images/payments/boleto.svg') ?>" alt="Boleto">
+                        <div class="payment-icons d-flex justify-content-lg-end gap-2 flex-wrap">
+                            <span class="badge bg-light text-dark px-2 py-1">
+                                <i class="bi bi-credit-card me-1"></i>Visa
+                            </span>
+                            <span class="badge bg-light text-dark px-2 py-1">
+                                <i class="bi bi-credit-card me-1"></i>Mastercard
+                            </span>
+                            <span class="badge bg-light text-dark px-2 py-1">
+                                <i class="bi bi-qr-code me-1"></i>PIX
+                            </span>
+                            <span class="badge bg-light text-dark px-2 py-1">
+                                <i class="bi bi-upc me-1"></i>Boleto
+                            </span>
                         </div>
                     </div>
                 </div>
