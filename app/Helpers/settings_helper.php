@@ -162,6 +162,11 @@ if (!function_exists('format_phone')) {
     {
         $phone = preg_replace('/\D/', '', $phone);
 
+        // Remove codigo do pais (55) se existir
+        if (strlen($phone) >= 12 && substr($phone, 0, 2) === '55') {
+            $phone = substr($phone, 2);
+        }
+
         if (strlen($phone) === 11) {
             return '(' . substr($phone, 0, 2) . ') ' . substr($phone, 2, 5) . '-' . substr($phone, 7);
         } elseif (strlen($phone) === 10) {
