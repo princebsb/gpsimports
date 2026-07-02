@@ -2,139 +2,121 @@
 
 namespace App\Libraries\Payment;
 
-use MercadoPago\SDK;
-use MercadoPago\Preference;
-use MercadoPago\Item;
-use MercadoPago\Payer;
-
 class MercadoPagoCheckoutPro
 {
     protected string $accessToken;
     protected string $publicKey;
     protected bool $sandbox;
+    protected string $apiUrl = 'https://api.mercadopago.com';
 
     public function __construct()
     {
         $this->accessToken = env('mercadopago.accessToken', '');
         $this->publicKey = env('mercadopago.publicKey', '');
         $this->sandbox = env('mercadopago.sandbox', false) === 'true' || env('mercadopago.sandbox', false) === true;
-
-        // Configurar SDK v2
-        SDK::setAccessToken($this->accessToken);
     }
 
     /**
-     * Criar preferencia de pagamento para Checkout Pro
+     * Criar preferencia de pagamento para Checkout Pro (via API REST)
      */
     public function createPreference(array $order, array $items, array $customer): array
     {
         try {
-            $preference = new Preference();
-
             // Preparar itens
             $preferenceItems = [];
             foreach ($items as $item) {
-                $mpItem = new Item();
-                $mpItem->id = (string) ($item['product_id'] ?? $item['id'] ?? '');
-                $mpItem->title = $item['name'];
-                $mpItem->quantity = (int) $item['quantity'];
-                $mpItem->unit_price = (float) $item['price'];
-                $mpItem->currency_id = 'BRL';
-                $preferenceItems[] = $mpItem;
+                $preferenceItems[] = [
+                    'id' => (string) ($item['product_id'] ?? $item['id'] ?? ''),
+                    'title' => $item['name'],
+                    'quantity' => (int) $item['quantity'],
+                    'unit_price' => (float) $item['price'],
+                    'currency_id' => 'BRL',
+                ];
             }
 
             // Adicionar frete como item separado se houver custo de envio
             $shippingCost = (float) ($order['shipping_cost'] ?? 0);
             if ($shippingCost > 0) {
-                $shippingItem = new Item();
-                $shippingItem->id = 'FRETE';
-                $shippingItem->title = 'Frete - ' . ($order['shipping_method'] ?? 'Envio');
-                $shippingItem->quantity = 1;
-                $shippingItem->unit_price = $shippingCost;
-                $shippingItem->currency_id = 'BRL';
-                $preferenceItems[] = $shippingItem;
+                $preferenceItems[] = [
+                    'id' => 'FRETE',
+                    'title' => 'Frete - ' . ($order['shipping_method'] ?? 'Envio'),
+                    'quantity' => 1,
+                    'unit_price' => $shippingCost,
+                    'currency_id' => 'BRL',
+                ];
             }
 
-            $preference->items = $preferenceItems;
-
             // Dados do pagador
-            $payer = new Payer();
             $nameParts = explode(' ', $customer['name']);
-            $payer->name = $nameParts[0];
-            $payer->surname = count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : $nameParts[0];
-            $payer->email = $customer['email'];
-
             $cpf = preg_replace('/\D/', '', $customer['cpf'] ?? '');
+            $phone = preg_replace('/\D/', '', $customer['phone'] ?? '');
+
+            $payer = [
+                'name' => $nameParts[0],
+                'surname' => count($nameParts) > 1 ? implode(' ', array_slice($nameParts, 1)) : $nameParts[0],
+                'email' => $customer['email'],
+            ];
+
             if ($cpf) {
-                $payer->identification = [
+                $payer['identification'] = [
                     'type' => 'CPF',
                     'number' => $cpf,
                 ];
             }
 
-            if (!empty($customer['phone'])) {
-                $phone = preg_replace('/\D/', '', $customer['phone']);
-                $payer->phone = [
+            if ($phone) {
+                $payer['phone'] = [
                     'area_code' => substr($phone, 0, 2),
                     'number' => substr($phone, 2),
                 ];
             }
 
-            $preference->payer = $payer;
-
             // URLs de retorno
             $baseUrl = base_url();
-            $preference->back_urls = [
-                'success' => $baseUrl . 'checkout/sucesso/' . $order['order_number'],
-                'failure' => $baseUrl . 'checkout/falha/' . $order['order_number'],
-                'pending' => $baseUrl . 'checkout/pendente/' . $order['order_number'],
+
+            // Montar payload da preferencia
+            $preferenceData = [
+                'items' => $preferenceItems,
+                'payer' => $payer,
+                'back_urls' => [
+                    'success' => $baseUrl . 'checkout/sucesso/' . $order['order_number'],
+                    'failure' => $baseUrl . 'checkout/falha/' . $order['order_number'],
+                    'pending' => $baseUrl . 'checkout/pendente/' . $order['order_number'],
+                ],
+                'auto_return' => 'approved',
+                'external_reference' => $order['order_number'],
+                'notification_url' => $baseUrl . 'webhook/mercadopago',
+                'statement_descriptor' => 'GPS IMPORTS',
+                'payment_methods' => [
+                    'installments' => 12,
+                    'default_installments' => 1,
+                ],
+                'expires' => true,
+                'expiration_date_from' => date('c'),
+                'expiration_date_to' => date('c', strtotime('+2 days')),
             ];
-            $preference->auto_return = 'approved';
-
-            // Referencia externa (numero do pedido)
-            $preference->external_reference = $order['order_number'];
-
-            // URL de notificacao (webhook)
-            $preference->notification_url = $baseUrl . 'webhook/mercadopago';
-
-            // Descricao no extrato
-            $preference->statement_descriptor = 'GPS IMPORTS';
-
-            // Configuracao de pagamento - parcelas
-            $preference->payment_methods = [
-                'installments' => 12, // Maximo 12 parcelas
-                'default_installments' => 1,
-                'default_payment_method_id' => null,
-                'excluded_payment_types' => [],
-                'excluded_payment_methods' => [],
-            ];
-
-            // Expiracao
-            $preference->expires = true;
-            $preference->expiration_date_from = date('c');
-            $preference->expiration_date_to = date('c', strtotime('+2 days'));
 
             // Log para debug
-            log_message('debug', 'MercadoPago Preference payment_methods: ' . json_encode($preference->payment_methods));
+            log_message('debug', 'MercadoPago Preference Request: ' . json_encode($preferenceData));
 
-            // Salvar preferencia
-            $preference->save();
+            // Fazer requisicao para API
+            $response = $this->request('POST', '/checkout/preferences', $preferenceData);
 
-            // Log da preferencia criada
-            log_message('debug', 'MercadoPago Preference created: ID=' . ($preference->id ?? 'null') . ' init_point=' . ($preference->init_point ?? 'null'));
+            // Log da resposta
+            log_message('debug', 'MercadoPago Preference Response: ' . json_encode($response));
 
-            if ($preference->id) {
+            if (!empty($response['id'])) {
                 return [
                     'success' => true,
-                    'preference_id' => $preference->id,
-                    'init_point' => $this->sandbox ? $preference->sandbox_init_point : $preference->init_point,
-                    'sandbox_init_point' => $preference->sandbox_init_point,
+                    'preference_id' => $response['id'],
+                    'init_point' => $this->sandbox ? $response['sandbox_init_point'] : $response['init_point'],
+                    'sandbox_init_point' => $response['sandbox_init_point'] ?? null,
                 ];
             }
 
             return [
                 'success' => false,
-                'message' => 'Erro ao criar preferencia de pagamento.',
+                'message' => $response['message'] ?? 'Erro ao criar preferencia de pagamento.',
             ];
 
         } catch (\Exception $e) {
@@ -144,6 +126,55 @@ class MercadoPagoCheckoutPro
                 'message' => 'Erro ao processar pagamento: ' . $e->getMessage(),
             ];
         }
+    }
+
+    /**
+     * Fazer requisicao para API do Mercado Pago
+     */
+    protected function request(string $method, string $endpoint, array $data = []): array
+    {
+        $ch = curl_init();
+        $url = $this->apiUrl . $endpoint;
+
+        $headers = [
+            'Authorization: Bearer ' . $this->accessToken,
+            'Content-Type: application/json',
+            'X-Idempotency-Key: ' . uniqid('mp_', true),
+        ];
+
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYPEER => true,
+        ]);
+
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        } elseif ($method === 'GET' && !empty($data)) {
+            $url .= '?' . http_build_query($data);
+            curl_setopt($ch, CURLOPT_URL, $url);
+        }
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        if ($error) {
+            log_message('error', 'MercadoPago cURL Error: ' . $error);
+            throw new \Exception('Erro de conexao: ' . $error);
+        }
+
+        $decoded = json_decode($response, true) ?? [];
+
+        if ($httpCode >= 400) {
+            log_message('error', 'MercadoPago API Error HTTP ' . $httpCode . ': ' . $response);
+        }
+
+        return $decoded;
     }
 
     /**
