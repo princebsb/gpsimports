@@ -192,8 +192,8 @@ class ProductModel extends Model
         // Sorting
         $sort = $filters['sort'] ?? 'newest';
         match ($sort) {
-            'price_asc' => $builder->orderBy('COALESCE(products.sale_price, products.price)', 'ASC'),
-            'price_desc' => $builder->orderBy('COALESCE(products.sale_price, products.price)', 'DESC'),
+            'price_asc' => $builder->orderBy('COALESCE(products.sale_price, products.price)', 'ASC', false),
+            'price_desc' => $builder->orderBy('COALESCE(products.sale_price, products.price)', 'DESC', false),
             'name_asc' => $builder->orderBy('products.name', 'ASC'),
             'name_desc' => $builder->orderBy('products.name', 'DESC'),
             'bestseller' => $builder->orderBy('products.sales_count', 'DESC'),
