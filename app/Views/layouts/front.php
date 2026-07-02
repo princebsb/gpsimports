@@ -869,28 +869,11 @@
                         <small>&copy; <?= date('Y') ?> <?= setting('store_name') ?? 'GPS Imports' ?>. Todos os direitos reservados.</small>
                     </div>
                     <div class="col-lg-6 text-lg-end">
-                        <div class="payment-icons d-flex justify-content-lg-end gap-2 flex-wrap align-items-center">
-                            <!-- Visa -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 750 471" style="background:#fff;border-radius:4px;padding:2px;">
-                                <path fill="#1A1F71" d="M278.2 334.2h-47.5l29.7-183.5h47.5zM524.5 153.5c-9.4-3.7-24.1-7.7-42.5-7.7-46.9 0-79.9 24.9-80.2 60.6-.3 26.4 23.6 41.1 41.6 49.9 18.5 9 24.7 14.8 24.6 22.8-.1 12.3-14.8 17.9-28.4 17.9-19 0-29.1-2.8-44.7-9.7l-6.1-2.9-6.7 41.2c11.1 5.1 31.6 9.6 52.9 9.8 49.9 0 82.3-24.6 82.7-62.7.2-20.9-12.5-36.8-39.9-49.9-16.6-8.5-26.8-14.1-26.7-22.7 0-7.6 8.6-15.7 27.2-15.7 15.5-.2 26.8 3.3 35.5 7l4.3 2.1 6.4-40z"/>
-                                <path fill="#1A1F71" d="M661.6 150.7h-36.6c-11.4 0-19.9 3.3-24.9 15.3l-70.6 168.7h49.9s8.2-22.6 10-27.6h61c1.4 6.4 5.8 27.6 5.8 27.6h44.1l-38.7-184zm-58.8 119c3.9-10.6 19-51.5 19-51.5-.3.5 3.9-10.7 6.3-17.6l3.2 15.9s9.1 44.1 11 53.2h-39.5z"/>
-                                <path fill="#1A1F71" d="M232.2 150.7L186 273.6l-4.9-25.2c-8.6-29-35.3-60.5-65.2-76.2l42.5 161.9h50.3l74.8-183.4h-51.3z"/>
-                                <path fill="#F9A533" d="M146.9 150.7H70.3l-.6 3.6c59.8 15.3 99.4 52.2 115.8 96.5l-16.7-84.8c-2.9-11.6-11.3-15-22-15.3z"/>
-                            </svg>
-                            <!-- Mastercard -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 750 471" style="background:#fff;border-radius:4px;padding:2px;">
-                                <circle fill="#EB001B" cx="250" cy="235" r="150"/>
-                                <circle fill="#F79E1B" cx="500" cy="235" r="150"/>
-                                <path fill="#FF5F00" d="M325 117.5a150 150 0 0 0 0 235 150 150 0 0 0 0-235z"/>
-                            </svg>
-                            <!-- PIX -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 512 512" style="background:#fff;border-radius:4px;padding:4px;">
-                                <path fill="#32BCAD" d="M395.7 316.3l-77.3-77.3c-8.5-8.5-22.3-8.5-30.8 0l-77.3 77.3c-8.5 8.5-22.3 8.5-30.8 0l-63.8-63.8c-8.5-8.5-8.5-22.3 0-30.8l63.8-63.8c8.5-8.5 8.5-22.3 0-30.8L102.2 50c-8.5-8.5-22.3-8.5-30.8 0L7.6 113.8c-10.1 10.1-10.1 26.6 0 36.7l135.8 135.8c8.5 8.5 8.5 22.3 0 30.8L7.6 452.9c-10.1 10.1-10.1 26.6 0 36.7l63.8 63.8c10.1 10.1 26.6 10.1 36.7 0l135.8-135.8c8.5-8.5 22.3-8.5 30.8 0l77.3 77.3c8.5 8.5 22.3 8.5 30.8 0l77.3-77.3c8.5-8.5 22.3-8.5 30.8 0l63.8 63.8c10.1 10.1 26.6 10.1 36.7 0l63.8-63.8c10.1-10.1 10.1-26.6 0-36.7l-135.8-135.8c-8.5-8.5-8.5-22.3 0-30.8L655 113.8c10.1-10.1 10.1-26.6 0-36.7L591.2 13.3c-10.1-10.1-26.6-10.1-36.7 0L418.7 149.1c-8.5 8.5-22.3 8.5-30.8 0l-77.3-77.3c-8.5-8.5-22.3-8.5-30.8 0l-77.3 77.3c-8.5 8.5-8.5 22.3 0 30.8l77.3 77.3c8.5 8.5 8.5 22.3 0 30.8l-77.3 77.3c-8.5 8.5-8.5 22.3 0 30.8l77.3 77.3c8.5 8.5 22.3 8.5 30.8 0l77.3-77.3c8.5-8.5 8.5-22.3 0-30.8z"/>
-                            </svg>
-                            <!-- Boleto -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="28" viewBox="0 0 24 24" style="background:#fff;border-radius:4px;padding:4px;">
-                                <path fill="#333" d="M2 4h2v16H2V4zm4 0h1v16H6V4zm3 0h2v16H9V4zm3 0h2v16h-2V4zm4 0h1v16h-1V4zm3 0h3v16h-3V4z"/>
-                            </svg>
+                        <div class="payment-icons d-flex justify-content-lg-end gap-1 flex-wrap align-items-center">
+                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/visa.svg" alt="Visa" height="32">
+                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/mastercard.svg" alt="Mastercard" height="32">
+                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/pix.svg" alt="PIX" height="32">
+                            <img src="https://cdn.jsdelivr.net/gh/nicholasess/payment-methods-svg-brasil@master/boleto.svg" alt="Boleto" height="32">
                         </div>
                     </div>
                 </div>
