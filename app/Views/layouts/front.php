@@ -544,7 +544,7 @@
                 </div>
                 <div class="col-6 text-end">
                     <a href="<?= base_url('rastrear-pedido') ?>" class="me-3"><i class="bi bi-geo-alt me-1"></i>Rastrear Pedido</a>
-                    <a href="tel:<?= setting('store_phone') ?>"><i class="bi bi-telephone me-1"></i><?= setting('store_phone') ?: '(11) 99999-9999' ?></a>
+                    <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank"><i class="bi bi-whatsapp me-1"></i><?= setting('store_whatsapp_display') ?: '(11) 99999-9999' ?></a>
                 </div>
             </div>
         </div>
@@ -802,13 +802,10 @@
                         <?php if (setting('store_email')): ?>
                             <li><i class="bi bi-envelope me-2"></i><?= setting('store_email') ?></li>
                         <?php endif; ?>
-                        <?php if (setting('store_phone')): ?>
-                            <li><i class="bi bi-telephone me-2"></i><?= setting('store_phone') ?></li>
-                        <?php endif; ?>
                         <?php if (setting('store_whatsapp')): ?>
                             <li><i class="bi bi-whatsapp me-2"></i>
                                 <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank" class="text-decoration-none">
-                                    <?= setting('store_phone') ?>
+                                    <?= setting('store_whatsapp_display') ?: setting('store_whatsapp') ?>
                                 </a>
                             </li>
                         <?php endif; ?>
