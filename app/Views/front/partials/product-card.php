@@ -81,14 +81,15 @@
             $pixDiscount = (float) (setting('pix_discount') ?? 5);
             $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
             ?>
-            <div class="pix-price text-success small">
+            <div class="pix-price text-success small mb-1">
                 <i class="bi bi-qr-code"></i>
                 <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
             </div>
-            <div class="installments">
+            <div class="installments small">
                 <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
                 <?php if ($installments > 1): ?>
-                    ou <?= $installments ?>x de R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?>
+                    <i class="bi bi-credit-card"></i>
+                    <?= $installments ?>x de R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

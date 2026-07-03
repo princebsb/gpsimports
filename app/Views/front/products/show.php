@@ -129,14 +129,18 @@
                         </div>
                     <?php endif; ?>
                     <div class="h2 text-primary mb-1">R$ <?= number_format($currentPrice, 2, ',', '.') ?></div>
-                    <div class="text-success mb-1">
+                    <div class="text-success mb-2">
                         <i class="bi bi-qr-code me-1"></i>
                         <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
                         <span class="badge bg-success ms-1"><?= $pixDiscount ?>% OFF</span>
                     </div>
-                    <div class="text-muted small">
+                    <div class="text-primary mb-1">
+                        <i class="bi bi-credit-card me-1"></i>
                         <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
-                        ou em ate <?= $installments ?>x de R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?> sem juros
+                        <strong><?= $installments ?>x</strong> de <strong>R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?></strong> sem juros
+                    </div>
+                    <div class="text-muted small">
+                        no cartão de crédito
                     </div>
                 <?php else: ?>
                     <div class="h2 text-warning mb-1">Consulte</div>
