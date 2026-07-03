@@ -137,7 +137,18 @@
                     <?php
                     $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3);
                     $parcelasMax = (int) (setting('installments_max') ?? 12);
-                    $taxaJuros = (float) (setting('installments_interest_rate') ?? 2.99);
+                    // Taxas de juros do Mercado Pago por parcela (CFT)
+                    $taxasPorParcela = [
+                        4 => 11.36,
+                        5 => 14.31,
+                        6 => 14.32,
+                        7 => 16.72,
+                        8 => 16.73,
+                        9 => 19.69,
+                        10 => 20.65,
+                        11 => 20.66,
+                        12 => 22.11,
+                    ];
                     ?>
                     <div class="mb-2">
                         <i class="bi bi-credit-card me-1 text-primary"></i>
@@ -168,11 +179,12 @@
                                                 if ($semJuros) {
                                                     $valorParcela = $currentPrice / $i;
                                                     $valorTotal = $currentPrice;
+                                                    $taxa = 0;
                                                 } else {
-                                                    // Calculo com juros compostos
-                                                    $taxaMensal = $taxaJuros / 100;
-                                                    $valorParcela = $currentPrice * ($taxaMensal * pow(1 + $taxaMensal, $i)) / (pow(1 + $taxaMensal, $i) - 1);
-                                                    $valorTotal = $valorParcela * $i;
+                                                    // Usar taxa especifica da parcela
+                                                    $taxa = $taxasPorParcela[$i] ?? 0;
+                                                    $valorTotal = $currentPrice * (1 + $taxa / 100);
+                                                    $valorParcela = $valorTotal / $i;
                                                 }
                                                 ?>
                                                 <tr>
@@ -182,7 +194,7 @@
                                                         <?php if ($semJuros): ?>
                                                             <span class="text-success">sem juros</span>
                                                         <?php else: ?>
-                                                            <span class="text-muted small">(<?= number_format($taxaJuros, 2, ',', '.') ?>% a.m.)</span>
+                                                            <span class="text-muted small">(<?= number_format($taxa, 2, ',', '.') ?>%)</span>
                                                         <?php endif; ?>
                                                     </td>
                                                     <td class="text-end pe-3 text-muted small">
