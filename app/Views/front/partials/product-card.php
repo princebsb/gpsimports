@@ -86,11 +86,8 @@
                 <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
             </div>
             <div class="installments small">
-                <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
-                <?php if ($installments > 1): ?>
-                    <i class="bi bi-credit-card"></i>
-                    <?= $installments ?>x de R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?>
-                <?php endif; ?>
+                <i class="bi bi-credit-card"></i>
+                3x de R$ <?= number_format($currentPrice / 3, 2, ',', '.') ?> s/ juros
             </div>
         <?php endif; ?>
 

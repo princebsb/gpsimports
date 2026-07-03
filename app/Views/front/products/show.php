@@ -134,13 +134,12 @@
                         <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
                         <span class="badge bg-success ms-1"><?= $pixDiscount ?>% OFF</span>
                     </div>
-                    <div class="text-primary mb-1">
-                        <i class="bi bi-credit-card me-1"></i>
-                        <?php $installments = max(1, min(12, floor($currentPrice / 10))); ?>
-                        <strong><?= $installments ?>x</strong> de <strong>R$ <?= number_format($currentPrice / $installments, 2, ',', '.') ?></strong> sem juros
+                    <div class="mb-1">
+                        <i class="bi bi-credit-card me-1 text-primary"></i>
+                        <strong>3x</strong> de <strong>R$ <?= number_format($currentPrice / 3, 2, ',', '.') ?></strong> sem juros
                     </div>
                     <div class="text-muted small">
-                        no cartão de crédito
+                        ou até 12x com juros no cartão
                     </div>
                 <?php else: ?>
                     <div class="h2 text-warning mb-1">Consulte</div>
