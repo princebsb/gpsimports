@@ -378,7 +378,8 @@ class MelhorEnvioService
                 'receipt' => false,
                 'own_hand' => false,
                 'reverse' => false,
-                'non_commercial' => false,
+                // Envio comercial para valores acima de R$ 4.477,36
+                'non_commercial' => ((float) $order['total'] <= 4477.36),
                 'invoice' => [
                     'key' => '',
                 ],
