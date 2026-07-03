@@ -137,16 +137,71 @@
                     <?php
                     $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3);
                     $parcelasMax = (int) (setting('installments_max') ?? 12);
+                    $taxaJuros = (float) (setting('installments_interest_rate') ?? 2.99);
                     ?>
-                    <div class="mb-1">
+                    <div class="mb-2">
                         <i class="bi bi-credit-card me-1 text-primary"></i>
                         <strong><?= $parcelasSemJuros ?>x</strong> de <strong>R$ <?= number_format($currentPrice / $parcelasSemJuros, 2, ',', '.') ?></strong> sem juros
                     </div>
-                    <?php if ($parcelasMax > $parcelasSemJuros): ?>
-                    <div class="text-muted small">
-                        ou até <?= $parcelasMax ?>x com juros no cartão
+                    <div>
+                        <a href="#" class="text-primary small text-decoration-none" data-bs-toggle="modal" data-bs-target="#modalParcelas">
+                            <i class="bi bi-list-ul me-1"></i>Ver todas as parcelas
+                        </a>
                     </div>
-                    <?php endif; ?>
+
+                    <!-- Modal Parcelas -->
+                    <div class="modal fade" id="modalParcelas" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <i class="bi bi-credit-card me-2"></i>Parcelas no Cartão
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body p-0">
+                                    <table class="table table-hover mb-0">
+                                        <tbody>
+                                            <?php for ($i = 1; $i <= $parcelasMax; $i++): ?>
+                                                <?php
+                                                $semJuros = $i <= $parcelasSemJuros;
+                                                if ($semJuros) {
+                                                    $valorParcela = $currentPrice / $i;
+                                                    $valorTotal = $currentPrice;
+                                                } else {
+                                                    // Calculo com juros compostos
+                                                    $taxaMensal = $taxaJuros / 100;
+                                                    $valorParcela = $currentPrice * ($taxaMensal * pow(1 + $taxaMensal, $i)) / (pow(1 + $taxaMensal, $i) - 1);
+                                                    $valorTotal = $valorParcela * $i;
+                                                }
+                                                ?>
+                                                <tr>
+                                                    <td class="ps-3">
+                                                        <strong><?= $i ?>x</strong> de
+                                                        <strong>R$ <?= number_format($valorParcela, 2, ',', '.') ?></strong>
+                                                        <?php if ($semJuros): ?>
+                                                            <span class="text-success">sem juros</span>
+                                                        <?php else: ?>
+                                                            <span class="text-muted small">(<?= number_format($taxaJuros, 2, ',', '.') ?>% a.m.)</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td class="text-end pe-3 text-muted small">
+                                                        Total: R$ <?= number_format($valorTotal, 2, ',', '.') ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endfor; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer bg-light">
+                                    <small class="text-muted">
+                                        <i class="bi bi-shield-check me-1"></i>
+                                        Pagamento seguro via Mercado Pago
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <?php else: ?>
                     <div class="h2 text-warning mb-1">Consulte</div>
                     <div class="text-muted small">
