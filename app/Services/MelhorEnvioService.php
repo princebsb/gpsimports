@@ -92,12 +92,17 @@ class MelhorEnvioService
             'User-Agent: GPSImports/1.0',
         ];
 
+        // Configurar CA bundle para SSL (Windows/WAMP)
+        $caBundle = 'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem';
+
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_CAINFO => file_exists($caBundle) ? $caBundle : null,
         ]);
 
         if ($method === 'POST') {
@@ -213,13 +218,13 @@ class MelhorEnvioService
     {
         $token = $this->getAccessToken();
         if (empty($token)) {
-            return ['success' => false, 'message' => 'Token nao configurado'];
+            return ['success' => false, 'message' => 'Token do Melhor Envio nao configurado. Acesse /melhor-envio/autorizar'];
         }
 
-        // Formato correto da API Melhor Envio
+        // Formato da API Melhor Envio - gateway pode ser: mercadopago, picpay, ou moip
         $payload = [
             'gateway' => 'mercadopago',
-            'value' => $value,
+            'value' => (float) $value,
         ];
 
         try {
@@ -232,24 +237,76 @@ class MelhorEnvioService
 
             log_message('debug', 'MelhorEnvio addCredits Response: ' . json_encode($response));
 
-            // A API retorna um link para pagamento
-            if (!empty($response['id']) || !empty($response['link'])) {
+            // Verificar diferentes formatos de resposta da API
+            // Formato 1: Link direto de pagamento
+            if (!empty($response['link'])) {
                 return [
                     'success' => true,
                     'id' => $response['id'] ?? null,
-                    'link' => $response['link'] ?? null,
+                    'link' => $response['link'],
+                    'data' => $response,
+                ];
+            }
+
+            // Formato 2: Resposta com init_point (Mercado Pago)
+            if (!empty($response['init_point'])) {
+                return [
+                    'success' => true,
+                    'id' => $response['id'] ?? null,
+                    'link' => $response['init_point'],
+                    'data' => $response,
+                ];
+            }
+
+            // Formato 3: Resposta com payment_url
+            if (!empty($response['payment_url'])) {
+                return [
+                    'success' => true,
+                    'id' => $response['id'] ?? null,
+                    'link' => $response['payment_url'],
+                    'data' => $response,
+                ];
+            }
+
+            // Formato 4: PIX direto
+            if (!empty($response['pix']['qrcode']) || !empty($response['digitable_line'])) {
+                return [
+                    'success' => true,
+                    'id' => $response['id'] ?? null,
                     'pix_code' => $response['pix']['qrcode'] ?? $response['digitable_line'] ?? null,
                     'qr_code' => $response['pix']['qrcode_image'] ?? null,
-                    'boleto_url' => $response['pdf'] ?? $response['link'] ?? null,
+                    'data' => $response,
+                ];
+            }
+
+            // Formato 5: ID de transacao criada (precisa redirecionar para pagamento)
+            if (!empty($response['id']) && !empty($response['status'])) {
+                // Construir link do Melhor Envio para pagamento
+                $paymentLink = str_replace('/api/v2', '', $this->baseUrl) . '/painel/carteira/pagamento/' . $response['id'];
+                return [
+                    'success' => true,
+                    'id' => $response['id'],
+                    'link' => $paymentLink,
                     'data' => $response,
                 ];
             }
 
             // Se a resposta tem erro
-            $errorMsg = $response['message'] ?? $response['error'] ?? 'Erro ao gerar pagamento';
+            $errorMsg = $response['message'] ?? $response['error'] ?? 'Resposta inesperada da API';
             if (isset($response['errors']) && is_array($response['errors'])) {
-                $errorMsg = implode(', ', array_values($response['errors']));
+                $errorsFlat = [];
+                foreach ($response['errors'] as $field => $msgs) {
+                    if (is_array($msgs)) {
+                        $errorsFlat[] = $field . ': ' . implode(', ', $msgs);
+                    } else {
+                        $errorsFlat[] = $msgs;
+                    }
+                }
+                $errorMsg = implode(' | ', $errorsFlat);
             }
+
+            // Log da resposta completa para debug
+            log_message('error', 'MelhorEnvio addCredits - Resposta sem link: ' . json_encode($response));
 
             return [
                 'success' => false,
@@ -279,12 +336,17 @@ class MelhorEnvioService
             'User-Agent: GPSImports/1.0',
         ];
 
+        // Configurar CA bundle para SSL (Windows/WAMP)
+        $caBundle = 'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem';
+
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_CAINFO => file_exists($caBundle) ? $caBundle : null,
         ]);
 
         if ($method === 'POST') {

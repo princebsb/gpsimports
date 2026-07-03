@@ -168,12 +168,17 @@ class MercadoPagoCheckoutPro
             'X-Idempotency-Key: ' . uniqid('mp_', true),
         ];
 
+        // Configurar CA bundle para SSL (Windows/WAMP)
+        $caBundle = 'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem';
+
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => $headers,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYHOST => 2,
+            CURLOPT_CAINFO => file_exists($caBundle) ? $caBundle : null,
         ]);
 
         if ($method === 'POST') {

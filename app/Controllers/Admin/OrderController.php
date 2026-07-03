@@ -404,7 +404,19 @@ class OrderController extends BaseController
         }
 
         $melhorEnvio = new \App\Services\MelhorEnvioService();
+
+        // Verificar se esta conectado
+        if (!$melhorEnvio->isConnected()) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Melhor Envio nao conectado. Acesse /melhor-envio/autorizar para conectar.'
+            ]);
+        }
+
         $result = $melhorEnvio->addCredits($valor, $metodo);
+
+        // Log do resultado para debug
+        log_message('debug', 'adicionarCreditoME result: ' . json_encode($result));
 
         return $this->response->setJSON($result);
     }
