@@ -193,12 +193,10 @@
                                                         <strong>R$ <?= number_format($valorParcela, 2, ',', '.') ?></strong>
                                                         <?php if ($semJuros): ?>
                                                             <span class="text-success">sem juros</span>
-                                                        <?php else: ?>
-                                                            <span class="text-muted small">(<?= number_format($taxa, 2, ',', '.') ?>%)</span>
                                                         <?php endif; ?>
                                                     </td>
                                                     <td class="text-end pe-3 text-muted small">
-                                                        Total: R$ <?= number_format($valorTotal, 2, ',', '.') ?>
+                                                        R$ <?= number_format($valorTotal, 2, ',', '.') ?>
                                                     </td>
                                                 </tr>
                                             <?php endfor; ?>
