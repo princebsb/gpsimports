@@ -394,7 +394,14 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
-            $response = $this->request('POST', '/me/cart', $payload);
+
+            // Log do payload para debug
+            log_message('debug', 'MelhorEnvio addToCart Payload: ' . json_encode($payload));
+
+            $response = $this->requestWithDetails('POST', '/me/cart', $payload);
+
+            // Log da resposta
+            log_message('debug', 'MelhorEnvio addToCart Response: ' . json_encode($response));
 
             if (!empty($response['id'])) {
                 return [
@@ -404,9 +411,23 @@ class MelhorEnvioService
                 ];
             }
 
+            // Capturar erro detalhado
+            $errorMsg = $response['message'] ?? 'Erro ao adicionar ao carrinho';
+            if (!empty($response['errors'])) {
+                $errorsDetail = [];
+                foreach ($response['errors'] as $field => $msgs) {
+                    if (is_array($msgs)) {
+                        $errorsDetail[] = $field . ': ' . implode(', ', $msgs);
+                    } else {
+                        $errorsDetail[] = $field . ': ' . $msgs;
+                    }
+                }
+                $errorMsg = implode(' | ', $errorsDetail);
+            }
+
             return [
                 'success' => false,
-                'message' => $response['message'] ?? 'Erro ao adicionar ao carrinho',
+                'message' => $errorMsg,
                 'errors' => $response['errors'] ?? [],
             ];
 
