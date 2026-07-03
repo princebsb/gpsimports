@@ -25,6 +25,21 @@
             <h5>Nenhum produto encontrado</h5>
             <p class="text-muted">Tente buscar por outros termos ou navegue pelas categorias.</p>
             <a href="<?= base_url('produtos') ?>" class="btn btn-primary">Ver todos os produtos</a>
+
+            <!-- Mensagem de contato -->
+            <div class="mt-4 p-4 bg-light rounded">
+                <h6 class="mb-3"><i class="bi bi-headset me-2"></i>Nao encontrou o que procura?</h6>
+                <p class="text-muted mb-3">Entre em contato conosco que nos achamos o produto para voce!</p>
+                <?php if (setting('store_whatsapp')): ?>
+                    <a href="https://wa.me/<?= setting('store_whatsapp') ?>?text=<?= urlencode('Olá! Estou procurando um produto que não encontrei no site: ' . $term) ?>" target="_blank" class="btn btn-success">
+                        <i class="bi bi-whatsapp me-2"></i>Falar no WhatsApp
+                    </a>
+                <?php else: ?>
+                    <a href="<?= base_url('contato') ?>" class="btn btn-outline-primary">
+                        <i class="bi bi-envelope me-2"></i>Entrar em contato
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     <?php else: ?>
         <div class="row g-4">

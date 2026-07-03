@@ -102,9 +102,26 @@
             <?php endif; ?>
 
             <?php if (empty($products)): ?>
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Nenhum produto encontrado nesta categoria.
+                <div class="text-center py-5">
+                    <i class="bi bi-box-seam fs-1 text-muted mb-3 d-block"></i>
+                    <h5>Nenhum produto encontrado</h5>
+                    <p class="text-muted">Nenhum produto encontrado nesta categoria.</p>
+                    <a href="<?= base_url('produtos') ?>" class="btn btn-outline-secondary">Ver todos os produtos</a>
+
+                    <!-- Mensagem de contato -->
+                    <div class="mt-4 p-4 bg-light rounded">
+                        <h6 class="mb-3"><i class="bi bi-headset me-2"></i>Nao encontrou o que procura?</h6>
+                        <p class="text-muted mb-3">Entre em contato conosco que nos achamos o produto para voce!</p>
+                        <?php if (setting('store_whatsapp')): ?>
+                            <a href="https://wa.me/<?= setting('store_whatsapp') ?>?text=<?= urlencode('Olá! Estou procurando um produto da categoria ' . $category['name'] . ' que não encontrei no site.') ?>" target="_blank" class="btn btn-success">
+                                <i class="bi bi-whatsapp me-2"></i>Falar no WhatsApp
+                            </a>
+                        <?php else: ?>
+                            <a href="<?= base_url('contato') ?>" class="btn btn-outline-primary">
+                                <i class="bi bi-envelope me-2"></i>Entrar em contato
+                            </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php else: ?>
                 <div class="row g-4">
