@@ -394,9 +394,15 @@
                 </form>
 
                 <div class="mt-3">
-                    <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/cotar-frete') ?>" class="btn btn-outline-secondary btn-sm w-100">
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100" onclick="cotarFrete()" id="btnCotarFrete">
                         <i class="bi bi-calculator me-1"></i>Cotar Frete
-                    </a>
+                    </button>
+                </div>
+
+                <!-- Resultado da Cotacao -->
+                <div id="resultadoCotacao" class="mt-3" style="display: none;">
+                    <div class="small text-muted mb-2"><i class="bi bi-truck me-1"></i>Opcoes de Frete:</div>
+                    <div id="listaCotacoes"></div>
                 </div>
 
                 <!-- Adicionar Creditos -->
@@ -497,6 +503,70 @@ function adicionarCredito() {
     .catch(error => {
         alert('Erro na requisicao: ' + error);
     });
+}
+
+function cotarFrete() {
+    const btn = document.getElementById('btnCotarFrete');
+    const resultado = document.getElementById('resultadoCotacao');
+    const lista = document.getElementById('listaCotacoes');
+
+    // Pegar dimensoes do formulario
+    const form = document.getElementById('formEtiqueta');
+    const weight = form ? form.querySelector('[name="weight"]').value : 0.5;
+    const height = form ? form.querySelector('[name="height"]').value : 10;
+    const width = form ? form.querySelector('[name="width"]').value : 15;
+    const length = form ? form.querySelector('[name="length"]').value : 20;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Cotando...';
+
+    const url = `<?= base_url('admin/pedidos/' . $order['id'] . '/cotar-frete') ?>?weight=${weight}&height=${height}&width=${width}&length=${length}`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-calculator me-1"></i>Cotar Frete';
+
+            const saldo = data.balance || 0;
+
+            if (data.success && data.quotes && data.quotes.length > 0) {
+                let html = `<div class="alert alert-info py-2 mb-2">
+                    <i class="bi bi-wallet2 me-1"></i>Saldo: <strong>R$ ${saldo.toFixed(2).replace('.', ',')}</strong>
+                </div>`;
+                data.quotes.forEach(quote => {
+                    const falta = quote.price > saldo ? (quote.price - saldo) : 0;
+                    const statusClass = falta > 0 ? 'text-danger' : 'text-success';
+                    const statusIcon = falta > 0 ? 'x-circle' : 'check-circle';
+
+                    html += `
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <div>
+                                <strong>${quote.name}</strong>
+                                <br><small class="text-muted">${quote.company} - ${quote.deadline} dias</small>
+                            </div>
+                            <div class="text-end">
+                                <strong>R$ ${quote.price.toFixed(2).replace('.', ',')}</strong>
+                                <br><small class="${statusClass}">
+                                    <i class="bi bi-${statusIcon}"></i>
+                                    ${falta > 0 ? 'Falta R$ ' + falta.toFixed(2).replace('.', ',') : 'OK'}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                });
+                lista.innerHTML = html;
+                resultado.style.display = 'block';
+            } else {
+                lista.innerHTML = '<div class="alert alert-warning py-2">Nenhuma cotacao disponivel.</div>';
+                resultado.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-calculator me-1"></i>Cotar Frete';
+            alert('Erro ao cotar frete: ' + error);
+        });
 }
 </script>
 <?= $this->endSection() ?>

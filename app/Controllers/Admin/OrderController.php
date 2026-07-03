@@ -227,23 +227,26 @@ class OrderController extends BaseController
         $order = $this->orderModel->getWithItems($id);
 
         if (!$order) {
-            return redirect()->back()->with('error', 'Pedido nao encontrado.');
+            return $this->response->setJSON(['success' => false, 'message' => 'Pedido nao encontrado.']);
         }
 
         $melhorEnvio = new \App\Services\MelhorEnvioService();
 
+        // Usar dimensoes do request se fornecidas, senao usar padrao
         $package = [
-            'weight' => 0.5,
-            'height' => 10,
-            'width' => 15,
-            'length' => 20,
+            'weight' => (float) ($this->request->getGet('weight') ?: 0.5),
+            'height' => (int) ($this->request->getGet('height') ?: 10),
+            'width' => (int) ($this->request->getGet('width') ?: 15),
+            'length' => (int) ($this->request->getGet('length') ?: 20),
         ];
 
         $quotes = $melhorEnvio->quoteForOrder($order, $package);
+        $balance = $melhorEnvio->getBalance();
 
         return $this->response->setJSON([
             'success' => true,
             'quotes' => $quotes,
+            'balance' => $balance,
         ]);
     }
 
@@ -272,10 +275,32 @@ class OrderController extends BaseController
 
         $melhorEnvio = new \App\Services\MelhorEnvioService();
 
+        // Buscar cotacao para saber o valor do frete
+        $quotes = $melhorEnvio->quoteForOrder($order, $package);
+        $shippingCost = 0;
+        foreach ($quotes as $quote) {
+            if ($quote['code'] == $serviceId) {
+                $shippingCost = $quote['price'];
+                break;
+            }
+        }
+
+        // Se nao encontrou o servico especifico, pegar o primeiro como estimativa
+        if ($shippingCost == 0 && !empty($quotes)) {
+            $shippingCost = $quotes[0]['price'];
+        }
+
         // Verificar saldo antes de continuar
         $balance = $melhorEnvio->getBalance();
-        if ($balance !== null && $balance < 15) {
-            return redirect()->back()->with('error', 'Saldo insuficiente no Melhor Envio: R$ ' . number_format($balance, 2, ',', '.') . '. Adicione creditos antes de gerar etiquetas.');
+        if ($balance !== null && $shippingCost > 0 && $balance < $shippingCost) {
+            $falta = $shippingCost - $balance;
+            return redirect()->back()->with('error',
+                'Saldo insuficiente no Melhor Envio. ' .
+                'Saldo: R$ ' . number_format($balance, 2, ',', '.') . ' | ' .
+                'Frete: R$ ' . number_format($shippingCost, 2, ',', '.') . ' | ' .
+                'Falta: R$ ' . number_format($falta, 2, ',', '.') . '. ' .
+                'Adicione creditos antes de gerar a etiqueta.'
+            );
         }
 
         // 1. Adicionar ao carrinho
