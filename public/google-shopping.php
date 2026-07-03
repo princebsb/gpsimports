@@ -4,66 +4,55 @@
  * URL: https://gpsimports.com.br/google-shopping.php
  */
 
-// Carregar configuracoes do CodeIgniter
-require_once __DIR__ . '/../vendor/autoload.php';
+// Definir o path base
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
 
-// Configuracao do banco de dados
-$dbHost = 'localhost';
-$dbName = 'u699148595_gpsimports';
-$dbUser = 'u699148595_gpsimports';
-$dbPass = ''; // Preencher com a senha
+// Carregar o autoload do Composer
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-// Tentar carregar do .env
-$envFile = __DIR__ . '/../.env';
-if (file_exists($envFile)) {
-    $env = parse_ini_file($envFile);
-    $dbHost = $env['database.default.hostname'] ?? $dbHost;
-    $dbName = $env['database.default.database'] ?? $dbName;
-    $dbUser = $env['database.default.username'] ?? $dbUser;
-    $dbPass = $env['database.default.password'] ?? $dbPass;
-}
+// Carregar o bootstrap do CodeIgniter
+$paths = require dirname(__DIR__) . '/app/Config/Paths.php';
+
+// Boot do sistema
+require_once $paths->systemDirectory . '/Boot.php';
+
+// Carregar configuracoes do banco
+$db = \Config\Database::connect();
 
 // Configuracoes da loja
-$storeUrl = 'https://gpsimports.com.br';
+$storeUrl = rtrim(base_url(), '/');
 $storeName = 'GPS Imports';
 
-try {
-    $pdo = new PDO("mysql:host={$dbHost};dbname={$dbName};charset=utf8mb4", $dbUser, $dbPass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    header('HTTP/1.1 500 Internal Server Error');
-    die('Erro de conexao com o banco de dados');
-}
-
 // Buscar produtos ativos com estoque
-$sql = "
-    SELECT
-        p.id,
-        p.sku,
-        p.name,
-        p.slug,
-        p.short_description,
-        p.description,
-        p.price,
-        p.sale_price,
-        p.stock,
-        p.weight,
-        p.featured_image,
-        p.gtin,
-        p.mpn,
-        c.name as category_name,
-        b.name as brand_name
-    FROM products p
-    LEFT JOIN categories c ON p.category_id = c.id
-    LEFT JOIN brands b ON p.brand_id = b.id
-    WHERE p.status = 'active'
-    AND p.price > 0
-    AND (p.stock > 0 OR p.manage_stock = 0)
-    ORDER BY p.id DESC
-";
+$builder = $db->table('products p');
+$builder->select('
+    p.id,
+    p.sku,
+    p.name,
+    p.slug,
+    p.short_description,
+    p.description,
+    p.price,
+    p.sale_price,
+    p.stock,
+    p.weight,
+    p.featured_image,
+    p.gtin,
+    p.mpn,
+    c.name as category_name,
+    b.name as brand_name
+');
+$builder->join('categories c', 'p.category_id = c.id', 'left');
+$builder->join('brands b', 'p.brand_id = b.id', 'left');
+$builder->where('p.status', 'active');
+$builder->where('p.price >', 0);
+$builder->groupStart();
+$builder->where('p.stock >', 0);
+$builder->orWhere('p.manage_stock', 0);
+$builder->groupEnd();
+$builder->orderBy('p.id', 'DESC');
 
-$stmt = $pdo->query($sql);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$products = $builder->get()->getResultArray();
 
 // Gerar XML
 header('Content-Type: application/xml; charset=utf-8');
