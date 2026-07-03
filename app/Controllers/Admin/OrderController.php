@@ -95,6 +95,26 @@ class OrderController extends BaseController
         return redirect()->back()->with('success', 'Status atualizado com sucesso!');
     }
 
+    /**
+     * Alterar status via URL (GET)
+     */
+    public function changeStatus($id, $status)
+    {
+        $validStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'];
+
+        if (!in_array($status, $validStatuses)) {
+            return redirect()->to('/admin/pedidos/' . $id)->with('error', 'Status invalido.');
+        }
+
+        $result = $this->orderService->updateStatus($id, $status, null, false);
+
+        if (!$result) {
+            return redirect()->to('/admin/pedidos/' . $id)->with('error', 'Erro ao atualizar status.');
+        }
+
+        return redirect()->to('/admin/pedidos/' . $id)->with('success', 'Status alterado para ' . $status . '!');
+    }
+
     public function addTracking($id)
     {
         $trackingCode = $this->request->getPost('tracking_code');

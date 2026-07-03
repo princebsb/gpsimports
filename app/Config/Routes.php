@@ -162,6 +162,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->get('pedidos/(:num)', 'OrderController::show/$1');
         $routes->post('pedidos/status/(:num)', 'OrderController::updateStatus/$1');
         $routes->post('pedidos/(:num)/status', 'OrderController::updateStatus/$1');
+        $routes->get('pedidos/(:num)/status/(:segment)', 'OrderController::changeStatus/$1/$2');
         $routes->post('pedidos/rastreio/(:num)', 'OrderController::addTracking/$1');
         $routes->get('pedidos/imprimir/(:num)', 'OrderController::print/$1');
         $routes->get('pedidos/exportar', 'OrderController::export');
