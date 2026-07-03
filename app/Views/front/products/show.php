@@ -134,13 +134,19 @@
                         <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
                         <span class="badge bg-success ms-1"><?= $pixDiscount ?>% OFF</span>
                     </div>
+                    <?php
+                    $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3);
+                    $parcelasMax = (int) (setting('installments_max') ?? 12);
+                    ?>
                     <div class="mb-1">
                         <i class="bi bi-credit-card me-1 text-primary"></i>
-                        <strong>3x</strong> de <strong>R$ <?= number_format($currentPrice / 3, 2, ',', '.') ?></strong> sem juros
+                        <strong><?= $parcelasSemJuros ?>x</strong> de <strong>R$ <?= number_format($currentPrice / $parcelasSemJuros, 2, ',', '.') ?></strong> sem juros
                     </div>
+                    <?php if ($parcelasMax > $parcelasSemJuros): ?>
                     <div class="text-muted small">
-                        ou até 12x com juros no cartão
+                        ou até <?= $parcelasMax ?>x com juros no cartão
                     </div>
+                    <?php endif; ?>
                 <?php else: ?>
                     <div class="h2 text-warning mb-1">Consulte</div>
                     <div class="text-muted small">

@@ -81,13 +81,14 @@
             $pixDiscount = (float) (setting('pix_discount') ?? 5);
             $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
             ?>
+            <?php $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3); ?>
             <div class="pix-price text-success small mb-1">
                 <i class="bi bi-qr-code"></i>
                 <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
             </div>
             <div class="installments small">
                 <i class="bi bi-credit-card"></i>
-                3x de R$ <?= number_format($currentPrice / 3, 2, ',', '.') ?> s/ juros
+                <?= $parcelasSemJuros ?>x de R$ <?= number_format($currentPrice / $parcelasSemJuros, 2, ',', '.') ?> s/ juros
             </div>
         <?php endif; ?>
 
