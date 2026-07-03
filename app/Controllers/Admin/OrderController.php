@@ -67,9 +67,14 @@ class OrderController extends BaseController
             return redirect()->to('/admin/pedidos')->with('error', 'Pedido nao encontrado.');
         }
 
+        // Buscar saldo do Melhor Envio
+        $melhorEnvio = new \App\Services\MelhorEnvioService();
+        $meBalance = $melhorEnvio->getBalance();
+
         return view('admin/orders/show', [
             'title' => 'Pedido #' . $order['order_number'],
             'order' => $order,
+            'meBalance' => $meBalance,
         ]);
     }
 
@@ -267,6 +272,12 @@ class OrderController extends BaseController
 
         $melhorEnvio = new \App\Services\MelhorEnvioService();
 
+        // Verificar saldo antes de continuar
+        $balance = $melhorEnvio->getBalance();
+        if ($balance !== null && $balance < 15) {
+            return redirect()->back()->with('error', 'Saldo insuficiente no Melhor Envio: R$ ' . number_format($balance, 2, ',', '.') . '. Adicione creditos antes de gerar etiquetas.');
+        }
+
         // 1. Adicionar ao carrinho
         $cartResult = $melhorEnvio->addToCart($order, $package, $serviceId);
 
@@ -280,7 +291,12 @@ class OrderController extends BaseController
         $checkoutResult = $melhorEnvio->checkout([$cartId]);
 
         if (!$checkoutResult['success']) {
-            return redirect()->back()->with('error', 'Erro no checkout: ' . ($checkoutResult['message'] ?? 'Erro desconhecido'));
+            // Adicionar info do saldo na mensagem de erro
+            $errorMsg = $checkoutResult['message'] ?? 'Erro desconhecido';
+            if ($balance !== null) {
+                $errorMsg .= ' (Saldo: R$ ' . number_format($balance, 2, ',', '.') . ')';
+            }
+            return redirect()->back()->with('error', 'Erro no checkout: ' . $errorMsg);
         }
 
         // 3. Gerar etiqueta

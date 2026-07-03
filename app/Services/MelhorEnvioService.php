@@ -342,18 +342,18 @@ class MelhorEnvioService
                 'note' => '',
             ],
             'to' => [
-                'name' => $order['shipping_name'] ?? '',
-                'phone' => $order['shipping_phone'] ?? '',
-                'email' => $order['customer']['email'] ?? '',
-                'document' => $order['billing_cpf'] ?? '',
+                'name' => substr($order['shipping_name'] ?? 'Cliente', 0, 60),
+                'phone' => preg_replace('/\D/', '', $order['shipping_phone'] ?? ''),
+                'email' => $order['customer']['email'] ?? $order['customer_email'] ?? '',
+                'document' => preg_replace('/\D/', '', $order['billing_cpf'] ?? ''),
                 'company_document' => '',
                 'state_register' => '',
-                'address' => $order['shipping_street'] ?? '',
-                'complement' => $order['shipping_complement'] ?? '',
-                'number' => $order['shipping_number'] ?? '',
-                'district' => $order['shipping_neighborhood'] ?? '',
-                'city' => $order['shipping_city'] ?? '',
-                'state_abbr' => $order['shipping_state'] ?? '',
+                'address' => substr($order['shipping_street'] ?? '', 0, 60),
+                'complement' => substr($order['shipping_complement'] ?? '', 0, 60),
+                'number' => substr($order['shipping_number'] ?? 'SN', 0, 10),
+                'district' => substr($order['shipping_neighborhood'] ?? '', 0, 60),
+                'city' => substr($order['shipping_city'] ?? '', 0, 60),
+                'state_abbr' => strtoupper(substr($order['shipping_state'] ?? '', 0, 2)),
                 'country_id' => 'BR',
                 'postal_code' => preg_replace('/\D/', '', $order['shipping_zipcode'] ?? ''),
                 'note' => '',
@@ -452,7 +452,14 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
-            $response = $this->request('POST', '/me/shipment/checkout', $payload);
+
+            // Log do payload para debug
+            log_message('debug', 'MelhorEnvio checkout Payload: ' . json_encode($payload));
+
+            $response = $this->requestWithDetails('POST', '/me/shipment/checkout', $payload);
+
+            // Log da resposta
+            log_message('debug', 'MelhorEnvio checkout Response: ' . json_encode($response));
 
             if (!empty($response['purchase'])) {
                 return [
@@ -462,9 +469,30 @@ class MelhorEnvioService
                 ];
             }
 
+            // Capturar erro detalhado
+            $errorMsg = $response['message'] ?? 'Erro no checkout';
+            if (!empty($response['errors'])) {
+                $errorsDetail = [];
+                foreach ($response['errors'] as $field => $msgs) {
+                    if (is_array($msgs)) {
+                        $errorsDetail[] = $field . ': ' . implode(', ', $msgs);
+                    } else {
+                        $errorsDetail[] = $field . ': ' . $msgs;
+                    }
+                }
+                $errorMsg = implode(' | ', $errorsDetail);
+            }
+
+            // Verificar saldo insuficiente
+            if (isset($response['message']) && stripos($response['message'], 'saldo') !== false) {
+                $balance = $this->getBalance();
+                $errorMsg .= ' (Saldo atual: R$ ' . number_format($balance ?? 0, 2, ',', '.') . ')';
+            }
+
             return [
                 'success' => false,
-                'message' => $response['message'] ?? 'Erro no checkout',
+                'message' => $errorMsg,
+                'data' => $response,
             ];
 
         } catch (\Exception $e) {
@@ -487,10 +515,40 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
-            $response = $this->request('POST', '/me/shipment/generate', $payload);
+
+            // Log do payload para debug
+            log_message('debug', 'MelhorEnvio generateLabel Payload: ' . json_encode($payload));
+
+            $response = $this->requestWithDetails('POST', '/me/shipment/generate', $payload);
+
+            // Log da resposta
+            log_message('debug', 'MelhorEnvio generateLabel Response: ' . json_encode($response));
+
+            // Verificar se gerou com sucesso
+            if (!empty($response) && !isset($response['errors'])) {
+                return [
+                    'success' => true,
+                    'data' => $response,
+                ];
+            }
+
+            // Capturar erro detalhado
+            $errorMsg = $response['message'] ?? 'Erro ao gerar etiqueta';
+            if (!empty($response['errors'])) {
+                $errorsDetail = [];
+                foreach ($response['errors'] as $field => $msgs) {
+                    if (is_array($msgs)) {
+                        $errorsDetail[] = $field . ': ' . implode(', ', $msgs);
+                    } else {
+                        $errorsDetail[] = $field . ': ' . $msgs;
+                    }
+                }
+                $errorMsg = implode(' | ', $errorsDetail);
+            }
 
             return [
-                'success' => true,
+                'success' => false,
+                'message' => $errorMsg,
                 'data' => $response,
             ];
 

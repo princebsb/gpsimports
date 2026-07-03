@@ -343,6 +343,15 @@
                 <h5 class="mb-0"><i class="bi bi-box-seam me-1"></i>Gerar Etiqueta</h5>
             </div>
             <div class="card-body">
+                <?php if (isset($meBalance)): ?>
+                    <div class="alert alert-<?= $meBalance >= 30 ? 'success' : 'warning' ?> py-2 mb-3">
+                        <i class="bi bi-wallet2 me-1"></i>
+                        <strong>Saldo Melhor Envio:</strong> R$ <?= number_format($meBalance, 2, ',', '.') ?>
+                        <?php if ($meBalance < 30): ?>
+                            <br><small class="text-muted">Saldo baixo! Adicione creditos para gerar etiquetas.</small>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
                 <p class="small text-muted mb-3">Gere a etiqueta de envio pelo Melhor Envio.</p>
 
                 <form action="<?= base_url('admin/pedidos/' . $order['id'] . '/gerar-etiqueta') ?>" method="post" id="formEtiqueta">
@@ -388,6 +397,18 @@
                     <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/cotar-frete') ?>" class="btn btn-outline-secondary btn-sm w-100">
                         <i class="bi bi-calculator me-1"></i>Cotar Frete
                     </a>
+                </div>
+
+                <!-- Adicionar Creditos -->
+                <div class="mt-3 pt-3 border-top">
+                    <p class="small text-muted mb-2"><i class="bi bi-plus-circle me-1"></i>Adicionar Creditos</p>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">R$</span>
+                        <input type="number" id="valorCredito" class="form-control" value="50" min="10" max="50000" step="10">
+                        <button type="button" class="btn btn-success" onclick="adicionarCredito()">
+                            <i class="bi bi-plus"></i> Adicionar
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -444,4 +465,38 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script>
+function adicionarCredito() {
+    const valor = document.getElementById('valorCredito').value;
+
+    if (valor < 10 || valor > 50000) {
+        alert('Valor deve ser entre R$ 10,00 e R$ 50.000,00');
+        return;
+    }
+
+    fetch('<?= base_url('admin/melhor-envio/adicionar-credito') ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ valor: parseFloat(valor), metodo: 'pix' })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.link) {
+            window.open(data.link, '_blank');
+            alert('Link de pagamento aberto em nova aba. Apos o pagamento, recarregue a pagina.');
+        } else {
+            alert('Erro: ' + (data.message || 'Erro desconhecido'));
+        }
+    })
+    .catch(error => {
+        alert('Erro na requisicao: ' + error);
+    });
+}
+</script>
 <?= $this->endSection() ?>
