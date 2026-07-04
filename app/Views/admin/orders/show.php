@@ -343,13 +343,18 @@
                 <h5 class="mb-0"><i class="bi bi-box-seam me-1"></i>Gerar Etiqueta</h5>
             </div>
             <div class="card-body">
-                <?php if (isset($meBalance)): ?>
+                <?php if ($meBalance !== null): ?>
                     <div class="alert alert-<?= $meBalance >= 30 ? 'success' : 'warning' ?> py-2 mb-3">
                         <i class="bi bi-wallet2 me-1"></i>
                         <strong>Saldo Melhor Envio:</strong> R$ <?= number_format($meBalance, 2, ',', '.') ?>
                         <?php if ($meBalance < 30): ?>
                             <br><small class="text-muted">Saldo baixo! Adicione creditos para gerar etiquetas.</small>
                         <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <div class="alert alert-secondary py-2 mb-3">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        <small>Nao foi possivel obter saldo. <a href="<?= base_url('melhor-envio/autorizar') ?>">Verificar conexao</a></small>
                     </div>
                 <?php endif; ?>
                 <?php

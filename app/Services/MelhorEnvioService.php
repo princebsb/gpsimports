@@ -184,12 +184,15 @@ class MelhorEnvioService
     {
         $token = $this->getAccessToken();
         if (empty($token)) {
+            log_message('debug', 'MelhorEnvio getBalance: Token vazio');
             return null;
         }
 
         try {
             $this->token = $token;
-            $response = $this->request('GET', '/me/balance', []);
+            $response = $this->requestWithDetails('GET', '/me/balance', []);
+
+            log_message('debug', 'MelhorEnvio getBalance Response: ' . json_encode($response));
 
             if (isset($response['balance'])) {
                 return (float) $response['balance'];
@@ -352,6 +355,9 @@ class MelhorEnvioService
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        } elseif ($method === 'GET' && !empty($data)) {
+            $url .= '?' . http_build_query($data);
+            curl_setopt($ch, CURLOPT_URL, $url);
         }
 
         $response = curl_exec($ch);
