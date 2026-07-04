@@ -71,6 +71,7 @@ class Filters extends BaseFilters
                     'api/v1/*',
                     'webhook/*',
                     'admin/webhooks/*',
+                    'admin/melhor-envio/*',
                 ],
             ],
         ],
