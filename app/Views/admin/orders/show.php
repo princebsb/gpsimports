@@ -352,6 +352,34 @@
                         <?php endif; ?>
                     </div>
                 <?php endif; ?>
+                <?php
+                // Calcular peso e dimensoes dos itens do pedido
+                $totalWeight = 0;
+                $maxHeight = 2;
+                $maxWidth = 11;
+                $maxLength = 16;
+
+                foreach ($order['items'] as $item) {
+                    $qty = (int) ($item['quantity'] ?? 1);
+                    $itemWeight = (float) ($item['product_weight'] ?? 0.3);
+                    $totalWeight += $itemWeight * $qty;
+
+                    // Pegar maiores dimensoes (para calcular volume da caixa)
+                    $itemHeight = (int) ($item['product_height'] ?? 2);
+                    $itemWidth = (int) ($item['product_width'] ?? 11);
+                    $itemLength = (int) ($item['product_length'] ?? 16);
+
+                    $maxHeight = max($maxHeight, $itemHeight);
+                    $maxWidth = max($maxWidth, $itemWidth);
+                    $maxLength = max($maxLength, $itemLength);
+                }
+
+                // Minimos para embalagem
+                $totalWeight = max(0.1, round($totalWeight, 2));
+                $maxHeight = max(2, $maxHeight);
+                $maxWidth = max(11, $maxWidth);
+                $maxLength = max(16, $maxLength);
+                ?>
                 <p class="small text-muted mb-3">Gere a etiqueta de envio pelo Melhor Envio.</p>
 
                 <form action="<?= base_url('admin/pedidos/' . $order['id'] . '/gerar-etiqueta') ?>" method="post" id="formEtiqueta">
@@ -370,21 +398,21 @@
 
                     <div class="mb-3">
                         <label class="form-label">Peso Total (kg)</label>
-                        <input type="number" name="weight" class="form-control" step="0.01" min="0.1" value="0.5" required>
+                        <input type="number" name="weight" class="form-control" step="0.01" min="0.1" value="<?= $totalWeight ?>" required>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-4">
                             <label class="form-label">Altura (cm)</label>
-                            <input type="number" name="height" class="form-control" min="1" value="10" required>
+                            <input type="number" name="height" class="form-control" min="1" value="<?= $maxHeight ?>" required>
                         </div>
                         <div class="col-4">
                             <label class="form-label">Largura (cm)</label>
-                            <input type="number" name="width" class="form-control" min="1" value="15" required>
+                            <input type="number" name="width" class="form-control" min="1" value="<?= $maxWidth ?>" required>
                         </div>
                         <div class="col-4">
                             <label class="form-label">Compr. (cm)</label>
-                            <input type="number" name="length" class="form-control" min="1" value="20" required>
+                            <input type="number" name="length" class="form-control" min="1" value="<?= $maxLength ?>" required>
                         </div>
                     </div>
 
