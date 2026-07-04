@@ -270,10 +270,11 @@ class MelhorEnvioService
             return ['success' => false, 'message' => 'Token do Melhor Envio nao configurado. Acesse /melhor-envio/autorizar'];
         }
 
-        // Formato da API Melhor Envio - usar pagseguro (suporta PIX e boleto)
+        // Formato da API Melhor Envio - usar yapay-transparente com slug pix ou boleto
         $payload = [
-            'gateway' => 'pagseguro',
-            'value' => (float) $value,
+            'gateway' => 'yapay-transparente',
+            'value' => number_format($value, 2, '.', ''),
+            'slug' => $method, // 'pix' ou 'boleto'
         ];
 
         try {
@@ -286,8 +287,23 @@ class MelhorEnvioService
 
             log_message('debug', 'MelhorEnvio addCredits Response: ' . json_encode($response));
 
-            // Verificar diferentes formatos de resposta da API
-            // Formato 1: Link direto de pagamento
+            // Formato yapay-transparente:
+            // - digitable: codigo PIX copia e cola
+            // - redirect: URL para pagamento/QR code
+            // - payment.link: link alternativo
+
+            // PIX: tem digitable (codigo copia e cola) ou redirect (link)
+            if (!empty($response['digitable']) || !empty($response['redirect'])) {
+                return [
+                    'success' => true,
+                    'id' => $response['id'] ?? null,
+                    'pix_code' => $response['digitable'] ?? null,
+                    'link' => $response['redirect'] ?? $response['payment']['link'] ?? null,
+                    'data' => $response,
+                ];
+            }
+
+            // Link direto de pagamento
             if (!empty($response['link'])) {
                 return [
                     'success' => true,
@@ -297,40 +313,18 @@ class MelhorEnvioService
                 ];
             }
 
-            // Formato 2: Resposta com init_point (Mercado Pago)
-            if (!empty($response['init_point'])) {
+            // payment.link alternativo
+            if (!empty($response['payment']['link'])) {
                 return [
                     'success' => true,
                     'id' => $response['id'] ?? null,
-                    'link' => $response['init_point'],
+                    'link' => $response['payment']['link'],
                     'data' => $response,
                 ];
             }
 
-            // Formato 3: Resposta com payment_url
-            if (!empty($response['payment_url'])) {
-                return [
-                    'success' => true,
-                    'id' => $response['id'] ?? null,
-                    'link' => $response['payment_url'],
-                    'data' => $response,
-                ];
-            }
-
-            // Formato 4: PIX direto
-            if (!empty($response['pix']['qrcode']) || !empty($response['digitable_line'])) {
-                return [
-                    'success' => true,
-                    'id' => $response['id'] ?? null,
-                    'pix_code' => $response['pix']['qrcode'] ?? $response['digitable_line'] ?? null,
-                    'qr_code' => $response['pix']['qrcode_image'] ?? null,
-                    'data' => $response,
-                ];
-            }
-
-            // Formato 5: ID de transacao criada (precisa redirecionar para pagamento)
-            if (!empty($response['id']) && !empty($response['status'])) {
-                // Construir link do Melhor Envio para pagamento
+            // ID de transacao criada
+            if (!empty($response['id'])) {
                 $paymentLink = str_replace('/api/v2', '', $this->baseUrl) . '/painel/carteira/pagamento/' . $response['id'];
                 return [
                     'success' => true,
