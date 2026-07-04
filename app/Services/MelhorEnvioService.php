@@ -92,9 +92,6 @@ class MelhorEnvioService
             'User-Agent: GPSImports/1.0',
         ];
 
-        // Configurar CA bundle para SSL (Windows/WAMP)
-        $caBundle = 'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem';
-
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -102,8 +99,20 @@ class MelhorEnvioService
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_CAINFO => file_exists($caBundle) ? $caBundle : null,
         ]);
+
+        // Configurar CA bundle para SSL (Windows/WAMP) se existir
+        $caBundles = [
+            'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem',
+            '/etc/ssl/certs/ca-certificates.crt',
+            '/etc/pki/tls/certs/ca-bundle.crt',
+        ];
+        foreach ($caBundles as $caBundle) {
+            if (file_exists($caBundle)) {
+                curl_setopt($ch, CURLOPT_CAINFO, $caBundle);
+                break;
+            }
+        }
 
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
@@ -376,9 +385,6 @@ class MelhorEnvioService
             'User-Agent: GPSImports/1.0',
         ];
 
-        // Configurar CA bundle para SSL (Windows/WAMP)
-        $caBundle = 'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem';
-
         curl_setopt_array($ch, [
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
@@ -386,8 +392,20 @@ class MelhorEnvioService
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_CAINFO => file_exists($caBundle) ? $caBundle : null,
         ]);
+
+        // Configurar CA bundle para SSL se existir (Windows/WAMP ou Linux)
+        $caBundles = [
+            'C:\\wamp64\\bin\\php\\php8.1.31\\extras\\ssl\\cacert.pem',
+            '/etc/ssl/certs/ca-certificates.crt',
+            '/etc/pki/tls/certs/ca-bundle.crt',
+        ];
+        foreach ($caBundles as $caBundle) {
+            if (file_exists($caBundle)) {
+                curl_setopt($ch, CURLOPT_CAINFO, $caBundle);
+                break;
+            }
+        }
 
         if ($method === 'POST') {
             curl_setopt($ch, CURLOPT_POST, true);
