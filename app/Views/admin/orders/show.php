@@ -521,7 +521,9 @@
                 </div>
                 <div id="pixContent" style="display: none;">
                     <p class="mb-3"><strong>Valor:</strong> <span id="pixValor" class="fs-4 text-success">R$ 0,00</span></p>
-                    <div id="pixQrCodeContainer" class="mb-3"></div>
+                    <div id="pixQrCodeContainer" class="mb-3">
+                        <canvas id="qrCanvasOrder"></canvas>
+                    </div>
                     <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
                     <div class="input-group mb-3">
                         <input type="text" id="pixCode" class="form-control form-control-sm" readonly>
@@ -557,7 +559,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 <script>
 let pixModal = null;
 
@@ -599,16 +601,12 @@ function adicionarCredito() {
                 document.getElementById('pixValor').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                 document.getElementById('pixCode').value = pixCode;
 
-                // Gerar QR code via biblioteca qrcodejs
-                const qrContainer = document.getElementById('pixQrCodeContainer');
-                qrContainer.innerHTML = ''; // Limpar anterior
-                new QRCode(qrContainer, {
-                    text: pixCode,
-                    width: 250,
-                    height: 250,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.L
+                // Gerar QR code via QRious
+                new QRious({
+                    element: document.getElementById('qrCanvasOrder'),
+                    value: pixCode,
+                    size: 250,
+                    level: 'L'
                 });
 
                 document.getElementById('pixContent').style.display = 'block';

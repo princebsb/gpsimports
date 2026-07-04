@@ -522,7 +522,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 
     <script>
         // Sidebar toggle
@@ -658,7 +658,9 @@
                     <div id="resultadoPix" class="d-none">
                         <div class="text-center">
                             <p class="mb-3"><strong>Valor:</strong> <span id="pixValorDisplay" class="fs-4 text-success">R$ 0,00</span></p>
-                            <div id="pixQrCodeContainer" class="mb-3"></div>
+                            <div id="pixQrCodeContainer" class="mb-3">
+                                <canvas id="qrCanvasGlobal"></canvas>
+                            </div>
                             <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
                             <div class="input-group mb-3">
                                 <input type="text" id="pixCodeInput" class="form-control form-control-sm" readonly>
@@ -817,16 +819,12 @@
                         document.getElementById('pixValorDisplay').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                         document.getElementById('pixCodeInput').value = pixCode;
 
-                        // Gerar QR code via biblioteca qrcodejs
-                        const qrContainer = document.getElementById('pixQrCodeContainer');
-                        qrContainer.innerHTML = ''; // Limpar anterior
-                        new QRCode(qrContainer, {
-                            text: pixCode,
-                            width: 220,
-                            height: 220,
-                            colorDark: '#000000',
-                            colorLight: '#ffffff',
-                            correctLevel: QRCode.CorrectLevel.L
+                        // Gerar QR code via QRious
+                        new QRious({
+                            element: document.getElementById('qrCanvasGlobal'),
+                            value: pixCode,
+                            size: 220,
+                            level: 'L'
                         });
 
                         document.getElementById('resultadoPix').classList.remove('d-none');
