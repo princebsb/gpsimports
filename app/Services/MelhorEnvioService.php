@@ -270,12 +270,9 @@ class MelhorEnvioService
             return ['success' => false, 'message' => 'Token do Melhor Envio nao configurado. Acesse /melhor-envio/autorizar'];
         }
 
-        // Formato da API Melhor Envio - gateway: picpay, moip, ou pagseguro
-        // Para PIX usar picpay que suporta PIX
-        $gateway = ($method === 'pix') ? 'picpay' : 'pagseguro';
-
+        // Formato da API Melhor Envio - usar pagseguro (suporta PIX e boleto)
         $payload = [
-            'gateway' => $gateway,
+            'gateway' => 'pagseguro',
             'value' => (float) $value,
         ];
 
