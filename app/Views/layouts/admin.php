@@ -645,28 +645,82 @@
                         </button>
                     </form>
 
-                    <!-- Resultado do pagamento -->
-                    <div id="resultadoPagamento" class="d-none mt-4">
+                    <!-- Loading -->
+                    <div id="pagamentoLoading" class="d-none text-center py-4">
+                        <div class="spinner-border text-purple" role="status" style="color: #7c3aed;">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Gerando pagamento...</p>
+                    </div>
+
+                    <!-- Resultado PIX -->
+                    <div id="resultadoPix" class="d-none">
                         <div class="text-center">
-                            <div id="pixQrCode" class="mb-3"></div>
-                            <div id="pixCopiaECola" class="mb-3">
-                                <input type="text" id="pixCode" class="form-control text-center" readonly>
-                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="copiarPix()">
-                                    <i class="bi bi-clipboard me-1"></i>Copiar codigo
+                            <p class="mb-3"><strong>Valor:</strong> <span id="pixValorDisplay" class="fs-4 text-success">R$ 0,00</span></p>
+                            <div id="pixQrCode" class="mb-3">
+                                <img id="pixQrImage" src="" alt="QR Code PIX" class="img-fluid" style="max-width: 220px; border-radius: 8px;">
+                            </div>
+                            <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
+                            <div class="input-group mb-3">
+                                <input type="text" id="pixCodeInput" class="form-control form-control-sm" readonly>
+                                <button class="btn btn-outline-success" type="button" onclick="copiarPixGlobal()">
+                                    <i class="bi bi-clipboard"></i> Copiar
                                 </button>
                             </div>
-                            <div id="pagamentoLink" class="d-none">
-                                <p class="text-muted mb-3">Clique no botao abaixo para realizar o pagamento via Mercado Pago:</p>
-                                <a href="#" id="linkPagamento" target="_blank" class="btn btn-purple btn-lg">
-                                    <i class="bi bi-box-arrow-up-right me-2"></i>Ir para Pagamento
-                                </a>
+                            <div id="pixCopiadoAlert" class="alert alert-success py-2 d-none">
+                                <i class="bi bi-check-circle me-1"></i>Codigo copiado!
                             </div>
-                            <div id="boletoLink" class="d-none">
-                                <a href="#" target="_blank" class="btn btn-outline-primary">
-                                    <i class="bi bi-file-pdf me-1"></i>Abrir Boleto
-                                </a>
+                            <div class="alert alert-info py-2 small">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Apos o pagamento, aguarde alguns segundos e clique em "Atualizar" para ver o novo saldo.
+                            </div>
+                            <button type="button" class="btn btn-success mt-2" onclick="location.reload()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Atualizar Saldo
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Resultado Link (fallback) -->
+                    <div id="resultadoLink" class="d-none">
+                        <div class="text-center py-3">
+                            <i class="bi bi-box-arrow-up-right fs-1 text-purple mb-3" style="color: #7c3aed;"></i>
+                            <p class="text-muted mb-3">Clique no botao abaixo para realizar o pagamento:</p>
+                            <a href="#" id="linkPagamento" target="_blank" class="btn btn-purple btn-lg">
+                                <i class="bi bi-credit-card me-2"></i>Ir para Pagamento
+                            </a>
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-secondary" onclick="location.reload()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Atualizar Saldo
+                                </button>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Resultado Boleto -->
+                    <div id="resultadoBoleto" class="d-none">
+                        <div class="text-center py-3">
+                            <i class="bi bi-file-earmark-bar-graph fs-1 text-primary mb-3"></i>
+                            <p class="text-muted mb-3">Seu boleto foi gerado com sucesso!</p>
+                            <a href="#" id="linkBoleto" target="_blank" class="btn btn-primary btn-lg">
+                                <i class="bi bi-file-pdf me-2"></i>Abrir Boleto
+                            </a>
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-secondary" onclick="location.reload()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Atualizar Saldo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Erro -->
+                    <div id="resultadoErro" class="d-none">
+                        <div class="alert alert-danger py-3 text-center">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            <span id="erroMsg">Erro ao gerar pagamento</span>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary w-100" onclick="resetModalME()">
+                            <i class="bi bi-arrow-left me-1"></i>Tentar Novamente
+                        </button>
                     </div>
                 </div>
             </div>
@@ -736,10 +790,11 @@
 
             const valor = document.getElementById('valorCredito').value;
             const metodo = document.querySelector('input[name="metodo"]:checked').value;
-            const btn = document.getElementById('btnGerarPagamento');
 
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Gerando...';
+            // Esconder formulario e mostrar loading
+            document.getElementById('formAdicionarCredito').classList.add('d-none');
+            document.getElementById('pagamentoLoading').classList.remove('d-none');
+            hideAllResults();
 
             fetch('<?= base_url('admin/melhor-envio/adicionar-credito') ?>', {
                 method: 'POST',
@@ -751,63 +806,92 @@
             })
             .then(response => response.json())
             .then(data => {
-                btn.disabled = false;
-                btn.innerHTML = metodo === 'pix' ? '<i class="bi bi-qr-code me-2"></i>Gerar PIX' : '<i class="bi bi-upc-scan me-2"></i>Gerar Boleto';
+                console.log('Resposta ME:', data);
+                document.getElementById('pagamentoLoading').classList.add('d-none');
 
                 if (data.success) {
-                    document.getElementById('formAdicionarCredito').classList.add('d-none');
-                    document.getElementById('resultadoPagamento').classList.remove('d-none');
+                    const pixCode = data.pix_code || data.digitable || '';
+                    const pixLink = data.link || '';
 
-                    // Esconder todas as opcoes primeiro
-                    document.getElementById('pixCopiaECola').classList.add('d-none');
-                    document.getElementById('pixQrCode').classList.add('d-none');
-                    document.getElementById('pagamentoLink').classList.add('d-none');
-                    document.getElementById('boletoLink').classList.add('d-none');
+                    // Se tem codigo PIX (copia e cola)
+                    if (pixCode) {
+                        document.getElementById('pixValorDisplay').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
+                        document.getElementById('pixCodeInput').value = pixCode;
 
-                    // Se tem link de pagamento (Mercado Pago)
-                    if (data.link) {
-                        document.getElementById('pagamentoLink').classList.remove('d-none');
-                        document.getElementById('linkPagamento').href = data.link;
-                        toastr.success('Link de pagamento gerado! Clique para pagar.');
-                    }
-                    // Se tem codigo PIX
-                    else if (data.pix_code) {
-                        document.getElementById('pixCopiaECola').classList.remove('d-none');
-                        document.getElementById('pixCode').value = data.pix_code;
-                        if (data.qr_code) {
-                            document.getElementById('pixQrCode').classList.remove('d-none');
-                            document.getElementById('pixQrCode').innerHTML = '<img src="' + data.qr_code + '" class="img-fluid" style="max-width: 200px;">';
-                        }
+                        // Gerar QR code via API
+                        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
+                        document.getElementById('pixQrImage').src = qrUrl;
+
+                        document.getElementById('resultadoPix').classList.remove('d-none');
                         toastr.success('PIX gerado com sucesso!');
                     }
-                    // Se tem URL de boleto
+                    // Se tem apenas link (redirecionar)
+                    else if (pixLink) {
+                        document.getElementById('linkPagamento').href = pixLink;
+                        document.getElementById('resultadoLink').classList.remove('d-none');
+                        toastr.success('Link de pagamento gerado!');
+                    }
+                    // Boleto
                     else if (data.boleto_url) {
-                        document.getElementById('boletoLink').classList.remove('d-none');
-                        document.getElementById('boletoLink').querySelector('a').href = data.boleto_url;
+                        document.getElementById('linkBoleto').href = data.boleto_url;
+                        document.getElementById('resultadoBoleto').classList.remove('d-none');
                         toastr.success('Boleto gerado com sucesso!');
                     }
+                    else {
+                        document.getElementById('erroMsg').textContent = 'Resposta invalida da API';
+                        document.getElementById('resultadoErro').classList.remove('d-none');
+                    }
                 } else {
-                    toastr.error(data.message || 'Erro ao gerar pagamento');
+                    document.getElementById('erroMsg').textContent = data.message || 'Erro ao gerar pagamento';
+                    document.getElementById('resultadoErro').classList.remove('d-none');
                     console.log('Erro detalhes:', data);
                 }
             })
             .catch(error => {
-                btn.disabled = false;
-                toastr.error('Erro de conexao');
+                console.error('Erro:', error);
+                document.getElementById('pagamentoLoading').classList.add('d-none');
+                document.getElementById('erroMsg').textContent = 'Erro de conexao: ' + error;
+                document.getElementById('resultadoErro').classList.remove('d-none');
             });
         });
 
-        function copiarPix() {
-            const input = document.getElementById('pixCode');
+        function hideAllResults() {
+            document.getElementById('resultadoPix').classList.add('d-none');
+            document.getElementById('resultadoLink').classList.add('d-none');
+            document.getElementById('resultadoBoleto').classList.add('d-none');
+            document.getElementById('resultadoErro').classList.add('d-none');
+        }
+
+        function resetModalME() {
+            document.getElementById('formAdicionarCredito').classList.remove('d-none');
+            document.getElementById('pagamentoLoading').classList.add('d-none');
+            hideAllResults();
+        }
+
+        function copiarPixGlobal() {
+            const input = document.getElementById('pixCodeInput');
             input.select();
-            document.execCommand('copy');
+            input.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(input.value).then(() => {
+                document.getElementById('pixCopiadoAlert').classList.remove('d-none');
+                setTimeout(() => {
+                    document.getElementById('pixCopiadoAlert').classList.add('d-none');
+                }, 3000);
+            }).catch(() => {
+                document.execCommand('copy');
+                document.getElementById('pixCopiadoAlert').classList.remove('d-none');
+                setTimeout(() => {
+                    document.getElementById('pixCopiadoAlert').classList.add('d-none');
+                }, 3000);
+            });
+
             toastr.success('Codigo PIX copiado!');
         }
 
         // Reset modal ao fechar
         document.getElementById('modalMelhorEnvio')?.addEventListener('hidden.bs.modal', function() {
-            document.getElementById('formAdicionarCredito').classList.remove('d-none');
-            document.getElementById('resultadoPagamento').classList.add('d-none');
+            resetModalME();
         });
     </script>
     <?php endif; ?>
