@@ -521,9 +521,7 @@
                 </div>
                 <div id="pixContent" style="display: none;">
                     <p class="mb-3"><strong>Valor:</strong> <span id="pixValor" class="fs-4 text-success">R$ 0,00</span></p>
-                    <div id="pixQrCode" class="mb-3">
-                        <canvas id="pixQrCanvas"></canvas>
-                    </div>
+                    <div id="pixQrCodeContainer" class="mb-3"></div>
                     <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
                     <div class="input-group mb-3">
                         <input type="text" id="pixCode" class="form-control form-control-sm" readonly>
@@ -559,7 +557,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 let pixModal = null;
 
@@ -601,14 +599,16 @@ function adicionarCredito() {
                 document.getElementById('pixValor').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                 document.getElementById('pixCode').value = pixCode;
 
-                // Gerar QR code via biblioteca QRCode.js
-                const canvas = document.getElementById('pixQrCanvas');
-                QRCode.toCanvas(canvas, pixCode, {
+                // Gerar QR code via biblioteca qrcodejs
+                const qrContainer = document.getElementById('pixQrCodeContainer');
+                qrContainer.innerHTML = ''; // Limpar anterior
+                new QRCode(qrContainer, {
+                    text: pixCode,
                     width: 250,
-                    margin: 2,
-                    color: { dark: '#000000', light: '#ffffff' }
-                }, function(error) {
-                    if (error) console.error('Erro ao gerar QR:', error);
+                    height: 250,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.L
                 });
 
                 document.getElementById('pixContent').style.display = 'block';
