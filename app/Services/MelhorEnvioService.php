@@ -190,12 +190,29 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
-            $response = $this->requestWithDetails('GET', '/me/balance', []);
+            // Tentar endpoint principal
+            $response = $this->requestWithDetails('GET', '/me/shipment/balance', []);
 
             log_message('debug', 'MelhorEnvio getBalance Response: ' . json_encode($response));
 
+            // Formato 1: {'balance': 8.42}
             if (isset($response['balance'])) {
                 return (float) $response['balance'];
+            }
+
+            // Formato 2: {'data': {'balance': 8.42}}
+            if (isset($response['data']['balance'])) {
+                return (float) $response['data']['balance'];
+            }
+
+            // Formato 3: [{'balance': 8.42}] - array
+            if (is_array($response) && isset($response[0]['balance'])) {
+                return (float) $response[0]['balance'];
+            }
+
+            // Formato 4: valor direto como numero
+            if (is_numeric($response)) {
+                return (float) $response;
             }
 
             return null;
