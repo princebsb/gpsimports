@@ -522,7 +522,7 @@
                 <div id="pixContent" style="display: none;">
                     <p class="mb-3"><strong>Valor:</strong> <span id="pixValor" class="fs-4 text-success">R$ 0,00</span></p>
                     <div id="pixQrCode" class="mb-3">
-                        <img id="pixQrImage" src="" alt="QR Code PIX" class="img-fluid" style="max-width: 250px;">
+                        <canvas id="pixQrCanvas"></canvas>
                     </div>
                     <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
                     <div class="input-group mb-3">
@@ -559,6 +559,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
 let pixModal = null;
 
@@ -600,9 +601,15 @@ function adicionarCredito() {
                 document.getElementById('pixValor').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                 document.getElementById('pixCode').value = pixCode;
 
-                // Gerar QR code via API
-                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(pixCode);
-                document.getElementById('pixQrImage').src = qrUrl;
+                // Gerar QR code via biblioteca QRCode.js
+                const canvas = document.getElementById('pixQrCanvas');
+                QRCode.toCanvas(canvas, pixCode, {
+                    width: 250,
+                    margin: 2,
+                    color: { dark: '#000000', light: '#ffffff' }
+                }, function(error) {
+                    if (error) console.error('Erro ao gerar QR:', error);
+                });
 
                 document.getElementById('pixContent').style.display = 'block';
             } else if (pixLink) {

@@ -522,6 +522,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
     <script>
         // Sidebar toggle
@@ -658,7 +659,7 @@
                         <div class="text-center">
                             <p class="mb-3"><strong>Valor:</strong> <span id="pixValorDisplay" class="fs-4 text-success">R$ 0,00</span></p>
                             <div id="pixQrCode" class="mb-3">
-                                <img id="pixQrImage" src="" alt="QR Code PIX" class="img-fluid" style="max-width: 220px; border-radius: 8px;">
+                                <canvas id="pixQrCanvas"></canvas>
                             </div>
                             <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
                             <div class="input-group mb-3">
@@ -818,9 +819,15 @@
                         document.getElementById('pixValorDisplay').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
                         document.getElementById('pixCodeInput').value = pixCode;
 
-                        // Gerar QR code via API
-                        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(pixCode);
-                        document.getElementById('pixQrImage').src = qrUrl;
+                        // Gerar QR code via biblioteca QRCode.js
+                        const canvas = document.getElementById('pixQrCanvas');
+                        QRCode.toCanvas(canvas, pixCode, {
+                            width: 220,
+                            margin: 2,
+                            color: { dark: '#000000', light: '#ffffff' }
+                        }, function(error) {
+                            if (error) console.error('Erro ao gerar QR:', error);
+                        });
 
                         document.getElementById('resultadoPix').classList.remove('d-none');
                         toastr.success('PIX gerado com sucesso!');
