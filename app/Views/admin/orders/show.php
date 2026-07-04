@@ -504,10 +504,64 @@
     </div>
 </div>
 
+<!-- Modal PIX -->
+<div class="modal fade" id="modalPix" tabindex="-1" aria-labelledby="modalPixLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="modalPixLabel"><i class="bi bi-qr-code me-2"></i>PIX - Melhor Envio</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="pixLoading" class="py-4">
+                    <div class="spinner-border text-success" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Gerando PIX...</p>
+                </div>
+                <div id="pixContent" style="display: none;">
+                    <p class="mb-3"><strong>Valor:</strong> <span id="pixValor" class="fs-4 text-success">R$ 0,00</span></p>
+                    <div id="pixQrCode" class="mb-3">
+                        <img id="pixQrImage" src="" alt="QR Code PIX" class="img-fluid" style="max-width: 250px;">
+                    </div>
+                    <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
+                    <div class="input-group mb-3">
+                        <input type="text" id="pixCode" class="form-control form-control-sm" readonly>
+                        <button class="btn btn-outline-success" type="button" onclick="copiarPix()">
+                            <i class="bi bi-clipboard"></i> Copiar
+                        </button>
+                    </div>
+                    <div id="pixCopied" class="alert alert-success py-2" style="display: none;">
+                        <i class="bi bi-check-circle me-1"></i>Codigo copiado!
+                    </div>
+                    <div class="alert alert-info py-2 small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Apos o pagamento, aguarde alguns segundos e recarregue a pagina para atualizar o saldo.
+                    </div>
+                </div>
+                <div id="pixError" style="display: none;">
+                    <div class="alert alert-danger py-3">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        <span id="pixErrorMsg">Erro ao gerar PIX</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-success" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Atualizar Saldo
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
 <script>
+let pixModal = null;
+
 function adicionarCredito() {
     const valor = document.getElementById('valorCredito').value;
 
@@ -515,6 +569,13 @@ function adicionarCredito() {
         alert('Valor deve ser entre R$ 10,00 e R$ 50.000,00');
         return;
     }
+
+    // Mostrar modal
+    pixModal = new bootstrap.Modal(document.getElementById('modalPix'));
+    document.getElementById('pixLoading').style.display = 'block';
+    document.getElementById('pixContent').style.display = 'none';
+    document.getElementById('pixError').style.display = 'none';
+    pixModal.show();
 
     fetch('<?= base_url('admin/melhor-envio/adicionar-credito') ?>', {
         method: 'POST',
@@ -527,15 +588,61 @@ function adicionarCredito() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success && data.link) {
-            window.open(data.link, '_blank');
-            alert('Link de pagamento aberto em nova aba. Apos o pagamento, recarregue a pagina.');
+        console.log('Resposta PIX:', data);
+        document.getElementById('pixLoading').style.display = 'none';
+
+        if (data.success) {
+            const pixCode = data.pix_code || data.digitable || '';
+            const pixLink = data.link || '';
+
+            if (pixCode) {
+                // Mostrar QR code e codigo
+                document.getElementById('pixValor').textContent = 'R$ ' + parseFloat(valor).toFixed(2).replace('.', ',');
+                document.getElementById('pixCode').value = pixCode;
+
+                // Gerar QR code via API
+                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(pixCode);
+                document.getElementById('pixQrImage').src = qrUrl;
+
+                document.getElementById('pixContent').style.display = 'block';
+            } else if (pixLink) {
+                // Se nao tem codigo PIX mas tem link, redirecionar
+                window.open(pixLink, '_blank');
+                pixModal.hide();
+                alert('Link de pagamento aberto em nova aba.');
+            } else {
+                document.getElementById('pixErrorMsg').textContent = 'Resposta invalida da API';
+                document.getElementById('pixError').style.display = 'block';
+            }
         } else {
-            alert('Erro: ' + (data.message || 'Erro desconhecido'));
+            document.getElementById('pixErrorMsg').textContent = data.message || 'Erro ao gerar PIX';
+            document.getElementById('pixError').style.display = 'block';
         }
     })
     .catch(error => {
-        alert('Erro na requisicao: ' + error);
+        console.error('Erro:', error);
+        document.getElementById('pixLoading').style.display = 'none';
+        document.getElementById('pixErrorMsg').textContent = 'Erro na requisicao: ' + error;
+        document.getElementById('pixError').style.display = 'block';
+    });
+}
+
+function copiarPix() {
+    const pixCode = document.getElementById('pixCode');
+    pixCode.select();
+    pixCode.setSelectionRange(0, 99999);
+
+    navigator.clipboard.writeText(pixCode.value).then(() => {
+        document.getElementById('pixCopied').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('pixCopied').style.display = 'none';
+        }, 3000);
+    }).catch(() => {
+        document.execCommand('copy');
+        document.getElementById('pixCopied').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('pixCopied').style.display = 'none';
+        }, 3000);
     });
 }
 
