@@ -51,7 +51,8 @@
       "Bash(copy:*)",
       "Bash(cmd /c copy \"C:\\\\Users\\\\sergi\\\\Downloads\\\\pagamento_mp.png\" \"C:\\\\wamp64\\\\www\\\\gpsimports\\\\public\\\\assets\\\\images\\\\pagamento_mp.png\")",
       "Bash(cmd /c dir \"C:\\\\wamp64\\\\www\\\\gpsimports\\\\public\\\\assets\\\\images\\\\pagamento_mp.png\")",
-      "Bash(cmd /c type \"C:\\\\wamp64\\\\www\\\\gpsimports\\\\writable\\\\logs\\\\log-2026-07-02.log\")"
+      "Bash(cmd /c type \"C:\\\\wamp64\\\\www\\\\gpsimports\\\\writable\\\\logs\\\\log-2026-07-02.log\")",
+      "Bash(cat:*)"
     ]
   }
 }

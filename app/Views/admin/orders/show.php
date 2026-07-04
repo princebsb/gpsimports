@@ -520,7 +520,8 @@ function adicionarCredito() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            '<?= csrf_header() ?>': '<?= csrf_hash() ?>'
         },
         body: JSON.stringify({ valor: parseFloat(valor), metodo: 'pix' })
     })

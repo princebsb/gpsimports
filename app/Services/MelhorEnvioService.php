@@ -190,36 +190,56 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
-            // Tentar endpoint principal
+
+            // Tentar endpoint /me/balance primeiro
+            $response = $this->requestWithDetails('GET', '/me/balance', []);
+
+            log_message('debug', 'MelhorEnvio getBalance /me/balance Response: ' . json_encode($response));
+
+            // Verificar diferentes formatos de resposta
+            $balance = $this->extractBalance($response);
+            if ($balance !== null) {
+                return $balance;
+            }
+
+            // Se nao encontrou, tentar /me/shipment/balance
             $response = $this->requestWithDetails('GET', '/me/shipment/balance', []);
+            log_message('debug', 'MelhorEnvio getBalance /me/shipment/balance Response: ' . json_encode($response));
 
-            log_message('debug', 'MelhorEnvio getBalance Response: ' . json_encode($response));
+            return $this->extractBalance($response);
 
-            // Formato 1: {'balance': 8.42}
-            if (isset($response['balance'])) {
-                return (float) $response['balance'];
-            }
-
-            // Formato 2: {'data': {'balance': 8.42}}
-            if (isset($response['data']['balance'])) {
-                return (float) $response['data']['balance'];
-            }
-
-            // Formato 3: [{'balance': 8.42}] - array
-            if (is_array($response) && isset($response[0]['balance'])) {
-                return (float) $response[0]['balance'];
-            }
-
-            // Formato 4: valor direto como numero
-            if (is_numeric($response)) {
-                return (float) $response;
-            }
-
-            return null;
         } catch (\Exception $e) {
             log_message('error', 'MelhorEnvio getBalance Error: ' . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Extract balance from API response
+     */
+    protected function extractBalance($response): ?float
+    {
+        // Formato 1: {'balance': 8.42}
+        if (isset($response['balance'])) {
+            return (float) $response['balance'];
+        }
+
+        // Formato 2: {'data': {'balance': 8.42}}
+        if (isset($response['data']['balance'])) {
+            return (float) $response['data']['balance'];
+        }
+
+        // Formato 3: [{'balance': 8.42}] - array
+        if (is_array($response) && isset($response[0]['balance'])) {
+            return (float) $response[0]['balance'];
+        }
+
+        // Formato 4: valor direto como numero
+        if (is_numeric($response)) {
+            return (float) $response;
+        }
+
+        return null;
     }
 
     /**
