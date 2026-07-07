@@ -303,7 +303,7 @@
                                                 <br><small class="text-muted">Aprovação instantânea</small>
                                             </div>
                                             <div class="text-end">
-                                                <strong class="text-success fs-5">R$ <?= number_format($pixTotal, 2, ',', '.') ?></strong>
+                                                <strong class="text-success fs-5" id="pricePixTotal">R$ <?= number_format($pixTotal, 2, ',', '.') ?></strong>
                                             </div>
                                         </div>
                                     </label>
@@ -324,7 +324,7 @@
                                                 <br><small class="text-muted">Em até 12x sem juros</small>
                                             </div>
                                             <div class="text-end">
-                                                <strong class="fs-5">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
+                                                <strong class="fs-5" id="priceCardTotal">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
                                             </div>
                                         </div>
                                     </label>
@@ -345,7 +345,7 @@
                                                 <br><small class="text-muted">Aprovação em até 2 dias úteis</small>
                                             </div>
                                             <div class="text-end">
-                                                <strong class="fs-5">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
+                                                <strong class="fs-5" id="priceBoletoTotal">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>
                                             </div>
                                         </div>
                                     </label>
@@ -565,6 +565,8 @@
         });
     }
 
+    const pixDiscountPercent = <?= $pixDiscount ?>;
+
     function selectShipping(code, price, name) {
         currentShippingPrice = price;
 
@@ -577,6 +579,12 @@
         let total = subtotal - discount + price;
 
         document.getElementById('summaryTotal').textContent = formatMoney(total);
+
+        // Update payment options prices
+        const pixTotal = total * (1 - pixDiscountPercent / 100);
+        document.getElementById('pricePixTotal').textContent = formatMoney(pixTotal);
+        document.getElementById('priceCardTotal').textContent = formatMoney(total);
+        document.getElementById('priceBoletoTotal').textContent = formatMoney(total);
 
         // Save shipping selection
         fetch('<?= base_url('carrinho/selecionar-frete') ?>', {
