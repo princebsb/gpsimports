@@ -15,6 +15,11 @@ $routes->get('sitemap.xml', '\App\Controllers\SitemapController::index');
 $routes->get('sitemap', '\App\Controllers\SitemapController::index');
 $routes->get('robots.txt', '\App\Controllers\SitemapController::robots');
 
+// Feed Google Merchant Center
+$routes->get('feed/google-merchant.xml', '\App\Controllers\FeedController::googleMerchant');
+$routes->get('feed/google', '\App\Controllers\FeedController::googleMerchant');
+$routes->get('products.xml', '\App\Controllers\FeedController::googleMerchant');
+
 $routes->group('', ['namespace' => 'App\Controllers\Front'], static function ($routes) {
     // Home
     $routes->get('/', 'HomeController::index');
