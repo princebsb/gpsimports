@@ -18,6 +18,45 @@
     <meta property="og:url" content="<?= current_url() ?>">
     <meta property="og:type" content="website">
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="<?= current_url() ?>">
+
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?= esc(setting('store_name') ?? 'GPS Imports', 'js') ?>",
+        "url": "<?= base_url() ?>",
+        "logo": "<?= base_url('assets/images/logo.png') ?>",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "<?= esc(setting('store_phone') ?? '', 'js') ?>",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese"
+        },
+        "sameAs": [
+            "<?= esc(setting('social_facebook') ?? '', 'js') ?>",
+            "<?= esc(setting('social_instagram') ?? '', 'js') ?>"
+        ]
+    }
+    </script>
+
+    <!-- Schema.org WebSite (para busca) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "<?= esc(setting('store_name') ?? 'GPS Imports', 'js') ?>",
+        "url": "<?= base_url() ?>",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "<?= base_url('busca?q={search_term_string}') ?>",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->

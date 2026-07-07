@@ -2,6 +2,59 @@
 
 <?= $this->section('content') ?>
 
+<?php
+// Schema Markup (JSON-LD) para SEO
+$schemaPrice = $product['sale_price'] && $product['sale_price'] < $product['price'] ? $product['sale_price'] : $product['price'];
+$schemaImage = $product['featured_image'] ?? '';
+if (!empty($schemaImage) && strpos($schemaImage, 'http') !== 0) {
+    $schemaImage = base_url('uploads/products/' . $schemaImage);
+}
+$schemaAvailability = ($product['stock'] ?? 0) > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
+$schemaCondition = 'https://schema.org/NewCondition';
+?>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "<?= esc($product['name'], 'js') ?>",
+    "description": "<?= esc(strip_tags($product['description'] ?? $product['short_description'] ?? $product['name']), 'js') ?>",
+    "sku": "<?= esc($product['sku'] ?? $product['id'], 'js') ?>",
+    "image": "<?= esc($schemaImage, 'js') ?>",
+    "url": "<?= current_url() ?>",
+    <?php if (!empty($product['brand_name'])): ?>
+    "brand": {
+        "@type": "Brand",
+        "name": "<?= esc($product['brand_name'], 'js') ?>"
+    },
+    <?php endif; ?>
+    <?php if (!empty($product['gtin']) || !empty($product['ean'])): ?>
+    "gtin13": "<?= esc($product['gtin'] ?? $product['ean'], 'js') ?>",
+    <?php endif; ?>
+    "offers": {
+        "@type": "Offer",
+        "url": "<?= current_url() ?>",
+        "priceCurrency": "BRL",
+        "price": "<?= number_format($schemaPrice, 2, '.', '') ?>",
+        "priceValidUntil": "<?= date('Y-12-31') ?>",
+        "availability": "<?= $schemaAvailability ?>",
+        "itemCondition": "<?= $schemaCondition ?>",
+        "seller": {
+            "@type": "Organization",
+            "name": "<?= esc(setting('store_name') ?? 'GPS Imports', 'js') ?>"
+        }
+    }
+    <?php if (($product['rating'] ?? 0) > 0): ?>
+    ,"aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "<?= number_format($product['rating'], 1, '.', '') ?>",
+        "reviewCount": "<?= (int) ($product['reviews_count'] ?? 1) ?>",
+        "bestRating": "5",
+        "worstRating": "1"
+    }
+    <?php endif; ?>
+}
+</script>
+
 <div class="container py-4">
     <div class="row">
         <!-- Product Images -->
