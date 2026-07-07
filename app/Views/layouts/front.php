@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google tag (gtag.js) - Google Ads -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18297254265"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'AW-18297254265');
+    </script>
     <meta name="description" content="<?= $meta_description ?? setting('meta_description') ?? 'Loja online com os melhores produtos' ?>">
     <meta name="keywords" content="<?= $meta_keywords ?? setting('meta_keywords') ?? '' ?>">
 
