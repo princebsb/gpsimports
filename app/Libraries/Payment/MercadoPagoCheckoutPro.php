@@ -223,24 +223,26 @@ class MercadoPagoCheckoutPro
     public function getPayment(string $paymentId): ?array
     {
         try {
-            $payment = \MercadoPago\Payment::find_by_id($paymentId);
+            // Usar API REST ao inves do SDK
+            $response = $this->request('GET', '/v1/payments/' . $paymentId);
 
-            if (!$payment || !$payment->id) {
+            if (empty($response['id'])) {
+                log_message('warning', 'MercadoPago getPayment: Payment not found - ' . $paymentId);
                 return null;
             }
 
             return [
-                'id' => $payment->id,
-                'status' => $payment->status,
-                'status_detail' => $payment->status_detail,
-                'payment_method_id' => $payment->payment_method_id,
-                'payment_type_id' => $payment->payment_type_id,
-                'installments' => $payment->installments,
-                'transaction_amount' => $payment->transaction_amount,
-                'external_reference' => $payment->external_reference,
-                'date_approved' => $payment->date_approved,
-                'date_created' => $payment->date_created,
-                'payer_email' => $payment->payer->email ?? null,
+                'id' => $response['id'],
+                'status' => $response['status'],
+                'status_detail' => $response['status_detail'] ?? null,
+                'payment_method_id' => $response['payment_method_id'] ?? null,
+                'payment_type_id' => $response['payment_type_id'] ?? null,
+                'installments' => $response['installments'] ?? 1,
+                'transaction_amount' => $response['transaction_amount'] ?? 0,
+                'external_reference' => $response['external_reference'] ?? null,
+                'date_approved' => $response['date_approved'] ?? null,
+                'date_created' => $response['date_created'] ?? null,
+                'payer_email' => $response['payer']['email'] ?? null,
             ];
 
         } catch (\Exception $e) {
