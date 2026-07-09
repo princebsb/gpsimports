@@ -51,18 +51,36 @@
                                         <td><?= $order['items_count'] ?? '-' ?> itens</td>
                                         <td>
                                             <?php
+                                            // Status do pagamento
+                                            $paymentColors = [
+                                                'pending' => 'warning',
+                                                'approved' => 'success',
+                                                'rejected' => 'danger',
+                                                'refunded' => 'secondary',
+                                            ];
+                                            $paymentNames = [
+                                                'pending' => 'Aguardando Pagamento',
+                                                'approved' => 'Pago',
+                                                'rejected' => 'Rejeitado',
+                                                'refunded' => 'Reembolsado',
+                                            ];
+                                            $paymentStatus = $order['payment_status'] ?? 'pending';
+                                            $paymentColor = $paymentColors[$paymentStatus] ?? 'secondary';
+                                            $paymentName = $paymentNames[$paymentStatus] ?? $paymentStatus;
+
+                                            // Status do pedido
                                             $statusColors = [
                                                 'pending' => 'warning',
                                                 'processing' => 'info',
-                                                'paid' => 'primary',
-                                                'shipped' => 'info',
+                                                'paid' => 'success',
+                                                'shipped' => 'primary',
                                                 'delivered' => 'success',
                                                 'cancelled' => 'danger',
                                                 'refunded' => 'secondary',
                                             ];
                                             $statusNames = [
                                                 'pending' => 'Pendente',
-                                                'processing' => 'Processando',
+                                                'processing' => 'Em Preparacao',
                                                 'paid' => 'Pago',
                                                 'shipped' => 'Enviado',
                                                 'delivered' => 'Entregue',
@@ -72,7 +90,9 @@
                                             $color = $statusColors[$order['status']] ?? 'secondary';
                                             $name = $statusNames[$order['status']] ?? $order['status'];
                                             ?>
-                                            <span class="badge bg-<?= $color ?>"><?= $name ?></span>
+                                            <span class="badge bg-<?= $paymentColor ?>"><?= $paymentName ?></span>
+                                            <br>
+                                            <small class="text-muted"><?= $name ?></small>
                                         </td>
                                         <td class="text-end">
                                             <strong>R$ <?= number_format($order['total'], 2, ',', '.') ?></strong>

@@ -22,15 +22,15 @@
             $statusColors = [
                 'pending' => 'warning',
                 'processing' => 'info',
-                'paid' => 'primary',
-                'shipped' => 'info',
+                'paid' => 'success',
+                'shipped' => 'primary',
                 'delivered' => 'success',
                 'cancelled' => 'danger',
                 'refunded' => 'secondary',
             ];
             $statusNames = [
                 'pending' => 'Pendente',
-                'processing' => 'Processando',
+                'processing' => 'Em Preparacao',
                 'paid' => 'Pago',
                 'shipped' => 'Enviado',
                 'delivered' => 'Entregue',
@@ -168,13 +168,17 @@
                             <?php
                             $paymentStatusColors = [
                                 'pending' => 'warning',
+                                'approved' => 'success',
                                 'paid' => 'success',
+                                'rejected' => 'danger',
                                 'failed' => 'danger',
                                 'refunded' => 'secondary',
                             ];
                             $paymentStatusNames = [
-                                'pending' => 'Pendente',
+                                'pending' => 'Aguardando',
+                                'approved' => 'Pago',
                                 'paid' => 'Pago',
+                                'rejected' => 'Rejeitado',
                                 'failed' => 'Falhou',
                                 'refunded' => 'Reembolsado',
                             ];
