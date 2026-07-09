@@ -153,22 +153,28 @@ HTML;
     public function send(string $toEmail, string $toName, string $subject, string $body): bool
     {
         try {
-            $this->email->clear();
-            $this->email->setFrom($this->getStoreEmail(), $this->getStoreName());
-            $this->email->setTo($toEmail);
-            $this->email->setSubject($subject);
-            $this->email->setMessage($body);
+            // Get fresh email instance with config from Email.php
+            $emailConfig = new \Config\Email();
+            $email = \Config\Services::email();
 
-            $result = $this->email->send(false);
+            $email->setFrom($emailConfig->fromEmail, $emailConfig->fromName);
+            $email->setTo($toEmail);
+            $email->setSubject($subject);
+            $email->setMessage($body);
+
+            $result = $email->send(false);
 
             if (!$result) {
-                log_message('error', 'EmailService: Failed to send email to ' . $toEmail . ' - ' . $this->email->printDebugger(['headers', 'subject', 'body']));
+                $debugger = $email->printDebugger(['headers']);
+                log_message('error', 'EmailService: Failed to send email to ' . $toEmail . ' - ' . $debugger);
+                $email->clear();
 
                 // Add to queue for retry
                 $this->addToQueue($toEmail, $toName, $subject, $body);
                 return false;
             }
 
+            $email->clear();
             log_message('info', 'EmailService: Email sent to ' . $toEmail . ' - Subject: ' . $subject);
             return true;
         } catch (\Exception $e) {

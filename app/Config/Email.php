@@ -17,9 +17,8 @@ class Email extends BaseConfig
 
     /**
      * The mail sending protocol: mail, sendmail, smtp
-     * Using 'mail' since we're on Hostinger shared hosting
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
