@@ -64,7 +64,7 @@ class EmailService
      */
     protected function getStoreEmail(): string
     {
-        return 'vendas@gpsimports.com.br';
+        return 'atendimento@gpsimports.com.br';
     }
 
     /**
