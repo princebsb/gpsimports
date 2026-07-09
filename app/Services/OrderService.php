@@ -284,16 +284,23 @@ class OrderService
 
         $result = $this->orderModel->updateStatus($orderId, $status, $comment, $notifyCustomer, $userId);
 
-        if ($result && $status === 'shipped') {
-            $this->orderModel->update($orderId, ['shipped_at' => date('Y-m-d H:i:s')]);
-        }
+        if ($result) {
+            // Se o status indica que o pedido foi pago, atualizar payment_status
+            if (in_array($status, ['paid', 'processing', 'shipped', 'delivered'])) {
+                $this->orderModel->update($orderId, ['payment_status' => 'approved']);
+            }
 
-        if ($result && $status === 'delivered') {
-            $this->orderModel->update($orderId, ['delivered_at' => date('Y-m-d H:i:s')]);
-        }
+            if ($status === 'shipped') {
+                $this->orderModel->update($orderId, ['shipped_at' => date('Y-m-d H:i:s')]);
+            }
 
-        if ($result && $notifyCustomer) {
-            $this->sendStatusUpdateEmail($orderId, $status);
+            if ($status === 'delivered') {
+                $this->orderModel->update($orderId, ['delivered_at' => date('Y-m-d H:i:s')]);
+            }
+
+            if ($notifyCustomer) {
+                $this->sendStatusUpdateEmail($orderId, $status);
+            }
         }
 
         return $result;
