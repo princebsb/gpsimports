@@ -18,35 +18,13 @@ class EmailService
     }
 
     /**
-     * Configure email settings from database
+     * Configure email settings - uses Email.php config
      */
     protected function configureEmail(): void
     {
-        $config = [
-            'mailType' => 'html',
-            'charset'  => 'UTF-8',
-        ];
-
-        // Get SMTP settings from database
-        $smtpHost = setting('smtp_host');
-        $smtpUser = setting('smtp_user');
-        $smtpPass = setting('smtp_pass');
-        $smtpPort = setting('smtp_port', 587);
-        $smtpCrypto = setting('smtp_crypto', 'tls');
-
-        if (!empty($smtpHost) && !empty($smtpUser)) {
-            $config['protocol'] = 'smtp';
-            $config['SMTPHost'] = $smtpHost;
-            $config['SMTPUser'] = $smtpUser;
-            $config['SMTPPass'] = $smtpPass;
-            $config['SMTPPort'] = (int) $smtpPort;
-            $config['SMTPCrypto'] = $smtpCrypto;
-            $config['SMTPTimeout'] = 30;
-        }
-
-        $this->email->initialize($config);
-
-        log_message('debug', 'EmailService configured: ' . $smtpHost . ':' . $smtpPort . ' (' . $smtpCrypto . ')');
+        // Email.php already has the SMTP settings configured
+        // Just ensure mailType is html
+        $this->email->setMailType('html');
     }
 
     /**
@@ -86,7 +64,7 @@ class EmailService
      */
     protected function getStoreEmail(): string
     {
-        return setting('store_email', setting('smtp_user', 'contato@gpsimports.com.br'));
+        return 'vendas@gpsimports.com.br';
     }
 
     /**
