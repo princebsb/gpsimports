@@ -144,7 +144,14 @@
                                 </span>
                             </div>
                             <div class="timeline-content">
-                                <div class="fw-bold"><?= esc($history['status_label'] ?? $historyStatusLabel) ?></div>
+                                <div class="fw-bold">
+                                    <?= esc($history['status_label'] ?? $historyStatusLabel) ?>
+                                    <?php if (!empty($history['notify_customer'])): ?>
+                                        <span class="badge bg-info badge-sm ms-1" title="Cliente notificado por email">
+                                            <i class="bi bi-envelope-check"></i>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                                 <?php if (!empty($history['notes']) || !empty($history['comment'])): ?>
                                     <div class="text-muted small"><?= esc($history['notes'] ?? $history['comment'] ?? '') ?></div>
                                 <?php endif; ?>
@@ -196,7 +203,7 @@
                         <?= csrf_field() ?>
                         <div class="mb-3">
                             <label class="form-label">Alterar Status</label>
-                            <select name="status" class="form-select">
+                            <select name="status" class="form-select" id="selectStatus">
                                 <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pendente</option>
                                 <option value="paid" <?= $order['status'] === 'paid' ? 'selected' : '' ?>>Pago</option>
                                 <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Em Preparacao</option>
@@ -207,9 +214,20 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Observacao</label>
-                            <textarea name="notes" class="form-control" rows="2"></textarea>
+                            <textarea name="comment" class="form-control" rows="2" placeholder="Observacao interna (opcional)"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Atualizar Status</button>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="notify_customer" value="1" id="notifyCustomer" checked>
+                                <label class="form-check-label" for="notifyCustomer">
+                                    <i class="bi bi-envelope me-1"></i>Notificar cliente por email
+                                </label>
+                            </div>
+                            <small class="text-muted">O cliente recebera um email informando a mudanca de status.</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-check-circle me-1"></i>Atualizar Status
+                        </button>
                     </form>
                 <?php endif; ?>
             </div>

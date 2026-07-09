@@ -15,6 +15,7 @@ class OrderService
     protected CouponModel $couponModel;
     protected CartService $cartService;
     protected StockService $stockService;
+    protected ?EmailService $emailService = null;
 
     public function __construct()
     {
@@ -24,6 +25,17 @@ class OrderService
         $this->couponModel = model('CouponModel');
         $this->cartService = service('cart');
         $this->stockService = service('stock');
+    }
+
+    /**
+     * Get email service instance (lazy loading)
+     */
+    protected function getEmailService(): EmailService
+    {
+        if ($this->emailService === null) {
+            $this->emailService = new EmailService();
+        }
+        return $this->emailService;
     }
 
     /**
@@ -323,8 +335,25 @@ class OrderService
      */
     protected function sendOrderConfirmationEmail(int $orderId): void
     {
-        // Implementation would use email service
-        log_message('info', 'Order confirmation email would be sent for order #' . $orderId);
+        try {
+            $order = $this->orderModel->getWithItems($orderId);
+
+            if (!$order) {
+                log_message('error', 'OrderService: Order not found for confirmation email - ID: ' . $orderId);
+                return;
+            }
+
+            $emailService = $this->getEmailService();
+            $result = $emailService->sendOrderConfirmationEmail($order);
+
+            if ($result) {
+                log_message('info', 'Order confirmation email sent for order #' . $order['order_number']);
+            } else {
+                log_message('warning', 'Order confirmation email queued for order #' . $order['order_number']);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'OrderService: Error sending confirmation email - ' . $e->getMessage());
+        }
     }
 
     /**
@@ -332,7 +361,24 @@ class OrderService
      */
     protected function sendStatusUpdateEmail(int $orderId, string $status): void
     {
-        // Implementation would use email service
-        log_message('info', 'Status update email would be sent for order #' . $orderId . ' - ' . $status);
+        try {
+            $order = $this->orderModel->getWithItems($orderId);
+
+            if (!$order) {
+                log_message('error', 'OrderService: Order not found for status email - ID: ' . $orderId);
+                return;
+            }
+
+            $emailService = $this->getEmailService();
+            $result = $emailService->sendOrderStatusEmail($order, $status);
+
+            if ($result) {
+                log_message('info', 'Status update email sent for order #' . $order['order_number'] . ' - Status: ' . $status);
+            } else {
+                log_message('warning', 'Status update email queued for order #' . $order['order_number'] . ' - Status: ' . $status);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'OrderService: Error sending status email - ' . $e->getMessage());
+        }
     }
 }
