@@ -7,11 +7,13 @@ class MelhorEnvioService
     protected string $token;
     protected string $baseUrl;
     protected string $cepOrigem;
+    protected int $handlingTime;
 
     public function __construct()
     {
         $this->token = env('melhorenvio.token', '');
         $this->cepOrigem = env('melhorenvio.cepOrigem', '01310100');
+        $this->handlingTime = config('Shipping')->handlingTime ?? 3;
 
         // Sandbox or production URL
         $sandboxEnv = env('melhorenvio.sandbox', 'false');
@@ -159,7 +161,7 @@ class MelhorEnvioService
                 'name' => $service['name'] ?? 'Envio',
                 'company' => $service['company']['name'] ?? 'Transportadora',
                 'price' => $price,
-                'deadline' => (int) ($service['delivery_time'] ?? 10),
+                'deadline' => (int) ($service['delivery_time'] ?? 10) + $this->handlingTime,
                 'logo' => $service['company']['picture'] ?? null,
             ];
         }
@@ -830,7 +832,7 @@ class MelhorEnvioService
 
         // PAC
         $pacPrice = round($basePrice * $regionMultiplier, 2);
-        $pacDeadline = 7 + (int) $region;
+        $pacDeadline = 7 + (int) $region + $this->handlingTime;
 
         $options[] = [
             'code' => 'PAC',
@@ -843,7 +845,7 @@ class MelhorEnvioService
 
         // SEDEX
         $sedexPrice = round($basePrice * $regionMultiplier * 1.9, 2);
-        $sedexDeadline = 2 + (int) floor((int) $region / 3);
+        $sedexDeadline = 2 + (int) floor((int) $region / 3) + $this->handlingTime;
 
         $options[] = [
             'code' => 'SEDEX',
