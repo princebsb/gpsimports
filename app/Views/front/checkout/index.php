@@ -321,7 +321,7 @@
                                             <div>
                                                 <i class="bi bi-credit-card text-primary me-2 fs-4"></i>
                                                 <strong>Cartão de Crédito</strong>
-                                                <br><small class="text-muted">Em até 12x sem juros</small>
+                                                <br><small class="text-muted">Em até 12x (juros a partir de 2x)</small>
                                             </div>
                                             <div class="text-end">
                                                 <strong class="fs-5" id="priceCardTotal">R$ <?= number_format($cart['total'], 2, ',', '.') ?></strong>

@@ -188,10 +188,12 @@ $schemaCondition = 'https://schema.org/NewCondition';
                         <span class="badge bg-success ms-1"><?= $pixDiscount ?>% OFF</span>
                     </div>
                     <?php
-                    $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3);
+                    $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 1);
                     $parcelasMax = (int) (setting('installments_max') ?? 12);
                     // Taxas de juros do Mercado Pago por parcela (CFT)
                     $taxasPorParcela = [
+                        2 => 4.52,
+                        3 => 6.61,
                         4 => 11.36,
                         5 => 14.31,
                         6 => 14.32,

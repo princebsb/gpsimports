@@ -81,7 +81,7 @@
             $pixDiscount = (float) (setting('pix_discount') ?? 5);
             $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
             ?>
-            <?php $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 3); ?>
+            <?php $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 1); ?>
             <div class="pix-price text-success small mb-1">
                 <i class="bi bi-qr-code"></i>
                 <strong>R$ <?= number_format($pixPrice, 2, ',', '.') ?></strong> no PIX
