@@ -669,7 +669,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                             <div>
                                 <div class="fw-medium">${option.name}</div>
                                 ${company}
-                                <small class="text-muted d-block">${option.deadline} dias uteis</small>
+                                <small class="text-muted d-block">${option.deadline} dias uteis +3 dias úteis (importação)</small>
                             </div>
                             <div class="text-end">
                                 ${priceHtml}

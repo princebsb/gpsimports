@@ -134,7 +134,7 @@
                                                 <span><?= esc($option['name']) ?></span>
                                                 <strong>R$ <?= number_format($option['price'], 2, ',', '.') ?></strong>
                                             </div>
-                                            <small class="text-muted"><?= $option['deadline'] ?> dias uteis</small>
+                                            <small class="text-muted"><?= $option['deadline'] ?> dias uteis +3 dias úteis (importação)</small>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
@@ -409,7 +409,7 @@
                                     <span><strong>${option.name}</strong> ${option.company ? '- ' + option.company : ''}</span>
                                     <strong class="text-primary">${formatMoney(option.price)}</strong>
                                 </div>
-                                <small class="text-muted">${option.deadline} dias uteis</small>
+                                <small class="text-muted">${option.deadline} dias uteis +3 dias úteis (importação)</small>
                             </label>
                         </div>
                     `;

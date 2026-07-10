@@ -161,7 +161,7 @@ class MelhorEnvioService
                 'name' => $service['name'] ?? 'Envio',
                 'company' => $service['company']['name'] ?? 'Transportadora',
                 'price' => $price,
-                'deadline' => (int) ($service['delivery_time'] ?? 10) + $this->handlingTime,
+                'deadline' => (int) ($service['delivery_time'] ?? 10),
                 'logo' => $service['company']['picture'] ?? null,
             ];
         }
@@ -832,7 +832,7 @@ class MelhorEnvioService
 
         // PAC
         $pacPrice = round($basePrice * $regionMultiplier, 2);
-        $pacDeadline = 7 + (int) $region + $this->handlingTime;
+        $pacDeadline = 7 + (int) $region;
 
         $options[] = [
             'code' => 'PAC',
@@ -845,7 +845,7 @@ class MelhorEnvioService
 
         // SEDEX
         $sedexPrice = round($basePrice * $regionMultiplier * 1.9, 2);
-        $sedexDeadline = 2 + (int) floor((int) $region / 3) + $this->handlingTime;
+        $sedexDeadline = 2 + (int) floor((int) $region / 3);
 
         $options[] = [
             'code' => 'SEDEX',
