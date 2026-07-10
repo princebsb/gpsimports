@@ -90,12 +90,12 @@
     <div class="step-indicator">
         <div class="step active" id="step1Indicator">
             <span class="step-number">1</span>
-            <span>Endereco</span>
+            <span>Endereço</span>
         </div>
         <div class="step-line"></div>
         <div class="step" id="step2Indicator">
             <span class="step-number">2</span>
-            <span>Confirmacao</span>
+            <span>Confirmação</span>
         </div>
     </div>
 
@@ -109,7 +109,7 @@
                 <div class="checkout-step active" id="step1">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0">Endereco de Entrega</h5>
+                            <h5 class="mb-0">Endereço de Entrega</h5>
                         </div>
                         <div class="card-body">
                             <?php if (!empty($addresses)): ?>
@@ -119,9 +119,9 @@
                                             <div class="address-card <?= $address['is_default'] ? 'selected' : '' ?>" onclick="selectAddress(<?= $address['id'] ?>, this)" data-zipcode="<?= esc($address['zipcode']) ?>">
                                                 <input type="radio" name="address_id" value="<?= $address['id'] ?>" class="d-none" <?= $address['is_default'] ? 'checked' : '' ?>>
                                                 <div class="d-flex justify-content-between">
-                                                    <strong><?= esc($address['label'] ?? 'Endereco') ?></strong>
+                                                    <strong><?= esc($address['label'] ?? 'Endereço') ?></strong>
                                                     <?php if ($address['is_default']): ?>
-                                                        <span class="badge bg-primary">Padrao</span>
+                                                        <span class="badge bg-primary">Padrão</span>
                                                     <?php endif; ?>
                                                 </div>
                                                 <div class="small mt-2">
@@ -142,7 +142,7 @@
 
                             <?php if (!empty($addresses)): ?>
                                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#newAddressForm">
-                                    <i class="bi bi-plus me-1"></i>Novo Endereco
+                                    <i class="bi bi-plus me-1"></i>Novo Endereço
                                 </button>
                             <?php endif; ?>
 
@@ -158,7 +158,7 @@
                                         <input type="text" name="new_street" id="newStreet" class="form-control">
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Numero <span class="text-danger">*</span></label>
+                                        <label class="form-label">Número <span class="text-danger">*</span></label>
                                         <input type="text" name="new_number" id="newNumber" class="form-control">
                                     </div>
                                     <div class="col-md-8">
@@ -190,7 +190,7 @@
                     <!-- Shipping Method -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0">Metodo de Envio</h5>
+                            <h5 class="mb-0">Método de Envio</h5>
                         </div>
                         <div class="card-body">
                             <div id="shippingMethods">
@@ -205,12 +205,12 @@
                                                     <span><?= esc($option['name']) ?></span>
                                                     <strong>R$ <?= number_format($option['price'], 2, ',', '.') ?></strong>
                                                 </div>
-                                                <small class="text-muted"><?= $option['deadline'] ?> dias uteis +3 dias úteis (importação)</small>
+                                                <small class="text-muted"><?= $option['deadline'] ?> dias úteis +3 dias úteis (importação)</small>
                                             </label>
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <p class="text-muted"><?= empty($addresses) ? 'Preencha o CEP para ver as opcoes de frete.' : 'Selecione um endereco para ver as opcoes de frete.' ?></p>
+                                    <p class="text-muted"><?= empty($addresses) ? 'Preencha o CEP para ver as opções de frete.' : 'Selecione um endereço para ver as opções de frete.' ?></p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -230,16 +230,16 @@
                 <div class="checkout-step" id="step2">
                     <div class="card mb-4">
                         <div class="card-header">
-                            <h5 class="mb-0">Revisao do Pedido</h5>
+                            <h5 class="mb-0">Revisão do Pedido</h5>
                         </div>
                         <div class="card-body">
                             <div class="row mb-4">
                                 <div class="col-md-6 mb-3">
-                                    <h6><i class="bi bi-geo-alt me-1"></i>Endereco de Entrega</h6>
+                                    <h6><i class="bi bi-geo-alt me-1"></i>Endereço de Entrega</h6>
                                     <div id="reviewAddress" class="text-muted small"></div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <h6><i class="bi bi-truck me-1"></i>Metodo de Envio</h6>
+                                    <h6><i class="bi bi-truck me-1"></i>Método de Envio</h6>
                                     <div id="reviewShipping" class="text-muted small"></div>
                                 </div>
                             </div>
@@ -465,7 +465,7 @@
             const shippingSelected = document.querySelector('input[name="shipping_method"]:checked');
 
             if (!addressSelected && !useNewAddress) {
-                toastr.error('Selecione um endereco de entrega');
+                toastr.error('Selecione um endereço de entrega');
                 return false;
             }
 
@@ -479,13 +479,13 @@
                 const state = document.getElementById('newState').value;
 
                 if (!zipcode || !street || !number || !neighborhood || !city || !state) {
-                    toastr.error('Preencha todos os campos obrigatorios do endereco');
+                    toastr.error('Preencha todos os campos obrigatorios do endereço');
                     return false;
                 }
             }
 
             if (!shippingSelected) {
-                toastr.error('Selecione um metodo de envio');
+                toastr.error('Selecione um método de envio');
                 return false;
             }
         }
@@ -498,10 +498,10 @@
         element.classList.add('selected');
         element.querySelector('input').checked = true;
 
-        // Desmarcar novo endereco
+        // Desmarcar novo endereço
         document.getElementById('useNewAddress').value = '0';
 
-        // Fechar formulario de novo endereco
+        // Fechar formulario de novo endereço
         const newAddressCollapse = bootstrap.Collapse.getInstance(document.getElementById('newAddressForm'));
         if (newAddressCollapse) {
             newAddressCollapse.hide();
@@ -544,7 +544,7 @@
                                     <span>${option.name}</span>
                                     <strong>${price}</strong>
                                 </div>
-                                <small class="text-muted">${option.deadline} dias uteis +3 dias úteis (importação)</small>
+                                <small class="text-muted">${option.deadline} dias úteis +3 dias úteis (importação)</small>
                             </label>
                         </div>
                     `;
@@ -556,7 +556,7 @@
                     selectShipping(data.options[0].code, data.options[0].price, data.options[0].name);
                 }
             } else {
-                shippingDiv.innerHTML = '<div class="alert alert-warning mb-0">Nao foi possivel calcular o frete. Tente novamente.</div>';
+                shippingDiv.innerHTML = '<div class="alert alert-warning mb-0">Não foi possível calcular o frete. Tente novamente.</div>';
             }
         })
         .catch(error => {
@@ -637,16 +637,16 @@
     document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
-        // Validar se um metodo de envio foi selecionado
+        // Validar se um método de envio foi selecionado
         const shippingSelected = document.querySelector('input[name="shipping_method"]:checked');
         if (!shippingSelected) {
-            toastr.error('Selecione um metodo de envio antes de finalizar');
+            toastr.error('Selecione um método de envio antes de finalizar');
             goToStep(1);
             return;
         }
 
         if (!document.getElementById('agreeTerms').checked) {
-            toastr.error('Voce precisa aceitar os termos');
+            toastr.error('Você precisa aceitar os termos');
             return;
         }
 
@@ -679,16 +679,16 @@
         }
     });
 
-    // Mask CEP do novo endereco
+    // Mask CEP do novo endereço
     document.getElementById('newZipcode')?.addEventListener('input', function() {
         this.value = this.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').substring(0, 9);
     });
 
-    // Auto-complete e calcular frete do novo endereco
+    // Auto-complete e calcular frete do novo endereço
     document.getElementById('newZipcode')?.addEventListener('blur', function() {
         const cep = this.value.replace(/\D/g, '');
         if (cep.length === 8) {
-            // Auto-complete endereco
+            // Auto-complete endereço
             fetch(`https://viacep.com.br/ws/${cep}/json/`)
                 .then(response => response.json())
                 .then(data => {
@@ -706,14 +706,14 @@
         }
     });
 
-    // Quando abre o formulario de novo endereco
+    // Quando abre o formulario de novo endereço
     document.getElementById('newAddressForm')?.addEventListener('show.bs.collapse', function() {
         document.getElementById('useNewAddress').value = '1';
         document.querySelectorAll('.address-card').forEach(el => {
             el.classList.remove('selected');
             el.querySelector('input').checked = false;
         });
-        document.getElementById('shippingMethods').innerHTML = '<p class="text-muted">Preencha o CEP para ver as opcoes de frete.</p>';
+        document.getElementById('shippingMethods').innerHTML = '<p class="text-muted">Preencha o CEP para ver as opções de frete.</p>';
     });
 
     // Select default address on load and calculate shipping

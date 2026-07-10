@@ -164,7 +164,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                         <i class="bi bi-star<?= $i <= ($product['rating'] ?? 0) ? '-fill' : '' ?>"></i>
                     <?php endfor; ?>
                 </div>
-                <span class="text-muted small">(<?= $product['reviews_count'] ?? 0 ?> avaliacoes)</span>
+                <span class="text-muted small">(<?= $product['reviews_count'] ?? 0 ?> avaliações)</span>
                 <span class="text-muted small ms-3">SKU: <?= esc($product['sku']) ?></span>
             </div>
 
@@ -283,7 +283,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
             <!-- Variations -->
             <?php if (!empty($product['variations'])): ?>
                 <div class="mb-4">
-                    <label class="form-label fw-bold">Opcao:</label>
+                    <label class="form-label fw-bold">Opção:</label>
                     <div class="d-flex flex-wrap gap-2">
                         <?php foreach ($product['variations'] as $variation): ?>
                             <button type="button"
@@ -380,7 +380,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                         </div>
                     </form>
                     <div id="shippingResults" class="mt-3"></div>
-                    <a href="https://buscacepinter.correios.com.br/" target="_blank" class="small text-muted">Nao sei meu CEP</a>
+                    <a href="https://buscacepinter.correios.com.br/" target="_blank" class="small text-muted">Não sei meu CEP</a>
                 </div>
             </div>
 
@@ -411,16 +411,16 @@ $schemaCondition = 'https://schema.org/NewCondition';
         <div class="col-12">
             <ul class="nav nav-tabs" id="productTabs">
                 <li class="nav-item">
-                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description">Descricao</button>
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#description">Descrição</button>
                 </li>
                 <?php if ($hasSpecs): ?>
                     <li class="nav-item">
-                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specs">Especificacoes</button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#specs">Especificações</button>
                     </li>
                 <?php endif; ?>
                 <li class="nav-item">
                     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reviews">
-                        Avaliacoes (<?= $product['reviews_count'] ?? 0 ?>)
+                        Avaliações (<?= $product['reviews_count'] ?? 0 ?>)
                     </button>
                 </li>
             </ul>
@@ -434,7 +434,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                 <!-- Specifications -->
                 <?php if ($hasSpecs): ?>
                     <div class="tab-pane fade" id="specs">
-                        <h5 class="mb-4 text-primary fw-bold">Especificacoes Tecnicas</h5>
+                        <h5 class="mb-4 text-primary fw-bold">Especificações Tecnicas</h5>
                         <div class="table-responsive">
                             <table class="table table-specs mb-0">
                                 <tbody>
@@ -480,7 +480,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-muted">Este produto ainda nao possui avaliacoes.</p>
+                        <p class="text-muted">Este produto ainda nao possui avaliações.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -538,7 +538,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
 
 <?= $this->section('styles') ?>
 <style>
-/* Tabela de Especificacoes Tecnicas */
+/* Tabela de Especificações Tecnicas */
 .table-specs {
     border-collapse: separate;
     border-spacing: 0;
@@ -669,7 +669,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
                             <div>
                                 <div class="fw-medium">${option.name}</div>
                                 ${company}
-                                <small class="text-muted d-block">${option.deadline} dias uteis +3 dias úteis (importação)</small>
+                                <small class="text-muted d-block">${option.deadline} dias úteis +3 dias úteis (importação)</small>
                             </div>
                             <div class="text-end">
                                 ${priceHtml}

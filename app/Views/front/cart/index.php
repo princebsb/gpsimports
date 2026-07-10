@@ -134,7 +134,7 @@
                                                 <span><?= esc($option['name']) ?></span>
                                                 <strong>R$ <?= number_format($option['price'], 2, ',', '.') ?></strong>
                                             </div>
-                                            <small class="text-muted"><?= $option['deadline'] ?> dias uteis +3 dias úteis (importação)</small>
+                                            <small class="text-muted"><?= $option['deadline'] ?> dias úteis +3 dias úteis (importação)</small>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
@@ -409,7 +409,7 @@
                                     <span><strong>${option.name}</strong> ${option.company ? '- ' + option.company : ''}</span>
                                     <strong class="text-primary">${formatMoney(option.price)}</strong>
                                 </div>
-                                <small class="text-muted">${option.deadline} dias uteis +3 dias úteis (importação)</small>
+                                <small class="text-muted">${option.deadline} dias úteis +3 dias úteis (importação)</small>
                             </label>
                         </div>
                     `;
@@ -421,7 +421,7 @@
                     selectShipping(firstOption.code, firstOption.price);
                 }
             } else {
-                optionsDiv.innerHTML = `<div class="alert alert-warning small mb-0"><i class="bi bi-exclamation-triangle me-1"></i>${data.message || 'Nenhuma opcao de frete disponivel'}</div>`;
+                optionsDiv.innerHTML = `<div class="alert alert-warning small mb-0"><i class="bi bi-exclamation-triangle me-1"></i>${data.message || 'Nenhuma opção de frete disponivel'}</div>`;
             }
         })
         .catch(() => {
