@@ -98,6 +98,11 @@ class CartController extends BaseController
 
             $result = $this->cartService->addItem($productId, $quantity, $variationId);
 
+            // Salvar carrinho abandonado para recuperacao
+            if ($result['success']) {
+                $this->salvarCarrinhoAbandonado();
+            }
+
             // Sempre retorna JSON (endpoint usado via AJAX)
             return $this->jsonResponse($result);
         } catch (\Exception $e) {
@@ -189,5 +194,76 @@ class CartController extends BaseController
         $result = $this->cartService->setShipping($method, $price, $zipcode);
 
         return $this->jsonResponse($result);
+    }
+
+    /**
+     * Salvar carrinho abandonado para recuperacao por email
+     */
+    protected function salvarCarrinhoAbandonado()
+    {
+        try {
+            $cart = $this->cartService->getCurrentCart();
+
+            // So salvar se tiver itens
+            if (empty($cart['items'])) {
+                return;
+            }
+
+            $customerId = session()->get('customer_id');
+            $sessionId = session_id();
+
+            // Se cliente nao esta logado, nao temos email para enviar
+            if (!$customerId) {
+                return;
+            }
+
+            $db = \Config\Database::connect();
+
+            // Verificar se ja existe registro para este cliente
+            $existing = $db->table('cart_abandonment')
+                ->where('customer_id', $customerId)
+                ->where('recovered', 0)
+                ->get()
+                ->getRowArray();
+
+            $data = [
+                'customer_id' => $customerId,
+                'session_id' => $sessionId,
+                'items' => json_encode($cart['items']),
+                'total' => $cart['subtotal'],
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            if ($existing) {
+                // Atualizar
+                $db->table('cart_abandonment')
+                    ->where('id', $existing['id'])
+                    ->update($data);
+            } else {
+                // Inserir novo
+                $data['created_at'] = date('Y-m-d H:i:s');
+                $data['email_sent'] = 0;
+                $data['recovered'] = 0;
+                $db->table('cart_abandonment')->insert($data);
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao salvar carrinho abandonado: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Marcar carrinho como recuperado (chamado apos finalizar compra)
+     */
+    public static function marcarCarrinhoRecuperado(int $customerId)
+    {
+        try {
+            $db = \Config\Database::connect();
+            $db->table('cart_abandonment')
+                ->where('customer_id', $customerId)
+                ->where('recovered', 0)
+                ->update(['recovered' => 1]);
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao marcar carrinho recuperado: ' . $e->getMessage());
+        }
     }
 }

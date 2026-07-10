@@ -177,6 +177,9 @@ class CheckoutController extends BaseController
         // Limpar carrinho
         service('cart')->clearCart();
 
+        // Marcar carrinho abandonado como recuperado
+        \App\Controllers\Front\CartController::marcarCarrinhoRecuperado($customerId);
+
         // Atualizar estatisticas do cliente
         model('CustomerModel')->updateOrderStats($customerId, $order['total']);
 
