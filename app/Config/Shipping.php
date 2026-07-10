@@ -98,8 +98,9 @@ class Shipping extends BaseConfig
 
     /**
      * Additional handling time (days)
+     * Produtos retirados no Paraguai: terça, quinta e sexta
      */
-    public int $handlingTime = 1;
+    public int $handlingTime = 3;
 
     /**
      * Package default dimensions (cm)
