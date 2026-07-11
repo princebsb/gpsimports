@@ -11,11 +11,8 @@
                     <?php foreach ($banners as $banner): ?>
                         <div class="swiper-slide">
                             <a href="<?= $banner['link'] ?? '#' ?>" class="banner-slide d-block">
-                                <?php
-                                $bannerPath = FCPATH . 'uploads/banners/' . ($banner['image'] ?? '');
-                                if (!empty($banner['image']) && file_exists($bannerPath)):
-                                ?>
-                                    <img src="<?= base_url('uploads/banners/' . $banner['image']) ?>" alt="<?= esc($banner['title']) ?>">
+                                <?php if (!empty($banner['image'])): ?>
+                                    <img src="<?= base_url('public/uploads/banners/' . $banner['image']) ?>" alt="<?= esc($banner['title']) ?>" onerror="this.src='https://placehold.co/1200x400/3b82f6/ffffff?text=<?= urlencode($banner['title'] ?? 'Banner') ?>'">
                                 <?php else: ?>
                                     <img src="https://placehold.co/1200x400/3b82f6/ffffff?text=<?= urlencode($banner['title'] ?? 'Banner') ?>" alt="<?= esc($banner['title']) ?>" class="w-100 rounded">
                                 <?php endif; ?>
