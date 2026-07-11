@@ -16,6 +16,7 @@ class ImportProducts extends BaseCommand
         '--offset' => 'Offset para paginação (default: 0)',
         '--dry-run' => 'Simula a importação sem salvar',
         '--update' => 'Atualiza produtos existentes (por SKU)',
+        '--fonte' => 'Filtrar por fonte (ex: megaeletronicos, atacadoconnect)',
     ];
 
     // Mapeamento de categoria_slug para category_id
@@ -150,6 +151,7 @@ class ImportProducts extends BaseCommand
         $offset = $params['offset'] ?? 0;
         $dryRun = CLI::getOption('dry-run') !== null;
         $update = CLI::getOption('update') !== null;
+        $fonte = CLI::getOption('fonte');
 
         CLI::write('==============================================', 'cyan');
         CLI::write('  IMPORTAÇÃO DE PRODUTOS - produtos_paraguai  ', 'cyan');
@@ -161,21 +163,32 @@ class ImportProducts extends BaseCommand
             CLI::newLine();
         }
 
+        if ($fonte) {
+            CLI::write("Filtrando por fonte: {$fonte}", 'yellow');
+            CLI::newLine();
+        }
+
         // Carregar mapeamentos
         $this->loadMappings();
 
         // Conectar ao banco de origem
         $sourceDb = $this->getSourceDb();
 
+        // Construir WHERE
+        $where = "ativo = 1 AND disponivel = 1";
+        if ($fonte) {
+            $where .= " AND fonte = '{$fonte}'";
+        }
+
         // Contar total
-        $totalQuery = $sourceDb->query("SELECT COUNT(*) as total FROM produtos WHERE ativo = 1 AND disponivel = 1");
+        $totalQuery = $sourceDb->query("SELECT COUNT(*) as total FROM produtos WHERE {$where}");
         $total = $totalQuery->getRow()->total;
 
         CLI::write("Total de produtos ativos: {$total}", 'green');
         CLI::newLine();
 
         // Query de seleção
-        $sql = "SELECT * FROM produtos WHERE ativo = 1 AND disponivel = 1 ORDER BY id";
+        $sql = "SELECT * FROM produtos WHERE {$where} ORDER BY id";
         if ($limit) {
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
         }
@@ -334,6 +347,18 @@ class ImportProducts extends BaseCommand
             $tags[] = $source['categoria_slug'];
         }
 
+        // Processar especificações como JSON
+        $especificacoesJson = null;
+        if (!empty($source['especificacoes'])) {
+            // Tentar parsear como JSON, senão converter texto para array
+            $specs = json_decode($source['especificacoes'], true);
+            if (!$specs) {
+                // Converter texto para array simples
+                $specs = ['Especificações' => strip_tags($source['especificacoes'])];
+            }
+            $especificacoesJson = json_encode($specs, JSON_UNESCAPED_UNICODE);
+        }
+
         return [
             'name' => $name,
             'slug' => $slug,
@@ -341,6 +366,7 @@ class ImportProducts extends BaseCommand
             'codigo_produto' => $source['codigo_produto'] ?? null,
             'description' => $description,
             'short_description' => mb_substr(strip_tags($description), 0, 300),
+            'especificacoes' => $especificacoesJson,
             'price' => $salePrice,
             'sale_price' => null,
             'cost_price' => $costPrice,
@@ -348,6 +374,10 @@ class ImportProducts extends BaseCommand
             'category_id' => $categoryId,
             'brand_id' => $brandId,
             'featured_image' => $source['imagem_url'] ?: null,
+            'images_json' => $source['imagens_json'] ?: null,
+            'url_origem' => $source['url'] ?: null,
+            'fonte' => $source['fonte'] ?: null,
+            'disponivel' => 1,
             'weight' => 0.5, // Peso padrão
             'width' => 20,   // Dimensões padrão
             'height' => 10,

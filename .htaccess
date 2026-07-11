@@ -6,25 +6,17 @@
     RewriteCond %{HTTP_HOST} gpsimports\.com\.br [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # Se o arquivo/diretorio existe em public, servir diretamente
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -f [OR]
-    RewriteCond %{DOCUMENT_ROOT}/public%{REQUEST_URI} -d
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # Caso contrario, enviar para index.php
+    # Redirecionar tudo para public/index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php/$1 [L]
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
 </IfModule>
 
 # Proteger arquivos sensiveis
 <FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
+    Require all denied
 </FilesMatch>
 
 <FilesMatch "(composer\.(json|lock)|\.env|phpunit\.xml)$">
-    Order allow,deny
-    Deny from all
+    Require all denied
 </FilesMatch>
