@@ -44,16 +44,40 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="card-title">
+                        <i class="bi bi-shield-check text-primary me-2"></i>
+                        Garantia
+                    </h5>
+                    <p class="card-text">
+                        <strong>Garantia de 90 dias contra defeitos de fabricação</strong>, contados a partir do recebimento do produto pelo cliente.
+                    </p>
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Não são cobertos pela garantia:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Danos por queda</li>
+                            <li>Danos por água</li>
+                            <li>Mau uso</li>
+                            <li>Danos na tela</li>
+                            <li>Carregador queimado</li>
+                            <li>Produto aberto por terceiros</li>
+                            <li>Lacre rompido</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">
                         <i class="bi bi-exclamation-triangle text-warning me-2"></i>
-                        Produto com Defeito
+                        Produto com Defeito de Fabricação
                     </h5>
                     <p class="card-text">
                         Se você recebeu um produto com defeito de fabricação:
                     </p>
                     <ul>
                         <li><strong>Até 7 dias:</strong> Troca imediata ou reembolso total</li>
-                        <li><strong>Até 30 dias:</strong> Reparo, troca ou reembolso (conforme disponibilidade)</li>
-                        <li><strong>Após 30 dias:</strong> Acione a garantia do fabricante</li>
+                        <li><strong>Até 90 dias:</strong> Reparo ou troca (conforme disponibilidade)</li>
                     </ul>
                 </div>
             </div>

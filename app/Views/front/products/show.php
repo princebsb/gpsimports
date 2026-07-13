@@ -384,6 +384,15 @@ $schemaCondition = 'https://schema.org/NewCondition';
                 </div>
             </div>
 
+            <!-- Warranty -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h6 class="card-title"><i class="bi bi-shield-check text-success me-2"></i>Garantia</h6>
+                    <p class="mb-2 small"><strong>90 dias</strong> contra defeitos de fabricação.</p>
+                    <p class="mb-0 text-muted small">Não cobre: queda, água, mau uso, tela, carregador queimado, produto aberto por terceiros ou lacre rompido.</p>
+                </div>
+            </div>
+
             <!-- Payment Methods -->
             <div class="card">
                 <div class="card-body">

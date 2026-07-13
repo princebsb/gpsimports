@@ -189,7 +189,7 @@
                         </div>
 
                         <?php
-                        $minSubtotal = 300.00;
+                        $minSubtotal = 500.00;
                         $subtotal = (float)($cart['subtotal'] ?? 0);
                         $falta = $minSubtotal - $subtotal;
                         ?>
@@ -457,7 +457,7 @@
         this.value = this.value.replace(/\D/g, '').replace(/(\d{5})(\d)/, '$1-$2').substring(0, 9);
     });
 
-    const MIN_SUBTOTAL = 300.00;
+    const MIN_SUBTOTAL = 500.00;
 
     const PIX_DISCOUNT = <?= (float) (setting('pix_discount') ?? 5) ?>;
 

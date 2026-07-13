@@ -32,7 +32,7 @@ class CheckoutController extends BaseController
         $cart = $validation['cart'];
 
         // Validar valor minimo
-        $minSubtotal = 300.00;
+        $minSubtotal = 500.00;
         if ((float)($cart['subtotal'] ?? 0) < $minSubtotal) {
             return redirect()->to('/carrinho')->with('error', 'O valor minimo para compra e de R$ ' . number_format($minSubtotal, 2, ',', '.') . '.');
         }
@@ -70,7 +70,7 @@ class CheckoutController extends BaseController
         $cart = $this->cartService->getCurrentCart();
 
         // Validar valor minimo
-        $minSubtotal = 300.00;
+        $minSubtotal = 500.00;
         if ((float)($cart['subtotal'] ?? 0) < $minSubtotal) {
             return $this->response->setJSON([
                 'success' => false,
