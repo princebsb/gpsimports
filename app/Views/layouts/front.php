@@ -417,31 +417,59 @@
             font-size: 0.875rem;
         }
 
-        /* Logo Animada com Borda Gradiente */
+        /* Logo Animada - Efeito Cobrinha */
         .logo-animated {
             position: relative;
             display: inline-block;
             padding: 3px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
-            background-size: 300% 300%;
-            animation: logo-gradient 3s ease infinite;
+            overflow: hidden;
         }
 
         .logo-animated::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
-            background-size: 300% 300%;
-            animation: logo-gradient 3s ease infinite;
-            filter: blur(8px);
-            opacity: 0.6;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 60deg,
+                #3b82f6 120deg,
+                #8b5cf6 180deg,
+                #ec4899 240deg,
+                transparent 300deg,
+                transparent 360deg
+            );
+            transform: translate(-50%, -50%);
+            animation: snake-rotate 2s linear infinite;
             z-index: -1;
+        }
+
+        .logo-animated::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                transparent 60deg,
+                #3b82f6 120deg,
+                #8b5cf6 180deg,
+                #ec4899 240deg,
+                transparent 300deg,
+                transparent 360deg
+            );
+            transform: translate(-50%, -50%);
+            animation: snake-rotate 2s linear infinite;
+            filter: blur(10px);
+            opacity: 0.7;
+            z-index: -2;
         }
 
         .logo-animated .logo-inner {
@@ -449,6 +477,8 @@
             background: #fff;
             border-radius: 10px;
             padding: 6px 12px;
+            position: relative;
+            z-index: 1;
         }
 
         .logo-animated .logo-inner img {
@@ -457,15 +487,12 @@
             width: auto;
         }
 
-        @keyframes logo-gradient {
+        @keyframes snake-rotate {
             0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
+                transform: translate(-50%, -50%) rotate(0deg);
             }
             100% {
-                background-position: 0% 50%;
+                transform: translate(-50%, -50%) rotate(360deg);
             }
         }
 
