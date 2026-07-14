@@ -417,6 +417,63 @@
             font-size: 0.875rem;
         }
 
+        /* Logo Animada com Borda Gradiente */
+        .logo-animated {
+            position: relative;
+            display: inline-block;
+            padding: 3px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
+            background-size: 300% 300%;
+            animation: logo-gradient 3s ease infinite;
+        }
+
+        .logo-animated::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
+            background-size: 300% 300%;
+            animation: logo-gradient 3s ease infinite;
+            filter: blur(8px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        .logo-animated .logo-inner {
+            display: block;
+            background: #fff;
+            border-radius: 10px;
+            padding: 6px 12px;
+        }
+
+        .logo-animated .logo-inner img {
+            display: block;
+            max-height: 40px;
+            width: auto;
+        }
+
+        @keyframes logo-gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .logo-animated:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s;
+        }
+
         /* WhatsApp Button */
         .whatsapp-button {
             position: fixed;
@@ -652,12 +709,14 @@
             <div class="row align-items-center">
                 <!-- Logo -->
                 <div class="col-6 col-lg-2">
-                    <a href="<?= base_url() ?>" class="logo">
-                        <?php if (setting('logo')): ?>
-                            <img src="<?= base_url('uploads/settings/' . setting('logo')) ?>" alt="<?= setting('store_name') ?>">
-                        <?php else: ?>
-                            <h4 class="mb-0 fw-bold text-primary"><?= setting('store_name') ?? 'GPS Imports' ?></h4>
-                        <?php endif; ?>
+                    <a href="<?= base_url() ?>" class="logo-animated">
+                        <span class="logo-inner">
+                            <?php if (setting('logo')): ?>
+                                <img src="<?= base_url('uploads/settings/' . setting('logo')) ?>" alt="<?= setting('store_name') ?>">
+                            <?php else: ?>
+                                <span class="fw-bold text-primary" style="font-size: 1.2rem;"><?= setting('store_name') ?? 'GPS Imports' ?></span>
+                            <?php endif; ?>
+                        </span>
                     </a>
                 </div>
 
