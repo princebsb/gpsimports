@@ -443,7 +443,7 @@
                 transparent 360deg
             );
             transform: translate(-50%, -50%);
-            animation: snake-rotate 6s ease-in-out infinite;
+            animation: snake-rotate 3s linear infinite;
             z-index: -1;
         }
 
@@ -464,7 +464,7 @@
                 transparent 360deg
             );
             transform: translate(-50%, -50%);
-            animation: snake-rotate 6s ease-in-out infinite;
+            animation: snake-rotate 3s linear infinite;
             filter: blur(6px);
             opacity: 0.6;
             z-index: -2;
@@ -488,9 +488,6 @@
         @keyframes snake-rotate {
             0% {
                 transform: translate(-50%, -50%) rotate(0deg);
-            }
-            33% {
-                transform: translate(-50%, -50%) rotate(360deg);
             }
             100% {
                 transform: translate(-50%, -50%) rotate(360deg);
