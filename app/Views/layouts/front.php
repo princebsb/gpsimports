@@ -421,7 +421,7 @@
         .logo-animated {
             position: relative;
             display: inline-block;
-            padding: 3px;
+            padding: 2px;
             border-radius: 12px;
             overflow: hidden;
         }
@@ -431,20 +431,19 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 200%;
-            height: 200%;
+            width: 150%;
+            height: 150%;
             background: conic-gradient(
                 from 0deg,
                 transparent 0deg,
-                transparent 60deg,
-                #3b82f6 120deg,
-                #8b5cf6 180deg,
-                #ec4899 240deg,
-                transparent 300deg,
+                #3b82f6 30deg,
+                #8b5cf6 60deg,
+                #ec4899 90deg,
+                transparent 120deg,
                 transparent 360deg
             );
             transform: translate(-50%, -50%);
-            animation: snake-rotate 2s linear infinite;
+            animation: snake-rotate 6s ease-in-out infinite;
             z-index: -1;
         }
 
@@ -453,22 +452,21 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 200%;
-            height: 200%;
+            width: 150%;
+            height: 150%;
             background: conic-gradient(
                 from 0deg,
                 transparent 0deg,
-                transparent 60deg,
-                #3b82f6 120deg,
-                #8b5cf6 180deg,
-                #ec4899 240deg,
-                transparent 300deg,
+                #3b82f6 30deg,
+                #8b5cf6 60deg,
+                #ec4899 90deg,
+                transparent 120deg,
                 transparent 360deg
             );
             transform: translate(-50%, -50%);
-            animation: snake-rotate 2s linear infinite;
-            filter: blur(10px);
-            opacity: 0.7;
+            animation: snake-rotate 6s ease-in-out infinite;
+            filter: blur(6px);
+            opacity: 0.6;
             z-index: -2;
         }
 
@@ -490,6 +488,9 @@
         @keyframes snake-rotate {
             0% {
                 transform: translate(-50%, -50%) rotate(0deg);
+            }
+            33% {
+                transform: translate(-50%, -50%) rotate(360deg);
             }
             100% {
                 transform: translate(-50%, -50%) rotate(360deg);
