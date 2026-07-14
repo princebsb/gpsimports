@@ -179,13 +179,13 @@
                         </div>
 
                         <?php
-                        $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                        $pixDiscount = get_pix_discount($cart['total']);
                         $pixTotal = $cart['total'] * (1 - $pixDiscount / 100);
                         ?>
                         <div class="d-flex justify-content-between mb-3 text-success">
                             <span><i class="bi bi-qr-code me-1"></i>No PIX</span>
                             <strong id="pix-total">R$ <?= number_format($pixTotal, 2, ',', '.') ?></strong>
-                            <span class="badge bg-success"><?= $pixDiscount ?>% OFF</span>
+                            <span class="badge bg-success" id="pix-badge"><?= $pixDiscount ?>% OFF</span>
                         </div>
 
                         <?php
@@ -459,7 +459,13 @@
 
     const MIN_SUBTOTAL = 500.00;
 
-    const PIX_DISCOUNT = <?= (float) (setting('pix_discount') ?? 5) ?>;
+    const PIX_DISCOUNT_NORMAL = <?= (float) (setting('pix_discount') ?? 5) ?>;
+    const PIX_DISCOUNT_HIGH = <?= (float) (setting('pix_discount_high_value') ?? 3) ?>;
+    const PIX_THRESHOLD = <?= (float) (setting('pix_discount_threshold') ?? 5000) ?>;
+
+    function getPixDiscount(value) {
+        return value > PIX_THRESHOLD ? PIX_DISCOUNT_HIGH : PIX_DISCOUNT_NORMAL;
+    }
 
     function updateTotals(data) {
         const subtotal = data.subtotal || data.cart?.subtotal || 0;
@@ -468,11 +474,16 @@
         document.getElementById('subtotal').textContent = formatMoney(subtotal);
         document.getElementById('total').textContent = formatMoney(total);
 
-        // Atualizar preco PIX
+        // Atualizar preco PIX com desconto dinamico
         const pixTotalEl = document.getElementById('pix-total');
+        const pixBadge = document.getElementById('pix-badge');
         if (pixTotalEl) {
-            const pixTotal = total * (1 - PIX_DISCOUNT / 100);
+            const pixDiscount = getPixDiscount(total);
+            const pixTotal = total * (1 - pixDiscount / 100);
             pixTotalEl.textContent = formatMoney(pixTotal);
+            if (pixBadge) {
+                pixBadge.textContent = pixDiscount + '% OFF';
+            }
         }
 
         // Atualizar desconto se existir

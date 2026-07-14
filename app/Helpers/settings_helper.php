@@ -248,3 +248,22 @@ if (!function_exists('payment_status_label')) {
         };
     }
 }
+
+/**
+ * Get PIX discount based on product/cart value
+ *
+ * @param float $value Product or cart value
+ * @return float Discount percentage
+ */
+if (!function_exists('get_pix_discount')) {
+    function get_pix_discount(float $value): float
+    {
+        $threshold = (float) (setting('pix_discount_threshold') ?? 5000);
+
+        if ($value > $threshold) {
+            return (float) (setting('pix_discount_high_value') ?? 3);
+        }
+
+        return (float) (setting('pix_discount') ?? 5);
+    }
+}

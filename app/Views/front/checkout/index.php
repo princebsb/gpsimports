@@ -285,7 +285,7 @@
                         <p class="mb-3">Escolha como deseja pagar:</p>
 
                         <?php
-                        $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                        $pixDiscount = get_pix_discount($cart['total']);
                         $pixTotal = $cart['total'] * (1 - $pixDiscount / 100);
                         ?>
 

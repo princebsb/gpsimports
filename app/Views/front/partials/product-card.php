@@ -78,7 +78,7 @@
 
         <?php if ($currentPrice > 0): ?>
             <?php
-            $pixDiscount = (float) (setting('pix_discount') ?? 5);
+            $pixDiscount = get_pix_discount($currentPrice);
             $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
             ?>
             <?php $parcelasSemJuros = (int) (setting('installments_no_interest') ?? 1); ?>

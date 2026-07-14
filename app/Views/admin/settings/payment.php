@@ -57,15 +57,29 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-12 mb-3">
                             <div class="form-check">
                                 <input type="checkbox" name="pix_enabled" class="form-check-input" id="pixEnabled" value="1" <?= ($settings['pix_enabled'] ?? true) ? 'checked' : '' ?>>
                                 <label class="form-check-label" for="pixEnabled">PIX Habilitado</label>
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Desconto PIX (%)</label>
+                    </div>
+                    <div class="alert alert-info mb-3">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Desconto diferenciado por faixa de valor do produto
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Desconto PIX - Ate R$ 5.000 (%)</label>
                             <input type="number" name="pix_discount" class="form-control" step="0.1" value="<?= $settings['pix_discount'] ?? 5 ?>">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Desconto PIX - Acima de R$ 5.000 (%)</label>
+                            <input type="number" name="pix_discount_high_value" class="form-control" step="0.1" value="<?= $settings['pix_discount_high_value'] ?? 3 ?>">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Limite para desconto maior (R$)</label>
+                            <input type="number" name="pix_discount_threshold" class="form-control" step="0.01" value="<?= $settings['pix_discount_threshold'] ?? 5000 ?>">
                         </div>
                     </div>
                 </div>

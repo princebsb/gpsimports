@@ -57,11 +57,11 @@ class OrderService
             return ['success' => false, 'errors' => ['Voce precisa estar logado para finalizar a compra.']];
         }
 
-        // Calcular desconto PIX
+        // Calcular desconto PIX (dinamico baseado no valor)
         $pixDiscount = 0;
         $totalWithPixDiscount = $cart['total'];
         if (($data['payment_method'] ?? '') === 'pix') {
-            $pixDiscountPercent = (float) (setting('pix_discount') ?? 5);
+            $pixDiscountPercent = get_pix_discount($cart['total']);
             if ($pixDiscountPercent > 0) {
                 $pixDiscount = round($cart['total'] * ($pixDiscountPercent / 100), 2);
                 $totalWithPixDiscount = $cart['total'] - $pixDiscount;

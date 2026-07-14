@@ -172,7 +172,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
             <div class="mb-4">
                 <?php
                 $currentPrice = $product['sale_price'] && $product['sale_price'] < $product['price'] ? $product['sale_price'] : $product['price'];
-                $pixDiscount = (float) (setting('pix_discount') ?? 5);
+                $pixDiscount = get_pix_discount($currentPrice);
                 $pixPrice = $currentPrice * (1 - $pixDiscount / 100);
                 ?>
                 <?php if ($currentPrice > 0): ?>
@@ -275,6 +275,33 @@ $schemaCondition = 'https://schema.org/NewCondition';
                 <?php endif; ?>
             </div>
 
+            <!-- Trust Badges -->
+            <div class="d-flex flex-wrap gap-2 mb-4">
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                    <i class="bi bi-check-circle-fill me-1"></i>Produto Original
+                </span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
+                    <i class="bi bi-geo-alt-fill me-1"></i>Entrega em Todo o Brasil
+                </span>
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2">
+                    <i class="bi bi-shield-check me-1"></i>Pagamento protegido pelo Mercado Pago
+                </span>
+                <?php if (($product['stock'] ?? 0) > 0): ?>
+                <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2">
+                    <i class="bi bi-box-seam-fill me-1"></i>Importação Programada
+                </span>
+                <?php endif; ?>
+            </div>
+
+            <!-- Como funciona sua compra -->
+            <div class="bg-light border-start border-4 border-primary p-3 mb-4 rounded-end">
+                <h6 class="fw-bold mb-2"><i class="bi bi-box2-heart me-2"></i>Como funciona sua compra</h6>
+                <p class="mb-2 small text-muted">
+                    Após a confirmação do pagamento, seu produto é adquirido junto ao nosso parceiro importador nas datas de processamento (terça, quinta e sábado), conferido, embalado e enviado ao seu endereço.
+                </p>
+                <p class="mb-0 small"><strong>Prazo médio para postagem:</strong> até <strong>5 dias úteis</strong>.</p>
+            </div>
+
             <!-- Short Description -->
             <?php if ($product['short_description']): ?>
                 <p class="text-muted mb-4"><?= esc($product['short_description']) ?></p>
@@ -304,7 +331,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
             <!-- Stock Status -->
             <div class="mb-4">
                 <?php if ($product['stock'] > 0): ?>
-                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Em Estoque</span>
+                    <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Disponível</span>
                     <?php if ($product['stock'] <= 5): ?>
                         <span class="badge bg-warning ms-2">Ultimas <?= $product['stock'] ?> unidades!</span>
                     <?php endif; ?>
@@ -340,6 +367,9 @@ $schemaCondition = 'https://schema.org/NewCondition';
                             <i class="bi bi-lightning-fill me-2"></i>Comprar Agora
                         </a>
                     </div>
+                    <p class="text-muted small mt-3 mb-0">
+                        <i class="bi bi-lock-fill me-1"></i>Pagamento processado com segurança pelo Mercado Pago. Seu dinheiro fica protegido até a entrega do produto.
+                    </p>
                 </form>
             <?php else: ?>
                 <div class="alert alert-secondary">

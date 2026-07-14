@@ -365,10 +365,10 @@ class PaymentService
         // Buscar itens do pedido
         $orderItems = $this->orderModel->getItems($orderId);
 
-        // Calcular desconto PIX se aplicavel
+        // Calcular desconto PIX se aplicavel (dinamico baseado no valor)
         $pixDiscount = 0;
         if ($paymentMethod === 'pix') {
-            $pixDiscountPercent = (float) (setting('pix_discount') ?? 5);
+            $pixDiscountPercent = get_pix_discount((float) $order['total']);
             $pixDiscount = $pixDiscountPercent / 100;
         }
 

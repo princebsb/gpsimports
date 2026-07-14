@@ -144,9 +144,9 @@ class CheckoutController extends BaseController
         $paymentMethod = $data['payment_method'] ?? 'card';
         $pixDiscount = 0;
 
-        // Aplicar desconto PIX se selecionado
+        // Aplicar desconto PIX se selecionado (dinamico baseado no valor)
         if ($paymentMethod === 'pix') {
-            $pixDiscountPercent = (float) (setting('pix_discount') ?? 5);
+            $pixDiscountPercent = get_pix_discount($cart['total']);
             $pixDiscount = $cart['total'] * ($pixDiscountPercent / 100);
             $data['pix_discount'] = $pixDiscount;
             $data['payment_method_selected'] = 'pix';
