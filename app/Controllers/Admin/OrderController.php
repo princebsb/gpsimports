@@ -332,13 +332,32 @@ class OrderController extends BaseController
         }
 
         // 4. Obter código de rastreio
-        $trackingResult = $melhorEnvio->tracking([$cartId]);
         $trackingCode = null;
 
-        if ($trackingResult['success'] && !empty($trackingResult['data'])) {
-            // O retorno é um array com o ID como chave
-            $trackingData = $trackingResult['data'][$cartId] ?? reset($trackingResult['data']);
-            $trackingCode = $trackingData['tracking'] ?? null;
+        // Tentar obter do resultado da geração de etiqueta
+        if (!empty($labelResult['data'])) {
+            // Pode estar em diferentes formatos
+            $labelData = is_array($labelResult['data']) ? $labelResult['data'] : [];
+            if (isset($labelData[$cartId]['tracking'])) {
+                $trackingCode = $labelData[$cartId]['tracking'];
+            } elseif (isset($labelData['tracking'])) {
+                $trackingCode = $labelData['tracking'];
+            }
+        }
+
+        // Se não encontrou, tentar via endpoint de tracking
+        if (!$trackingCode) {
+            // Aguardar 2 segundos para o Melhor Envio processar
+            sleep(2);
+
+            $trackingResult = $melhorEnvio->tracking([$cartId]);
+            log_message('debug', 'Tracking Result: ' . json_encode($trackingResult));
+
+            if ($trackingResult['success'] && !empty($trackingResult['data'])) {
+                // O retorno pode ser array indexado pelo cartId ou array simples
+                $trackingData = $trackingResult['data'][$cartId] ?? ($trackingResult['data'][0] ?? reset($trackingResult['data']));
+                $trackingCode = $trackingData['tracking'] ?? $trackingData['code'] ?? null;
+            }
         }
 
         // Salvar ID da etiqueta e código de rastreio no pedido
@@ -352,23 +371,26 @@ class OrderController extends BaseController
 
         $this->orderModel->update($id, $updateData);
 
+        // Recarregar o pedido com os dados atualizados
+        $order = $this->orderModel->getWithItems($id);
+
         // Atualizar status para "Enviado" e enviar email ao cliente
-        if (in_array($order['status'], ['pending', 'paid', 'processing'])) {
+        $previousStatus = $order['status'] ?? 'pending';
+        if (in_array($previousStatus, ['pending', 'paid', 'processing'])) {
             $this->orderService->updateStatus($id, 'shipped', 'Etiqueta gerada - Melhor Envio');
+        }
 
-            // Enviar email com código de rastreio
-            if ($trackingCode) {
-                $order['tracking_code'] = $trackingCode;
-                $order['tracking_url'] = $trackingUrl;
-
-                $emailService = new \App\Services\EmailService();
-                $emailService->sendOrderStatusEmail($order, 'shipped');
-            }
+        // Enviar email com código de rastreio (sempre que tiver o código)
+        if ($trackingCode) {
+            $emailService = new \App\Services\EmailService();
+            $emailService->sendOrderStatusEmail($order, 'shipped');
         }
 
         $successMsg = 'Etiqueta gerada com sucesso!';
         if ($trackingCode) {
             $successMsg .= ' Código de rastreio: ' . $trackingCode;
+        } else {
+            $successMsg .= ' (Código de rastreio será gerado em breve)';
         }
 
         return redirect()->back()->with('success', $successMsg);
