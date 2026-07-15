@@ -351,6 +351,41 @@
                     <i class="bi bi-whatsapp me-1"></i>WhatsApp Fornecedor
                 </a>
                 <small class="text-muted d-block mt-2 text-center">+595 982 897 556</small>
+
+                <hr class="my-3">
+
+                <?php
+                // Mensagem para Envio Brasil (44 99907-6963)
+                $endereco = ($order['shipping_street'] ?? $order['shipping_address'] ?? '') . ', ' . ($order['shipping_number'] ?? '');
+                if (!empty($order['shipping_complement'])) {
+                    $endereco .= ' ' . $order['shipping_complement'];
+                }
+                $endereco .= ' - ' . ($order['shipping_neighborhood'] ?? '');
+                $endereco .= ' - ' . ($order['shipping_city'] ?? '') . '/' . ($order['shipping_state'] ?? '');
+
+                $cep = $order['shipping_zipcode'] ?? '';
+                $cpf = $customer['cpf'] ?? '';
+                $email = $customer['email'] ?? '';
+                $nome = $order['shipping_name'] ?? $customer['name'] ?? '';
+
+                $msgEnvio = "ENDERECO: " . $endereco . "\n";
+                $msgEnvio .= "CEP: " . $cep . "\n";
+                $msgEnvio .= "CPF: " . $cpf . "\n";
+                $msgEnvio .= "E-mail: " . $email . "\n";
+                $msgEnvio .= "Nome: " . $nome . "\n\n";
+
+                foreach ($order['items'] as $item) {
+                    $msgEnvio .= "Produto: " . ($item['name'] ?? 'Produto') . "\n";
+                    $msgEnvio .= "Valor: " . number_format($item['price'], 2, ',', '.') . "\n";
+                    $msgEnvio .= "Quantidade: " . $item['quantity'] . "\n\n";
+                }
+
+                $envioBrasilUrl = 'https://wa.me/5544999076963?text=' . urlencode($msgEnvio);
+                ?>
+                <a href="<?= $envioBrasilUrl ?>" target="_blank" class="btn btn-outline-success w-100">
+                    <i class="bi bi-whatsapp me-1"></i>Envio Brasil
+                </a>
+                <small class="text-muted d-block mt-2 text-center">+55 44 99907-6963</small>
             </div>
         </div>
 
