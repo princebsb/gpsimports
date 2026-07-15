@@ -25,7 +25,7 @@ class MelhorEnvioService
     }
 
     /**
-     * Format CEP - returns only 8 digits
+     * Format CEP - returns with hyphen (XXXXX-XXX)
      */
     protected function formatCep(string $cep): string
     {
@@ -34,7 +34,9 @@ class MelhorEnvioService
         if (strlen($cep) < 8) {
             $cep = str_pad($cep, 8, '0', STR_PAD_LEFT);
         }
-        return substr($cep, 0, 8);
+        $cep = substr($cep, 0, 8);
+        // Formatar com hífen: XXXXX-XXX
+        return substr($cep, 0, 5) . '-' . substr($cep, 5, 3);
     }
 
     /**
@@ -470,7 +472,7 @@ class MelhorEnvioService
                 'district' => env('melhorenvio.senderDistrict', ''),
                 'city' => env('melhorenvio.senderCity', ''),
                 'country_id' => 'BR',
-                'postal_code' => $this->cepOrigem,
+                'postal_code' => $this->formatCep($this->cepOrigem),
                 'note' => '',
             ],
             'to' => [
