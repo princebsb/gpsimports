@@ -44,8 +44,9 @@ class MelhorEnvioService
      */
     public function calculate(string $cepDestino, array $products): array
     {
-        // If no token, use fallback calculation
-        if (empty($this->token)) {
+        // Get token from database settings
+        $token = $this->getAccessToken();
+        if (empty($token)) {
             return $this->fallbackCalculation($cepDestino, $products);
         }
 
@@ -67,8 +68,8 @@ class MelhorEnvioService
         }
 
         $payload = [
-            'from' => ['postal_code' => $this->cepOrigem],
-            'to' => ['postal_code' => preg_replace('/[^0-9]/', '', $cepDestino)],
+            'from' => ['postal_code' => $this->formatCep($this->cepOrigem)],
+            'to' => ['postal_code' => $this->formatCep($cepDestino)],
             'products' => $apiProducts,
             'options' => [
                 'insurance_value' => $totalValue,
@@ -79,6 +80,7 @@ class MelhorEnvioService
         ];
 
         try {
+            $this->token = $token;
             $response = $this->request('POST', '/me/shipment/calculate', $payload);
 
             if (empty($response)) {
@@ -781,8 +783,8 @@ class MelhorEnvioService
         }
 
         $payload = [
-            'from' => ['postal_code' => $this->cepOrigem],
-            'to' => ['postal_code' => preg_replace('/\D/', '', $cepDestino)],
+            'from' => ['postal_code' => $this->formatCep($this->cepOrigem)],
+            'to' => ['postal_code' => $this->formatCep($cepDestino)],
             'products' => [
                 [
                     'id' => 'order_' . ($order['id'] ?? 0),
