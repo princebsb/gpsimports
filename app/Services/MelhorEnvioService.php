@@ -551,7 +551,7 @@ class MelhorEnvioService
             }
 
             // Capturar erro detalhado
-            $errorMsg = $response['message'] ?? 'Erro ao adicionar ao carrinho';
+            $errorMsg = $response['message'] ?? '';
             if (!empty($response['errors'])) {
                 $errorsDetail = [];
                 foreach ($response['errors'] as $field => $msgs) {
@@ -563,6 +563,13 @@ class MelhorEnvioService
                 }
                 $errorMsg = implode(' | ', $errorsDetail);
             }
+
+            // Se ainda não tem mensagem de erro, mostrar resposta completa
+            if (empty($errorMsg)) {
+                $errorMsg = 'Resposta inesperada da API: ' . json_encode($response);
+            }
+
+            log_message('error', 'MelhorEnvio addToCart Failed: ' . $errorMsg);
 
             return [
                 'success' => false,
