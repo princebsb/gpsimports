@@ -25,6 +25,19 @@ class MelhorEnvioService
     }
 
     /**
+     * Format CEP - returns only 8 digits
+     */
+    protected function formatCep(string $cep): string
+    {
+        $cep = preg_replace('/\D/', '', $cep);
+        // Garantir que tem 8 dígitos
+        if (strlen($cep) < 8) {
+            $cep = str_pad($cep, 8, '0', STR_PAD_LEFT);
+        }
+        return substr($cep, 0, 8);
+    }
+
+    /**
      * Calculate shipping for products
      */
     public function calculate(string $cepDestino, array $products): array
@@ -461,20 +474,20 @@ class MelhorEnvioService
                 'note' => '',
             ],
             'to' => [
-                'name' => substr($order['shipping_name'] ?? 'Cliente', 0, 60),
+                'name' => trim(substr($order['shipping_name'] ?? 'Cliente', 0, 60)),
                 'phone' => preg_replace('/\D/', '', $order['shipping_phone'] ?? ''),
-                'email' => $order['customer']['email'] ?? $order['customer_email'] ?? '',
+                'email' => trim($order['customer']['email'] ?? $order['customer_email'] ?? ''),
                 'document' => preg_replace('/\D/', '', $order['billing_cpf'] ?? ''),
                 'company_document' => '',
                 'state_register' => '',
-                'address' => substr($order['shipping_street'] ?? '', 0, 60),
-                'complement' => substr($order['shipping_complement'] ?? '', 0, 60),
-                'number' => substr($order['shipping_number'] ?? 'SN', 0, 10),
-                'district' => substr($order['shipping_neighborhood'] ?? '', 0, 60),
-                'city' => substr($order['shipping_city'] ?? '', 0, 60),
-                'state_abbr' => strtoupper(substr($order['shipping_state'] ?? '', 0, 2)),
+                'address' => trim(substr($order['shipping_street'] ?? '', 0, 60)),
+                'complement' => trim(substr($order['shipping_complement'] ?? '', 0, 60)),
+                'number' => trim(substr($order['shipping_number'] ?? 'SN', 0, 10)),
+                'district' => trim(substr($order['shipping_neighborhood'] ?? '', 0, 60)),
+                'city' => trim(substr($order['shipping_city'] ?? '', 0, 60)),
+                'state_abbr' => strtoupper(trim(substr($order['shipping_state'] ?? '', 0, 2))),
                 'country_id' => 'BR',
-                'postal_code' => preg_replace('/\D/', '', $order['shipping_zipcode'] ?? ''),
+                'postal_code' => $this->formatCep(trim($order['shipping_zipcode'] ?? '')),
                 'note' => '',
             ],
             'products' => [
