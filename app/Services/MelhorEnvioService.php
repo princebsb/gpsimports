@@ -870,10 +870,13 @@ class MelhorEnvioService
         $chargeableWeight = max($totalWeight, $volumetricWeight);
         $basePrice = max(18, $chargeableWeight * 12);
 
+        // Dobrar o valor do frete (fallback = estimativa com margem de seguranca)
+        $fallbackMultiplier = 2;
+
         $options = [];
 
         // PAC
-        $pacPrice = round($basePrice * $regionMultiplier, 2);
+        $pacPrice = round($basePrice * $regionMultiplier * $fallbackMultiplier, 2);
         $pacDeadline = 7 + (int) $region;
 
         $options[] = [
@@ -886,7 +889,7 @@ class MelhorEnvioService
         ];
 
         // SEDEX
-        $sedexPrice = round($basePrice * $regionMultiplier * 1.9, 2);
+        $sedexPrice = round($basePrice * $regionMultiplier * 1.9 * $fallbackMultiplier, 2);
         $sedexDeadline = 2 + (int) floor((int) $region / 3);
 
         $options[] = [
