@@ -746,24 +746,34 @@ class MelhorEnvioService
      */
     public function quoteForOrder(array $order, array $package): array
     {
+        $cepDestino = $order['shipping_zipcode'] ?? '';
+        $fallbackProducts = [
+            ['weight' => $package['weight'], 'width' => $package['width'], 'height' => $package['height'], 'length' => $package['length'], 'price' => $order['total'] ?? 0, 'quantity' => 1]
+        ];
+
+        // Se não tiver CEP, retorna fallback
+        if (empty($cepDestino)) {
+            log_message('debug', 'MelhorEnvio quoteForOrder: CEP destino vazio, usando fallback');
+            return $this->fallbackCalculation('01310100', $fallbackProducts);
+        }
+
         $token = $this->getAccessToken();
         if (empty($token)) {
-            return $this->fallbackCalculation($order['shipping_zipcode'], [
-                ['weight' => $package['weight'], 'width' => $package['width'], 'height' => $package['height'], 'length' => $package['length'], 'price' => $order['total'], 'quantity' => 1]
-            ]);
+            log_message('debug', 'MelhorEnvio quoteForOrder: Token vazio, usando fallback');
+            return $this->fallbackCalculation($cepDestino, $fallbackProducts);
         }
 
         $payload = [
             'from' => ['postal_code' => $this->cepOrigem],
-            'to' => ['postal_code' => preg_replace('/\D/', '', $order['shipping_zipcode'])],
+            'to' => ['postal_code' => preg_replace('/\D/', '', $cepDestino)],
             'products' => [
                 [
-                    'id' => 'order_' . $order['id'],
+                    'id' => 'order_' . ($order['id'] ?? 0),
                     'width' => (int) $package['width'],
                     'height' => (int) $package['height'],
                     'length' => (int) $package['length'],
                     'weight' => (float) $package['weight'],
-                    'insurance_value' => (float) $order['total'],
+                    'insurance_value' => (float) ($order['total'] ?? 0),
                     'quantity' => 1,
                 ]
             ],
@@ -771,17 +781,30 @@ class MelhorEnvioService
 
         try {
             $this->token = $token;
+            log_message('debug', 'MelhorEnvio quoteForOrder Payload: ' . json_encode($payload));
+
             $response = $this->request('POST', '/me/shipment/calculate', $payload);
 
+            log_message('debug', 'MelhorEnvio quoteForOrder Response: ' . json_encode($response));
+
             if (empty($response)) {
-                return [];
+                log_message('debug', 'MelhorEnvio quoteForOrder: Resposta vazia, usando fallback');
+                return $this->fallbackCalculation($cepDestino, $fallbackProducts);
             }
 
-            return $this->formatResponse($response, $order['total']);
+            $formatted = $this->formatResponse($response, $order['total'] ?? 0);
+
+            // Se não conseguiu formatar nenhuma opção, usa fallback
+            if (empty($formatted)) {
+                log_message('debug', 'MelhorEnvio quoteForOrder: Nenhuma opcao formatada, usando fallback');
+                return $this->fallbackCalculation($cepDestino, $fallbackProducts);
+            }
+
+            return $formatted;
 
         } catch (\Exception $e) {
             log_message('error', 'MelhorEnvio quoteForOrder Error: ' . $e->getMessage());
-            return [];
+            return $this->fallbackCalculation($cepDestino, $fallbackProducts);
         }
     }
 
