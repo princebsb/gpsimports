@@ -331,17 +331,47 @@ class OrderController extends BaseController
             return redirect()->back()->with('error', 'Erro ao gerar etiqueta: ' . ($labelResult['message'] ?? 'Erro desconhecido'));
         }
 
-        // Salvar ID da etiqueta no pedido
-        $this->orderModel->update($id, [
-            'me_label_id' => $cartId,
-        ]);
+        // 4. Obter código de rastreio
+        $trackingResult = $melhorEnvio->tracking([$cartId]);
+        $trackingCode = null;
 
-        // Atualizar status para "Em Preparacao" se ainda estiver pendente
-        if (in_array($order['status'], ['pending', 'paid'])) {
-            $this->orderService->updateStatus($id, 'processing', 'Etiqueta gerada - Melhor Envio');
+        if ($trackingResult['success'] && !empty($trackingResult['data'])) {
+            // O retorno é um array com o ID como chave
+            $trackingData = $trackingResult['data'][$cartId] ?? reset($trackingResult['data']);
+            $trackingCode = $trackingData['tracking'] ?? null;
         }
 
-        return redirect()->back()->with('success', 'Etiqueta gerada com sucesso!');
+        // Salvar ID da etiqueta e código de rastreio no pedido
+        $updateData = ['me_label_id' => $cartId];
+
+        if ($trackingCode) {
+            $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $trackingCode;
+            $updateData['tracking_code'] = $trackingCode;
+            $updateData['tracking_url'] = $trackingUrl;
+        }
+
+        $this->orderModel->update($id, $updateData);
+
+        // Atualizar status para "Enviado" e enviar email ao cliente
+        if (in_array($order['status'], ['pending', 'paid', 'processing'])) {
+            $this->orderService->updateStatus($id, 'shipped', 'Etiqueta gerada - Melhor Envio');
+
+            // Enviar email com código de rastreio
+            if ($trackingCode) {
+                $order['tracking_code'] = $trackingCode;
+                $order['tracking_url'] = $trackingUrl;
+
+                $emailService = new \App\Services\EmailService();
+                $emailService->sendOrderStatusEmail($order, 'shipped');
+            }
+        }
+
+        $successMsg = 'Etiqueta gerada com sucesso!';
+        if ($trackingCode) {
+            $successMsg .= ' Código de rastreio: ' . $trackingCode;
+        }
+
+        return redirect()->back()->with('success', $successMsg);
     }
 
     /**

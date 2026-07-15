@@ -362,13 +362,14 @@ HTML;
                 $content .= "<p>Seu pedido esta sendo preparado para envio.</p>";
                 break;
             case 'shipped':
-                $content .= "<p>Seu pedido foi enviado!</p>";
+                $content .= "<p>Otima noticia! Seu pedido foi enviado e ja esta a caminho.</p>";
                 if (!empty($order['tracking_code'])) {
-                    $trackingUrl = $order['tracking_url'] ?? 'https://www.linkcorreios.com.br/?id=' . $order['tracking_code'];
+                    $trackingUrl = $order['tracking_url'] ?? 'https://www.melhorrastreio.com.br/rastreio/' . $order['tracking_code'];
                     $content .= "<div class='tracking-box'>";
                     $content .= "<p><strong>Codigo de Rastreio:</strong></p>";
-                    $content .= "<p style='font-size: 18px; font-weight: bold;'>{$order['tracking_code']}</p>";
-                    $content .= "<p><a href='{$trackingUrl}' class='button'>Rastrear Pedido</a></p>";
+                    $content .= "<p style='font-size: 24px; font-weight: bold; color: #2563eb;'>{$order['tracking_code']}</p>";
+                    $content .= "<p style='margin-top: 15px;'><a href='{$trackingUrl}' class='button'>Rastrear Meu Pedido</a></p>";
+                    $content .= "<p style='font-size: 12px; color: #666; margin-top: 10px;'>Ou acesse: {$trackingUrl}</p>";
                     $content .= "</div>";
                 }
                 break;
