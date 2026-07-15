@@ -6,6 +6,10 @@
     RewriteCond %{HTTP_HOST} gpsimports\.com\.br [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+    # Servir arquivos estaticos da pasta public
+    RewriteRule ^(uploads/.*)$ public/$1 [L]
+    RewriteRule ^(assets/.*)$ public/$1 [L]
+
     # Redirecionar tudo para public/index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
