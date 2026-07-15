@@ -440,6 +440,58 @@ class OrderController extends BaseController
     }
 
     /**
+     * Obter codigo de rastreio da etiqueta gerada
+     */
+    public function obterRastreio($id)
+    {
+        $order = $this->orderModel->getWithItems($id);
+
+        if (!$order || empty($order['me_label_id'])) {
+            return redirect()->back()->with('error', 'Etiqueta nao encontrada.');
+        }
+
+        // Se ja tem codigo de rastreio, nao precisa buscar
+        if (!empty($order['tracking_code'])) {
+            return redirect()->back()->with('info', 'Codigo de rastreio ja cadastrado: ' . $order['tracking_code']);
+        }
+
+        $melhorEnvio = new \App\Services\MelhorEnvioService();
+        $labelId = $order['me_label_id'];
+
+        // Buscar informacoes da etiqueta
+        $result = $melhorEnvio->tracking([$labelId]);
+        log_message('debug', 'obterRastreio - tracking result: ' . json_encode($result));
+
+        $trackingCode = null;
+
+        if ($result['success'] && !empty($result['data'])) {
+            // O retorno pode ser array indexado pelo labelId ou array simples
+            $trackingData = $result['data'][$labelId] ?? ($result['data'][0] ?? reset($result['data']));
+            $trackingCode = $trackingData['tracking'] ?? $trackingData['code'] ?? null;
+        }
+
+        if (!$trackingCode) {
+            return redirect()->back()->with('error', 'Codigo de rastreio ainda nao disponivel. Tente novamente em alguns minutos.');
+        }
+
+        // Salvar codigo de rastreio
+        $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $trackingCode;
+        $this->orderModel->update($id, [
+            'tracking_code' => $trackingCode,
+            'tracking_url' => $trackingUrl,
+        ]);
+
+        // Recarregar pedido
+        $order = $this->orderModel->getWithItems($id);
+
+        // Enviar email para o cliente
+        $emailService = new \App\Services\EmailService();
+        $emailService->sendOrderStatusEmail($order, 'shipped');
+
+        return redirect()->back()->with('success', 'Codigo de rastreio obtido: ' . $trackingCode . '. Email enviado ao cliente!');
+    }
+
+    /**
      * Adicionar credito Melhor Envio
      */
     public function adicionarCreditoME()

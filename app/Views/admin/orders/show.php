@@ -481,14 +481,25 @@
                 <p class="small mb-2"><strong>ID:</strong> <?= esc($order['me_label_id']) ?></p>
                 <?php if (!empty($order['tracking_code'])): ?>
                 <p class="small mb-2"><strong>Rastreio:</strong> <code><?= esc($order['tracking_code']) ?></code></p>
+                <?php else: ?>
+                <div class="alert alert-warning py-2 mb-2">
+                    <i class="bi bi-clock me-1"></i>
+                    <small>Codigo de rastreio ainda nao disponivel. Clique em "Obter Rastreio" para buscar.</small>
+                </div>
                 <?php endif; ?>
                 <div class="d-grid gap-2">
                     <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/imprimir-etiqueta') ?>" target="_blank" class="btn btn-success">
                         <i class="bi bi-printer me-1"></i>Imprimir Etiqueta
                     </a>
+                    <?php if (empty($order['tracking_code'])): ?>
+                    <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/obter-rastreio') ?>" class="btn btn-warning">
+                        <i class="bi bi-arrow-repeat me-1"></i>Obter Rastreio
+                    </a>
+                    <?php else: ?>
                     <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/rastrear-etiqueta') ?>" target="_blank" class="btn btn-outline-primary">
                         <i class="bi bi-geo-alt me-1"></i>Rastrear
                     </a>
+                    <?php endif; ?>
                     <?php if (!empty($order['tracking_code']) && !empty($order['shipping_phone'])): ?>
                     <?php
                         $customerName = $order['shipping_name'] ?? $order['customer']['name'] ?? 'Cliente';
