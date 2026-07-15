@@ -479,6 +479,9 @@
             </div>
             <div class="card-body">
                 <p class="small mb-2"><strong>ID:</strong> <?= esc($order['me_label_id']) ?></p>
+                <?php if (!empty($order['tracking_code'])): ?>
+                <p class="small mb-2"><strong>Rastreio:</strong> <code><?= esc($order['tracking_code']) ?></code></p>
+                <?php endif; ?>
                 <div class="d-grid gap-2">
                     <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/imprimir-etiqueta') ?>" target="_blank" class="btn btn-success">
                         <i class="bi bi-printer me-1"></i>Imprimir Etiqueta
@@ -486,6 +489,27 @@
                     <a href="<?= base_url('admin/pedidos/' . $order['id'] . '/rastrear-etiqueta') ?>" target="_blank" class="btn btn-outline-primary">
                         <i class="bi bi-geo-alt me-1"></i>Rastrear
                     </a>
+                    <?php if (!empty($order['tracking_code']) && !empty($order['shipping_phone'])): ?>
+                    <?php
+                        $customerName = $order['shipping_name'] ?? $order['customer']['name'] ?? 'Cliente';
+                        $firstName = explode(' ', trim($customerName))[0];
+                        $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $order['tracking_code'];
+                        $whatsappMsg = "Olá {$firstName}! 😊\n\n";
+                        $whatsappMsg .= "Ótima notícia! Seu pedido #{$order['order_number']} foi enviado e já está a caminho! 📦\n\n";
+                        $whatsappMsg .= "🔍 *Código de Rastreio:*\n{$order['tracking_code']}\n\n";
+                        $whatsappMsg .= "📍 *Acompanhe aqui:*\n{$trackingUrl}\n\n";
+                        $whatsappMsg .= "Qualquer dúvida, estamos à disposição!\n\n";
+                        $whatsappMsg .= "Att, GPS Imports 🚀";
+                        $phone = preg_replace('/\D/', '', $order['shipping_phone']);
+                        if (strlen($phone) <= 11) {
+                            $phone = '55' . $phone;
+                        }
+                        $whatsappUrl = 'https://wa.me/' . $phone . '?text=' . urlencode($whatsappMsg);
+                    ?>
+                    <a href="<?= $whatsappUrl ?>" target="_blank" class="btn btn-success" style="background-color: #25D366; border-color: #25D366;">
+                        <i class="bi bi-whatsapp me-1"></i>Enviar WhatsApp
+                    </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -499,13 +523,36 @@
                 </div>
                 <div class="card-body">
                     <?php if (!empty($order['tracking_code'])): ?>
-                        <div class="mb-2">
+                        <div class="mb-3">
                             <strong>Codigo:</strong>
-                            <code><?= esc($order['tracking_code']) ?></code>
+                            <code class="fs-5"><?= esc($order['tracking_code']) ?></code>
                         </div>
-                        <a href="https://www.linkcorreios.com.br/?id=<?= esc($order['tracking_code']) ?>" target="_blank" class="btn btn-sm btn-outline-primary w-100">
-                            <i class="bi bi-box-arrow-up-right me-1"></i>Rastrear
-                        </a>
+                        <div class="d-grid gap-2">
+                            <a href="https://www.melhorrastreio.com.br/rastreio/<?= esc($order['tracking_code']) ?>" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-geo-alt me-1"></i>Rastrear Pedido
+                            </a>
+                            <?php if (!empty($order['shipping_phone'])): ?>
+                            <?php
+                                $customerName = $order['shipping_name'] ?? $order['customer']['name'] ?? 'Cliente';
+                                $firstName = explode(' ', trim($customerName))[0];
+                                $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $order['tracking_code'];
+                                $whatsappMsg = "Olá {$firstName}! 😊\n\n";
+                                $whatsappMsg .= "Ótima notícia! Seu pedido #{$order['order_number']} foi enviado e já está a caminho! 📦\n\n";
+                                $whatsappMsg .= "🔍 *Código de Rastreio:*\n{$order['tracking_code']}\n\n";
+                                $whatsappMsg .= "📍 *Acompanhe aqui:*\n{$trackingUrl}\n\n";
+                                $whatsappMsg .= "Qualquer dúvida, estamos à disposição!\n\n";
+                                $whatsappMsg .= "Att, GPS Imports 🚀";
+                                $phone = preg_replace('/\D/', '', $order['shipping_phone']);
+                                if (strlen($phone) <= 11) {
+                                    $phone = '55' . $phone;
+                                }
+                                $whatsappUrl = 'https://wa.me/' . $phone . '?text=' . urlencode($whatsappMsg);
+                            ?>
+                            <a href="<?= $whatsappUrl ?>" target="_blank" class="btn btn-success" style="background-color: #25D366; border-color: #25D366;">
+                                <i class="bi bi-whatsapp me-1"></i>Enviar WhatsApp
+                            </a>
+                            <?php endif; ?>
+                        </div>
                     <?php else: ?>
                         <form action="<?= base_url('admin/pedidos/rastreio/' . $order['id']) ?>" method="post">
                             <?= csrf_field() ?>
