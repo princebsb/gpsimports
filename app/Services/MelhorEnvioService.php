@@ -529,12 +529,14 @@ class MelhorEnvioService
             $this->token = $token;
 
             // Log do payload para debug
-            log_message('debug', 'MelhorEnvio addToCart Payload: ' . json_encode($payload));
+            log_message('error', 'MelhorEnvio addToCart Payload: ' . json_encode($payload, JSON_UNESCAPED_UNICODE));
+            file_put_contents(WRITEPATH . 'logs/melhorenvio_debug.log', date('Y-m-d H:i:s') . " PAYLOAD:\n" . json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n\n", FILE_APPEND);
 
             $response = $this->requestWithDetails('POST', '/me/cart', $payload);
 
             // Log da resposta
-            log_message('debug', 'MelhorEnvio addToCart Response: ' . json_encode($response));
+            log_message('error', 'MelhorEnvio addToCart Response: ' . json_encode($response, JSON_UNESCAPED_UNICODE));
+            file_put_contents(WRITEPATH . 'logs/melhorenvio_debug.log', date('Y-m-d H:i:s') . " RESPONSE:\n" . json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "\n\n", FILE_APPEND);
 
             if (!empty($response['id'])) {
                 return [
