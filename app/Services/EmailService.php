@@ -460,4 +460,100 @@ HTML;
             default => ucfirst($method)
         };
     }
+
+    /**
+     * Enviar nota fiscal por email
+     */
+    public function sendInvoiceEmail(array $order, string $invoicePath): bool
+    {
+        $customer = $order['customer'] ?? [];
+        $to = $customer['email'] ?? null;
+
+        if (!$to) {
+            log_message('error', 'sendInvoiceEmail: Email do cliente nao encontrado para pedido #' . $order['order_number']);
+            return false;
+        }
+
+        $storeName = setting('store_name') ?? 'GPS Imports';
+        $customerName = $customer['name'] ?? 'Cliente';
+        $firstName = explode(' ', trim($customerName))[0];
+
+        $subject = "Nota Fiscal do Pedido #{$order['order_number']} - {$storeName}";
+
+        $body = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <div style='background: #2563eb; color: white; padding: 20px; text-align: center;'>
+                <h1 style='margin: 0;'>{$storeName}</h1>
+            </div>
+
+            <div style='padding: 30px; background: #f8fafc;'>
+                <h2 style='color: #1e293b;'>Ola, {$firstName}!</h2>
+
+                <p>Segue em anexo a <strong>Nota Fiscal</strong> referente ao seu pedido <strong>#{$order['order_number']}</strong>.</p>
+
+                <div style='background: white; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                    <h3 style='margin-top: 0; color: #1e293b;'>Resumo do Pedido</h3>
+                    <p><strong>Numero:</strong> #{$order['order_number']}</p>
+                    <p><strong>Data:</strong> " . date('d/m/Y', strtotime($order['created_at'])) . "</p>
+                    <p><strong>Total:</strong> R$ " . number_format($order['total'], 2, ',', '.') . "</p>
+                </div>
+
+                <p>Guarde este documento para sua garantia e eventuais trocas.</p>
+
+                <p>Qualquer duvida, estamos a disposicao!</p>
+
+                <p style='margin-top: 30px;'>
+                    Atenciosamente,<br>
+                    <strong>Equipe {$storeName}</strong>
+                </p>
+            </div>
+
+            <div style='background: #1e293b; color: #94a3b8; padding: 20px; text-align: center; font-size: 12px;'>
+                <p>&copy; " . date('Y') . " {$storeName}. Todos os direitos reservados.</p>
+            </div>
+        </div>
+        ";
+
+        return $this->sendWithAttachment($to, $subject, $body, $invoicePath);
+    }
+
+    /**
+     * Enviar email com anexo
+     */
+    protected function sendWithAttachment(string $to, string $subject, string $body, string $attachmentPath): bool
+    {
+        try {
+            $email = \Config\Services::email();
+
+            $email->setFrom(
+                getenv('email.fromEmail') ?: 'atendimento@gpsimports.com.br',
+                getenv('email.fromName') ?: 'GPS Imports'
+            );
+
+            $email->setTo($to);
+            $email->setSubject($subject);
+            $email->setMessage($body);
+            $email->setMailType('html');
+
+            // Anexar arquivo
+            if (file_exists($attachmentPath)) {
+                $email->attach($attachmentPath);
+            } else {
+                log_message('error', 'sendWithAttachment: Arquivo nao encontrado: ' . $attachmentPath);
+                return false;
+            }
+
+            if (!$email->send(false)) {
+                log_message('error', 'sendWithAttachment error: ' . $email->printDebugger(['headers', 'subject', 'body']));
+                return false;
+            }
+
+            log_message('info', 'Email com anexo enviado para: ' . $to);
+            return true;
+
+        } catch (\Exception $e) {
+            log_message('error', 'sendWithAttachment exception: ' . $e->getMessage());
+            return false;
+        }
+    }
 }

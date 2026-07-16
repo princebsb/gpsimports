@@ -524,4 +524,62 @@ class OrderController extends BaseController
 
         return $this->response->setJSON($result);
     }
+
+    /**
+     * Upload e envio de nota fiscal
+     */
+    public function enviarNotaFiscal($id)
+    {
+        $order = $this->orderModel->getWithItems($id);
+
+        if (!$order) {
+            return redirect()->back()->with('error', 'Pedido nao encontrado.');
+        }
+
+        // Verificar se foi enviado arquivo
+        $file = $this->request->getFile('invoice_file');
+
+        if (!$file || !$file->isValid()) {
+            return redirect()->back()->with('error', 'Arquivo da nota fiscal nao enviado ou invalido.');
+        }
+
+        // Validar extensao (apenas PDF)
+        if ($file->getExtension() !== 'pdf') {
+            return redirect()->back()->with('error', 'Apenas arquivos PDF sao aceitos.');
+        }
+
+        // Criar diretorio se nao existir
+        $uploadPath = WRITEPATH . 'uploads/invoices';
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0755, true);
+        }
+
+        // Gerar nome do arquivo
+        $fileName = 'nf_' . $order['order_number'] . '_' . date('YmdHis') . '.pdf';
+
+        // Mover arquivo
+        if (!$file->move($uploadPath, $fileName)) {
+            return redirect()->back()->with('error', 'Erro ao fazer upload do arquivo.');
+        }
+
+        // Salvar referencia no banco
+        $this->orderModel->update($id, ['invoice_file' => $fileName]);
+
+        // Enviar email com anexo
+        $customer = $order['customer'] ?? [];
+        $customerEmail = $customer['email'] ?? null;
+
+        if (!$customerEmail) {
+            return redirect()->back()->with('warning', 'Nota fiscal salva, mas cliente sem email cadastrado.');
+        }
+
+        $emailService = new \App\Services\EmailService();
+        $result = $emailService->sendInvoiceEmail($order, $uploadPath . '/' . $fileName);
+
+        if ($result) {
+            return redirect()->back()->with('success', 'Nota fiscal enviada para ' . $customerEmail . '!');
+        } else {
+            return redirect()->back()->with('warning', 'Nota fiscal salva, mas erro ao enviar email. Verifique os logs.');
+        }
+    }
 }

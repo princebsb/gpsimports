@@ -178,6 +178,7 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin'], static functio
         $routes->get('pedidos/(:num)/imprimir-etiqueta', 'OrderController::imprimirEtiqueta/$1');
         $routes->get('pedidos/(:num)/rastrear-etiqueta', 'OrderController::rastrearEtiqueta/$1');
         $routes->get('pedidos/(:num)/obter-rastreio', 'OrderController::obterRastreio/$1');
+        $routes->post('pedidos/(:num)/enviar-nota-fiscal', 'OrderController::enviarNotaFiscal/$1');
 
         // Melhor Envio - Creditos
         $routes->post('melhor-envio/adicionar-credito', 'OrderController::adicionarCreditoME');

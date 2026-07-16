@@ -323,6 +323,39 @@
             </div>
         </div>
 
+        <!-- Nota Fiscal -->
+        <div class="table-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-earmark-text me-1"></i>Nota Fiscal</h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($order['invoice_file'])): ?>
+                    <div class="alert alert-success py-2 mb-3">
+                        <i class="bi bi-check-circle me-1"></i>
+                        Nota fiscal enviada: <strong><?= esc($order['invoice_file']) ?></strong>
+                    </div>
+                <?php endif; ?>
+
+                <form action="<?= base_url('admin/pedidos/' . $order['id'] . '/enviar-nota-fiscal') ?>" method="post" enctype="multipart/form-data">
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label class="form-label">Arquivo PDF da Nota Fiscal</label>
+                        <input type="file" name="invoice_file" class="form-control" accept=".pdf" required>
+                        <small class="text-muted">Apenas arquivos PDF</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-envelope me-1"></i>Enviar NF para Cliente
+                    </button>
+                </form>
+
+                <?php if (!empty($customer['email'])): ?>
+                    <small class="text-muted d-block mt-2 text-center">
+                        Sera enviado para: <?= esc($customer['email']) ?>
+                    </small>
+                <?php endif; ?>
+            </div>
+        </div>
+
         <!-- Fornecedor -->
         <div class="table-card mb-4">
             <div class="card-header">

@@ -45,6 +45,7 @@ class OrderModel extends Model
         'billing_phone',
         'tracking_code',
         'tracking_url',
+        'invoice_file',
         'estimated_delivery',
         'shipped_at',
         'delivered_at',
