@@ -68,6 +68,12 @@ class CartModel extends Model
 
         $cart['items'] = $this->getItems($cartId);
 
+        // Carregar dados do cupom se existir
+        if (!empty($cart['coupon_id'])) {
+            $couponModel = model('CouponModel');
+            $cart['coupon'] = $couponModel->find($cart['coupon_id']);
+        }
+
         return $cart;
     }
 
