@@ -193,11 +193,16 @@ class CouponModel extends Model
             }
         }
 
+        // Log para debug
+        log_message('debug', 'calculateDiscount: type=' . $coupon['type'] . ', value=' . $coupon['value'] . ', applicableTotal=' . $applicableTotal);
+
         if ($coupon['type'] === 'percentage') {
             $discount = $applicableTotal * ($coupon['value'] / 100);
         } else { // fixed
             $discount = $coupon['value'];
         }
+
+        log_message('debug', 'calculateDiscount: discount calculado=' . $discount);
 
         // Apply max discount limit
         if (!empty($coupon['max_discount']) && $discount > $coupon['max_discount']) {
