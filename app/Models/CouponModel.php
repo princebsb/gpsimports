@@ -206,8 +206,8 @@ class CouponModel extends Model
 
         log_message('debug', 'calculateDiscount: discount calculado=' . $discount);
 
-        // Apply max discount limit
-        if (!empty($coupon['max_discount']) && $discount > $coupon['max_discount']) {
+        // Apply max discount limit (0 significa sem limite)
+        if ($coupon['max_discount'] > 0 && $discount > $coupon['max_discount']) {
             $discount = $coupon['max_discount'];
         }
 
