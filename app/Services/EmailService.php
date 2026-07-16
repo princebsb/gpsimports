@@ -523,13 +523,10 @@ HTML;
     protected function sendWithAttachment(string $to, string $subject, string $body, string $attachmentPath): bool
     {
         try {
+            $emailConfig = new \Config\Email();
             $email = \Config\Services::email();
 
-            $email->setFrom(
-                getenv('email.fromEmail') ?: 'atendimento@gpsimports.com.br',
-                getenv('email.fromName') ?: 'GPS Imports'
-            );
-
+            $email->setFrom($emailConfig->fromEmail, $emailConfig->fromName);
             $email->setTo($to);
             $email->setSubject($subject);
             $email->setMessage($body);
