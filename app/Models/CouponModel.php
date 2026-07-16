@@ -141,6 +141,8 @@ class CouponModel extends Model
         // Calculate discount
         $discount = $this->calculateDiscount($coupon, $cartTotal, $cartItems);
 
+        log_message('debug', 'validateCoupon: discount retornado=' . $discount . ', cartTotal=' . $cartTotal);
+
         return [
             'valid' => true,
             'coupon' => $coupon,
