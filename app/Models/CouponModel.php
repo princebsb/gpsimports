@@ -162,14 +162,15 @@ class CouponModel extends Model
 
         $applicableTotal = $cartTotal;
 
-        // Filter applicable items if needed
-        if ($coupon['applies_to'] !== 'all' && !empty($cartItems)) {
+        // Filter applicable items if needed (trata null/vazio como 'all')
+        $appliesTo = $coupon['applies_to'] ?? 'all';
+        if ($appliesTo !== 'all' && !empty($appliesTo) && !empty($cartItems)) {
             $applicableTotal = 0;
 
             foreach ($cartItems as $item) {
                 $applicable = false;
 
-                switch ($coupon['applies_to']) {
+                switch ($appliesTo) {
                     case 'products':
                         $productIds = $coupon['product_ids'] ?? [];
                         $applicable = in_array($item['product_id'], $productIds);

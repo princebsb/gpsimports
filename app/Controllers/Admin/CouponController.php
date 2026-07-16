@@ -46,6 +46,11 @@ class CouponController extends BaseController
         $data = $this->request->getPost();
         $data['code'] = strtoupper($data['code']);
 
+        // Garantir valor padrao para applies_to
+        if (empty($data['applies_to'])) {
+            $data['applies_to'] = 'all';
+        }
+
         $this->couponModel->insert($data);
 
         return redirect()->to('/admin/cupons')->with('success', 'Cupom criado com sucesso!');
