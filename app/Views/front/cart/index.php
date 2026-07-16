@@ -344,7 +344,7 @@
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-        fetch('<?= base_url('carrinho/aplicar-cupom') ?>', {
+        fetch('<?= base_url('carrinho/cupom') ?>', {
             method: 'POST',
             headers: ajaxHeaders,
             body: `coupon_code=${code}&<?= csrf_token() ?>=<?= csrf_hash() ?>`
