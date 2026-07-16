@@ -141,8 +141,6 @@ class CouponModel extends Model
         // Calculate discount
         $discount = $this->calculateDiscount($coupon, $cartTotal, $cartItems);
 
-        log_message('debug', 'validateCoupon: discount retornado=' . $discount . ', cartTotal=' . $cartTotal);
-
         return [
             'valid' => true,
             'coupon' => $coupon,
@@ -195,16 +193,11 @@ class CouponModel extends Model
             }
         }
 
-        // Log para debug
-        log_message('debug', 'calculateDiscount: type=' . $coupon['type'] . ', value=' . $coupon['value'] . ', applicableTotal=' . $applicableTotal);
-
         if ($coupon['type'] === 'percentage') {
             $discount = $applicableTotal * ($coupon['value'] / 100);
         } else { // fixed
             $discount = $coupon['value'];
         }
-
-        log_message('debug', 'calculateDiscount: discount calculado=' . $discount);
 
         // Apply max discount limit (0 significa sem limite)
         if ($coupon['max_discount'] > 0 && $discount > $coupon['max_discount']) {

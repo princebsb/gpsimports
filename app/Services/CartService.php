@@ -268,15 +268,6 @@ class CartService
             return ['success' => false, 'message' => $validation['message']];
         }
 
-        // Log para debug
-        log_message('debug', 'Cupom validado: ' . json_encode([
-            'code' => $code,
-            'subtotal' => $cart['subtotal'],
-            'discount' => $validation['discount'],
-            'coupon_id' => $validation['coupon']['id'],
-            'applies_to' => $validation['coupon']['applies_to'] ?? 'null',
-        ]));
-
         // Apply coupon
         $this->cartModel->applyCoupon($cart['id'], $validation['coupon']['id'], $validation['discount']);
 
