@@ -191,6 +191,12 @@ class CartService
 
         $updatedCart = $this->getCurrentCart();
 
+        // Se o carrinho ficou vazio, limpar todos os dados (frete, cupom, etc.)
+        if (empty($updatedCart['items_count']) || $updatedCart['items_count'] == 0) {
+            $this->clearCartData($cart['id']);
+            $updatedCart = $this->getCurrentCart();
+        }
+
         return [
             'success' => true,
             'message' => 'Item removido do carrinho.',
@@ -225,6 +231,12 @@ class CartService
         $this->cartModel->recalculate($cart['id']);
 
         $updatedCart = $this->getCurrentCart();
+
+        // Se o carrinho ficou vazio, limpar todos os dados (frete, cupom, etc.)
+        if (empty($updatedCart['items_count']) || $updatedCart['items_count'] == 0) {
+            $this->clearCartData($cart['id']);
+            $updatedCart = $this->getCurrentCart();
+        }
 
         return [
             'success' => true,
@@ -384,6 +396,23 @@ class CartService
         session()->remove('cart_id');
 
         return $result;
+    }
+
+    /**
+     * Clear cart data (shipping, coupon, etc.) but keep the cart
+     * Used when cart becomes empty after removing items
+     */
+    protected function clearCartData(int $cartId): bool
+    {
+        return $this->cartModel->update($cartId, [
+            'coupon_id' => null,
+            'discount' => 0,
+            'shipping_cost' => 0,
+            'shipping_method' => null,
+            'shipping_zipcode' => null,
+            'subtotal' => 0,
+            'total' => 0,
+        ]);
     }
 
     /**
