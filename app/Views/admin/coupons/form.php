@@ -3,13 +3,13 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1><?= isset($coupon) ? 'Editar Cupom' : 'Novo Cupom' ?></h1>
+    <h1><?= !empty($coupon) ? 'Editar Cupom' : 'Novo Cupom' ?></h1>
     <a href="<?= base_url('admin/cupons') ?>" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i>Voltar
     </a>
 </div>
 
-<form action="<?= isset($coupon) ? base_url('admin/cupons/atualizar/' . $coupon['id']) : base_url('admin/cupons/salvar') ?>" method="post">
+<form action="<?= !empty($coupon) ? base_url('admin/cupons/atualizar/' . $coupon['id']) : base_url('admin/cupons/salvar') ?>" method="post">
     <?= csrf_field() ?>
 
     <div class="row">
@@ -153,12 +153,12 @@
                 </div>
                 <div class="card-footer bg-transparent">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-check-lg me-1"></i><?= isset($coupon) ? 'Atualizar' : 'Criar' ?> Cupom
+                        <i class="bi bi-check-lg me-1"></i><?= !empty($coupon) ? 'Atualizar' : 'Criar' ?> Cupom
                     </button>
                 </div>
             </div>
 
-            <?php if (isset($coupon)): ?>
+            <?php if (!empty($coupon)): ?>
                 <div class="table-card">
                     <div class="card-body">
                         <h6 class="mb-3">Estatisticas</h6>
