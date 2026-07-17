@@ -155,7 +155,7 @@
                                     <div class="btn-group btn-group-sm">
                                         <?php
                                         $msgWpp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
-                                        $msgWpp .= "🚚 Tenho pessoal que *retira mercadoria pra mim* toda *Terça*, *Quinta* e *Sábado*.%0A%0A";
+                                        $msgWpp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terca* e *Quinta*.%0A%0A";
                                         $msgWpp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
                                         $msgWpp .= "*Quero comprar com vocês!*%0A%0A";
                                         $msgWpp .= "Segue o produto:%0A%0A";

@@ -372,7 +372,7 @@
                 }
 
                 $msgWhatsApp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
-                $msgWhatsApp .= "🚚 Tenho pessoal que *retira mercadoria pra mim* toda *Terça*, *Quinta* e *Sábado*.%0A%0A";
+                $msgWhatsApp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terca* e *Quinta*.%0A%0A";
                 $msgWhatsApp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
                 $msgWhatsApp .= "*Quero comprar com vocês!*%0A%0A";
                 $msgWhatsApp .= "Segue o produto:%0A%0A";

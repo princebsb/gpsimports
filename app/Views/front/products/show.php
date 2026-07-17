@@ -297,7 +297,7 @@ $schemaCondition = 'https://schema.org/NewCondition';
             <div class="bg-light border-start border-4 border-primary p-3 mb-4 rounded-end">
                 <h6 class="fw-bold mb-2"><i class="bi bi-box2-heart me-2"></i>Como funciona sua compra</h6>
                 <p class="mb-2 small text-muted">
-                    Após a confirmação do pagamento, seu produto é adquirido junto ao nosso parceiro importador nas datas de processamento (terça, quinta e sábado), conferido, embalado e enviado ao seu endereço.
+                    Após a confirmação do pagamento, seu produto é adquirido junto ao nosso parceiro importador nas datas de processamento (Terça e Quinta), conferido, embalado e enviado ao seu endereço.
                 </p>
                 <p class="mb-0 small"><strong>Prazo médio para postagem:</strong> até <strong>5 dias úteis</strong>.</p>
             </div>
