@@ -51,7 +51,8 @@ class CouponController extends BaseController
             $data['applies_to'] = 'all';
         }
 
-        $this->couponModel->insert($data);
+        // Pula validacao do modelo pois ja validamos acima
+        $this->couponModel->skipValidation()->insert($data);
 
         return redirect()->to('/admin/cupons')->with('success', 'Cupom criado com sucesso!');
     }
@@ -85,7 +86,12 @@ class CouponController extends BaseController
         $data = $this->request->getPost();
         $data['code'] = strtoupper($data['code']);
 
-        $this->couponModel->update($id, $data);
+        // Pula validacao do modelo pois ja validamos acima
+        $result = $this->couponModel->skipValidation()->update($id, $data);
+
+        if (!$result) {
+            return redirect()->back()->withInput()->with('error', 'Erro ao atualizar cupom');
+        }
 
         return redirect()->to('/admin/cupons')->with('success', 'Cupom atualizado!');
     }
