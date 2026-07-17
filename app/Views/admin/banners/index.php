@@ -24,7 +24,7 @@
                                 </div>
                             <?php endif; ?>
                             <div class="card-body">
-                                <h5 class="card-title"><?= esc($banner['title'] ?? 'Sem titulo') ?></h5>
+                                <h5 class="card-title"><?= esc($banner['title'] ?? 'Sem título') ?></h5>
                                 <p class="card-text small text-muted">
                                     <?php if ($banner['link']): ?>
                                         <i class="bi bi-link-45deg"></i> <?= esc($banner['link']) ?>

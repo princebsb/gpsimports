@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Configuracoes de Frete</h1>
+    <h1>Configurações de Frete</h1>
 </div>
 
 <div class="row">
@@ -33,7 +33,7 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Configuracoes Gerais</h5>
+                    <h5 class="mb-0">Configurações Gerais</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -44,7 +44,7 @@
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Dias de Manuseio</label>
                             <input type="number" name="shipping_handling_days" class="form-control" value="<?= $settings['shipping_handling_days'] ?? 1 ?>">
-                            <small class="text-muted">Dias adicionais para preparacao do pedido</small>
+                            <small class="text-muted">Dias adicionais para preparação do pedido</small>
                         </div>
                     </div>
                 </div>
@@ -52,15 +52,15 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Frete Gratis</h5>
+                    <h5 class="mb-0">Frete Grátis</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-check mb-3">
                         <input type="checkbox" name="free_shipping_enabled" class="form-check-input" id="freeShipping" value="1" <?= ($settings['free_shipping_enabled'] ?? false) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="freeShipping">Habilitar Frete Gratis</label>
+                        <label class="form-check-label" for="freeShipping">Habilitar Frete Grátis</label>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Valor Minimo para Frete Gratis</label>
+                        <label class="form-label">Valor Mínimo para Frete Grátis</label>
                         <div class="input-group">
                             <span class="input-group-text">R$</span>
                             <input type="number" name="free_shipping_min_value" class="form-control" step="0.01" value="<?= $settings['free_shipping_min_value'] ?? 299 ?>">

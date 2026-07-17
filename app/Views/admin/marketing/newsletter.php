@@ -17,7 +17,7 @@
                     <tr>
                         <th>Email</th>
                         <th>Status</th>
-                        <th>Data de Inscricao</th>
+                        <th>Data de Inscrição</th>
                     </tr>
                 </thead>
                 <tbody>

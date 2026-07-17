@@ -18,7 +18,7 @@
             <!-- Basic Info -->
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Informacoes Basicas</h5>
+                    <h5 class="mb-0">Informações Básicas</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -38,13 +38,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Descricao Curta</label>
+                        <label class="form-label">Descrição Curta</label>
                         <textarea name="short_description" class="form-control" rows="2" maxlength="500"><?= esc($product['short_description'] ?? old('short_description')) ?></textarea>
                         <small class="text-muted">Exibida na listagem de produtos (max 500 caracteres)</small>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Descricao Completa</label>
+                        <label class="form-label">Descrição Completa</label>
                         <textarea name="description" class="form-control" id="description" rows="6"><?= $product['description'] ?? old('description') ?></textarea>
                     </div>
                 </div>
@@ -53,26 +53,26 @@
             <!-- Pricing -->
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Precos</h5>
+                    <h5 class="mb-0">Preços</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Preco de Custo</label>
+                            <label class="form-label">Preço de Custo</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="text" name="cost_price" class="form-control money" value="<?= isset($product['cost_price']) ? number_format($product['cost_price'], 2, ',', '.') : old('cost_price') ?>">
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Preco de Venda <span class="text-danger">*</span></label>
+                            <label class="form-label">Preço de Venda <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="text" name="price" class="form-control money" required value="<?= isset($product['price']) ? number_format($product['price'], 2, ',', '.') : old('price') ?>">
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Preco Promocional</label>
+                            <label class="form-label">Preço Promocional</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="text" name="sale_price" class="form-control money" value="<?= isset($product['sale_price']) ? number_format($product['sale_price'], 2, ',', '.') : old('sale_price') ?>">
@@ -114,7 +114,7 @@
             <!-- Shipping -->
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Frete e Dimensoes</h5>
+                    <h5 class="mb-0">Frete e Dimensões</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -179,7 +179,7 @@
             <!-- Publish -->
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Publicacao</h5>
+                    <h5 class="mb-0">Publicação</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -198,7 +198,7 @@
 
                     <div class="form-check mb-2">
                         <input type="checkbox" name="is_new" class="form-check-input" id="isNew" value="1" <?= ($product['is_new'] ?? true) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="isNew">Lancamento</label>
+                        <label class="form-check-label" for="isNew">Lançamento</label>
                     </div>
 
                     <div class="form-check">
@@ -273,7 +273,7 @@
                     <?php endif; ?>
                     <?php if (!empty($product['preco_usd'])): ?>
                         <div class="mb-2">
-                            <strong>Preco USD:</strong>
+                            <strong>Preço USD:</strong>
                             <span class="text-success">$ <?= number_format($product['preco_usd'], 2) ?></span>
                         </div>
                     <?php endif; ?>
@@ -309,7 +309,7 @@
                     <div class="mb-0">
                         <label class="form-label">Palavras-chave</label>
                         <input type="text" name="meta_keywords" class="form-control" value="<?= esc($product['meta_keywords'] ?? old('meta_keywords')) ?>">
-                        <small class="text-muted">Separadas por virgula</small>
+                        <small class="text-muted">Separadas por vírgula</small>
                     </div>
                 </div>
             </div>

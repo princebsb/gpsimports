@@ -31,7 +31,7 @@
                             <tr>
                                 <th>Produto</th>
                                 <th class="text-center">Qtd</th>
-                                <th class="text-end">Preco</th>
+                                <th class="text-end">Preço</th>
                                 <th class="text-end">Total</th>
                             </tr>
                         </thead>
@@ -103,7 +103,7 @@
         <!-- Order Timeline -->
         <div class="table-card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Historico</h5>
+                <h5 class="mb-0">Histórico</h5>
             </div>
             <div class="card-body">
                 <div class="timeline">
@@ -131,7 +131,7 @@
                                 $historyStatusLabel = match($history['status'] ?? 'pending') {
                                     'pending' => 'Pendente',
                                     'paid' => 'Pago',
-                                    'processing' => 'Em Preparacao',
+                                    'processing' => 'Em Preparação',
                                     'shipped' => 'Enviado',
                                     'delivered' => 'Entregue',
                                     'cancelled' => 'Cancelado',
@@ -160,7 +160,7 @@
                         </div>
                     <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="text-muted mb-0">Nenhum historico disponivel.</p>
+                        <p class="text-muted mb-0">Nenhum histórico disponível.</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -187,7 +187,7 @@
                 $statusLabel = match($order['status']) {
                     'pending' => 'Pendente',
                     'paid' => 'Pago',
-                    'processing' => 'Em Preparacao',
+                    'processing' => 'Em Preparação',
                     'shipped' => 'Enviado',
                     'delivered' => 'Entregue',
                     'cancelled' => 'Cancelado',
@@ -206,15 +206,15 @@
                             <select name="status" class="form-select" id="selectStatus">
                                 <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Pendente</option>
                                 <option value="paid" <?= $order['status'] === 'paid' ? 'selected' : '' ?>>Pago</option>
-                                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Em Preparacao</option>
+                                <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Em Preparação</option>
                                 <option value="shipped" <?= $order['status'] === 'shipped' ? 'selected' : '' ?>>Enviado</option>
                                 <option value="delivered" <?= $order['status'] === 'delivered' ? 'selected' : '' ?>>Entregue</option>
                                 <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Cancelado</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Observacao</label>
-                            <textarea name="comment" class="form-control" rows="2" placeholder="Observacao interna (opcional)"></textarea>
+                            <label class="form-label">Observação</label>
+                            <textarea name="comment" class="form-control" rows="2" placeholder="Observação interna (opcional)"></textarea>
                         </div>
                         <div class="mb-3">
                             <div class="form-check">
@@ -223,7 +223,7 @@
                                     <i class="bi bi-envelope me-1"></i>Notificar cliente por email
                                 </label>
                             </div>
-                            <small class="text-muted">O cliente recebera um email informando a mudanca de status.</small>
+                            <small class="text-muted">O cliente recebera um email informando a mudança de status.</small>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-check-circle me-1"></i>Atualizar Status
@@ -258,7 +258,7 @@
         <!-- Shipping Address -->
         <div class="table-card mb-4">
             <div class="card-header">
-                <h5 class="mb-0">Endereco de Entrega</h5>
+                <h5 class="mb-0">Endereço de Entrega</h5>
             </div>
             <div class="card-body">
                 <address class="mb-0">
@@ -298,8 +298,8 @@
                     default => ucfirst($paymentStatus)
                 };
                 $methodLabel = match($paymentMethod) {
-                    'credit_card' => 'Cartao de Credito',
-                    'debit_card' => 'Cartao de Debito',
+                    'credit_card' => 'Cartão de Crédito',
+                    'debit_card' => 'Cartão de Débito',
                     'pix' => 'PIX',
                     'boleto' => 'Boleto',
                     'checkout_pro' => 'Mercado Pago',
@@ -310,7 +310,7 @@
                 <div class="mb-2">
                     <span class="badge <?= $paymentClass ?>"><?= $paymentLabel ?></span>
                 </div>
-                <div><strong>Metodo:</strong> <?= $methodLabel ?></div>
+                <div><strong>Método:</strong> <?= $methodLabel ?></div>
                 <?php if (($order['installments'] ?? 1) > 1): ?>
                     <div><strong>Parcelas:</strong> <?= $order['installments'] ?>x</div>
                 <?php endif; ?>
@@ -350,7 +350,7 @@
 
                 <?php if (!empty($customer['email'])): ?>
                     <small class="text-muted d-block mt-2 text-center">
-                        Sera enviado para: <?= esc($customer['email']) ?>
+                        Será enviado para: <?= esc($customer['email']) ?>
                     </small>
                 <?php endif; ?>
             </div>
@@ -372,7 +372,7 @@
                 }
 
                 $msgWhatsApp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
-                $msgWhatsApp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terca* e *Quinta*.%0A%0A";
+                $msgWhatsApp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terça* e *Quinta*.%0A%0A";
                 $msgWhatsApp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
                 $msgWhatsApp .= "*Quero comprar com vocês!*%0A%0A";
                 $msgWhatsApp .= "Segue o produto:%0A%0A";
@@ -401,7 +401,7 @@
                 $email = $customer['email'] ?? '';
                 $nome = $order['shipping_name'] ?? $customer['name'] ?? '';
 
-                $msgEnvio = "ENDERECO: " . $endereco . "\n";
+                $msgEnvio = "ENDEREÇO: " . $endereco . "\n";
                 $msgEnvio .= "CEP: " . $cep . "\n";
                 $msgEnvio .= "CPF: " . $cpf . "\n";
                 $msgEnvio .= "E-mail: " . $email . "\n";
@@ -434,17 +434,17 @@
                         <i class="bi bi-wallet2 me-1"></i>
                         <strong>Saldo Melhor Envio:</strong> R$ <?= number_format($meBalance, 2, ',', '.') ?>
                         <?php if ($meBalance < 30): ?>
-                            <br><small class="text-muted">Saldo baixo! Adicione creditos para gerar etiquetas.</small>
+                            <br><small class="text-muted">Saldo baixo! Adicione créditos para gerar etiquetas.</small>
                         <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <div class="alert alert-secondary py-2 mb-3">
                         <i class="bi bi-exclamation-triangle me-1"></i>
-                        <small>Nao foi possivel obter saldo. <a href="<?= base_url('melhor-envio/autorizar') ?>">Verificar conexao</a></small>
+                        <small>Não foi possível obter saldo. <a href="<?= base_url('melhor-envio/autorizar') ?>">Verificar conexão</a></small>
                     </div>
                 <?php endif; ?>
                 <?php
-                // Calcular peso e dimensoes dos itens do pedido
+                // Calcular peso e dimensões dos itens do pedido
                 $totalWeight = 0;
                 $maxHeight = 2;
                 $maxWidth = 11;
@@ -455,7 +455,7 @@
                     $itemWeight = (float) ($item['product_weight'] ?? 0.3);
                     $totalWeight += $itemWeight * $qty;
 
-                    // Pegar maiores dimensoes (para calcular volume da caixa)
+                    // Pegar maiores dimensões (para calcular volume da caixa)
                     $itemHeight = (int) ($item['product_height'] ?? 2);
                     $itemWidth = (int) ($item['product_width'] ?? 11);
                     $itemLength = (int) ($item['product_length'] ?? 16);
@@ -465,7 +465,7 @@
                     $maxLength = max($maxLength, $itemLength);
                 }
 
-                // Minimos para embalagem
+                // Mínimos para embalagem
                 $totalWeight = max(0.1, round($totalWeight, 2));
                 $maxHeight = max(2, $maxHeight);
                 $maxWidth = max(11, $maxWidth);
@@ -518,15 +518,15 @@
                     </button>
                 </div>
 
-                <!-- Resultado da Cotacao -->
+                <!-- Resultado da Cotação -->
                 <div id="resultadoCotacao" class="mt-3" style="display: none;">
-                    <div class="small text-muted mb-2"><i class="bi bi-truck me-1"></i>Opcoes de Frete:</div>
+                    <div class="small text-muted mb-2"><i class="bi bi-truck me-1"></i>Opções de Frete:</div>
                     <div id="listaCotacoes"></div>
                 </div>
 
-                <!-- Adicionar Creditos -->
+                <!-- Adicionar Créditos -->
                 <div class="mt-3 pt-3 border-top">
-                    <p class="small text-muted mb-2"><i class="bi bi-plus-circle me-1"></i>Adicionar Creditos</p>
+                    <p class="small text-muted mb-2"><i class="bi bi-plus-circle me-1"></i>Adicionar Créditos</p>
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">R$</span>
                         <input type="number" id="valorCredito" class="form-control" value="50" min="10" max="50000" step="10">
@@ -552,7 +552,7 @@
                 <?php else: ?>
                 <div class="alert alert-warning py-2 mb-2">
                     <i class="bi bi-clock me-1"></i>
-                    <small>Codigo de rastreio ainda nao disponivel. Clique em "Obter Rastreio" para buscar.</small>
+                    <small>Código de rastreio ainda não disponível. Clique em "Obter Rastreio" para buscar.</small>
                 </div>
                 <?php endif; ?>
                 <div class="d-grid gap-2">
@@ -573,11 +573,11 @@
                         $customerName = $order['shipping_name'] ?? $order['customer']['name'] ?? 'Cliente';
                         $firstName = explode(' ', trim($customerName))[0];
                         $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $order['tracking_code'];
-                        $whatsappMsg = "Ola {$firstName}!\n\n";
-                        $whatsappMsg .= "Otima noticia! Seu pedido #{$order['order_number']} foi enviado e ja esta a caminho!\n\n";
-                        $whatsappMsg .= "*Codigo de Rastreio:*\n{$order['tracking_code']}\n\n";
+                        $whatsappMsg = "Olá {$firstName}!\n\n";
+                        $whatsappMsg .= "Ótima notícia! Seu pedido #{$order['order_number']} foi enviado e já está a caminho!\n\n";
+                        $whatsappMsg .= "*Código de Rastreio:*\n{$order['tracking_code']}\n\n";
                         $whatsappMsg .= "*Acompanhe aqui:*\n{$trackingUrl}\n\n";
-                        $whatsappMsg .= "Qualquer duvida, estamos a disposicao!\n\n";
+                        $whatsappMsg .= "Qualquer dúvida, estamos à disposição!\n\n";
                         $whatsappMsg .= "Att, GPS Imports";
                         $phone = preg_replace('/\D/', '', $order['shipping_phone']);
                         if (strlen($phone) <= 11) {
@@ -603,7 +603,7 @@
                 <div class="card-body">
                     <?php if (!empty($order['tracking_code'])): ?>
                         <div class="mb-3">
-                            <strong>Codigo:</strong>
+                            <strong>Código:</strong>
                             <code class="fs-5"><?= esc($order['tracking_code']) ?></code>
                         </div>
                         <div class="d-grid gap-2">
@@ -615,11 +615,11 @@
                                 $customerName = $order['shipping_name'] ?? $order['customer']['name'] ?? 'Cliente';
                                 $firstName = explode(' ', trim($customerName))[0];
                                 $trackingUrl = 'https://www.melhorrastreio.com.br/rastreio/' . $order['tracking_code'];
-                                $whatsappMsg = "Ola {$firstName}!\n\n";
-                                $whatsappMsg .= "Otima noticia! Seu pedido #{$order['order_number']} foi enviado e ja esta a caminho!\n\n";
-                                $whatsappMsg .= "*Codigo de Rastreio:*\n{$order['tracking_code']}\n\n";
+                                $whatsappMsg = "Olá {$firstName}!\n\n";
+                                $whatsappMsg .= "Ótima notícia! Seu pedido #{$order['order_number']} foi enviado e já está a caminho!\n\n";
+                                $whatsappMsg .= "*Código de Rastreio:*\n{$order['tracking_code']}\n\n";
                                 $whatsappMsg .= "*Acompanhe aqui:*\n{$trackingUrl}\n\n";
-                                $whatsappMsg .= "Qualquer duvida, estamos a disposicao!\n\n";
+                                $whatsappMsg .= "Qualquer dúvida, estamos à disposição!\n\n";
                                 $whatsappMsg .= "Att, GPS Imports";
                                 $phone = preg_replace('/\D/', '', $order['shipping_phone']);
                                 if (strlen($phone) <= 11) {
@@ -636,7 +636,7 @@
                         <form action="<?= base_url('admin/pedidos/rastreio/' . $order['id']) ?>" method="post">
                             <?= csrf_field() ?>
                             <div class="mb-3">
-                                <label class="form-label">Codigo de Rastreio</label>
+                                <label class="form-label">Código de Rastreio</label>
                                 <input type="text" name="tracking_code" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Adicionar Rastreio</button>
@@ -668,7 +668,7 @@
                     <div id="pixQrCodeContainer" class="mb-3">
                         <canvas id="qrCanvasOrder"></canvas>
                     </div>
-                    <p class="small text-muted mb-2">Ou copie o codigo PIX:</p>
+                    <p class="small text-muted mb-2">Ou copie o código PIX:</p>
                     <div class="input-group mb-3">
                         <input type="text" id="pixCode" class="form-control form-control-sm" readonly>
                         <button class="btn btn-outline-success" type="button" onclick="copiarPix()">
@@ -676,11 +676,11 @@
                         </button>
                     </div>
                     <div id="pixCopied" class="alert alert-success py-2" style="display: none;">
-                        <i class="bi bi-check-circle me-1"></i>Codigo copiado!
+                        <i class="bi bi-check-circle me-1"></i>Código copiado!
                     </div>
                     <div class="alert alert-info py-2 small">
                         <i class="bi bi-info-circle me-1"></i>
-                        Apos o pagamento, aguarde alguns segundos e recarregue a pagina para atualizar o saldo.
+                        Após o pagamento, aguarde alguns segundos e recarregue a página para atualizar o saldo.
                     </div>
                 </div>
                 <div id="pixError" style="display: none;">
@@ -755,12 +755,12 @@ function adicionarCredito() {
 
                 document.getElementById('pixContent').style.display = 'block';
             } else if (pixLink) {
-                // Se nao tem codigo PIX mas tem link, redirecionar
+                // Se não tem código PIX mas tem link, redirecionar
                 window.open(pixLink, '_blank');
                 pixModal.hide();
                 alert('Link de pagamento aberto em nova aba.');
             } else {
-                document.getElementById('pixErrorMsg').textContent = 'Resposta invalida da API';
+                document.getElementById('pixErrorMsg').textContent = 'Resposta inválida da API';
                 document.getElementById('pixError').style.display = 'block';
             }
         } else {
@@ -771,7 +771,7 @@ function adicionarCredito() {
     .catch(error => {
         console.error('Erro:', error);
         document.getElementById('pixLoading').style.display = 'none';
-        document.getElementById('pixErrorMsg').textContent = 'Erro na requisicao: ' + error;
+        document.getElementById('pixErrorMsg').textContent = 'Erro na requisição: ' + error;
         document.getElementById('pixError').style.display = 'block';
     });
 }
@@ -800,7 +800,7 @@ function cotarFrete() {
     const resultado = document.getElementById('resultadoCotacao');
     const lista = document.getElementById('listaCotacoes');
 
-    // Pegar dimensoes do formulario
+    // Pegar dimensões do formulário
     const form = document.getElementById('formEtiqueta');
     const weight = form ? form.querySelector('[name="weight"]').value : 0.5;
     const height = form ? form.querySelector('[name="height"]').value : 10;
@@ -848,7 +848,7 @@ function cotarFrete() {
                 lista.innerHTML = html;
                 resultado.style.display = 'block';
             } else {
-                lista.innerHTML = '<div class="alert alert-warning py-2">Nenhuma cotacao disponivel.</div>';
+                lista.innerHTML = '<div class="alert alert-warning py-2">Nenhuma cotação disponível.</div>';
                 resultado.style.display = 'block';
             }
         })

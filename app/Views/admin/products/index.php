@@ -65,10 +65,10 @@
                         <th style="width: 80px;">Imagem</th>
                         <th>Produto</th>
                         <th>Categoria</th>
-                        <th>Preco</th>
+                        <th>Preço</th>
                         <th>Estoque</th>
                         <th>Status</th>
-                        <th style="width: 150px;">Acoes</th>
+                        <th style="width: 150px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -155,7 +155,7 @@
                                     <div class="btn-group btn-group-sm">
                                         <?php
                                         $msgWpp = "👋 Olá! Sou o *Sérgio*, já compro produtos no Paraguai há algum tempo.%0A%0A";
-                                        $msgWpp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terca* e *Quinta*.%0A%0A";
+                                        $msgWpp .= "Tenho pessoal que *retira mercadoria pra mim* toda *Terça* e *Quinta*.%0A%0A";
                                         $msgWpp .= "💵 Eles *pagam e retiram as notas* nesses dias.%0A%0A";
                                         $msgWpp .= "*Quero comprar com vocês!*%0A%0A";
                                         $msgWpp .= "Segue o produto:%0A%0A";

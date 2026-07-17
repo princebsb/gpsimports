@@ -15,13 +15,13 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Codigo</th>
+                        <th>Código</th>
                         <th>Tipo</th>
                         <th>Valor</th>
                         <th>Uso</th>
                         <th>Validade</th>
                         <th>Status</th>
-                        <th style="width: 120px;">Acoes</th>
+                        <th style="width: 120px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,7 +39,7 @@
                                     $types = [
                                         'percentage' => '<span class="badge bg-info">Porcentagem</span>',
                                         'fixed' => '<span class="badge bg-primary">Valor Fixo</span>',
-                                        'free_shipping' => '<span class="badge bg-success">Frete Gratis</span>',
+                                        'free_shipping' => '<span class="badge bg-success">Frete Grátis</span>',
                                     ];
                                     echo $types[$coupon['type']] ?? $coupon['type'];
                                     ?>
@@ -67,7 +67,7 @@
                                         <small>De: <?= date('d/m/Y', strtotime($coupon['starts_at'])) ?></small><br>
                                     <?php endif; ?>
                                     <?php if ($coupon['expires_at']): ?>
-                                        <small>Ate: <?= date('d/m/Y', strtotime($coupon['expires_at'])) ?></small>
+                                        <small>Até: <?= date('d/m/Y', strtotime($coupon['expires_at'])) ?></small>
                                         <?php if (strtotime($coupon['expires_at']) < time()): ?>
                                             <span class="badge bg-danger">Expirado</span>
                                         <?php endif; ?>

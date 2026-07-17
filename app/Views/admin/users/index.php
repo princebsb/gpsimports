@@ -3,9 +3,9 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Usuarios do Sistema</h1>
+    <h1>Usuários do Sistema</h1>
     <a href="<?= base_url('admin/usuarios/criar') ?>" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i>Novo Usuario
+        <i class="bi bi-plus-lg me-1"></i>Novo Usuário
     </a>
 </div>
 
@@ -17,10 +17,10 @@
                     <tr>
                         <th>Nome</th>
                         <th>Email</th>
-                        <th>Funcao</th>
+                        <th>Função</th>
                         <th>Status</th>
-                        <th>Ultimo Acesso</th>
-                        <th style="width: 120px;">Acoes</th>
+                        <th>Último Acesso</th>
+                        <th style="width: 120px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +60,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">Nenhum usuario encontrado</td>
+                            <td colspan="6" class="text-center py-5 text-muted">Nenhum usuário encontrado</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

@@ -37,7 +37,7 @@
                         <th>Pedidos</th>
                         <th>Status</th>
                         <th>Cadastro</th>
-                        <th style="width: 100px;">Acoes</th>
+                        <th style="width: 100px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -8,7 +8,7 @@
         <select class="form-select form-select-sm" id="periodFilter" style="width: auto;">
             <option value="today">Hoje</option>
             <option value="week" selected>Esta Semana</option>
-            <option value="month">Este Mes</option>
+            <option value="month">Este Mês</option>
             <option value="year">Este Ano</option>
         </select>
     </div>
@@ -30,7 +30,7 @@
             <?php if (isset($stats['revenue_change'])): ?>
                 <div class="stat-change mt-2 <?= $stats['revenue_change'] >= 0 ? 'text-success' : 'text-danger' ?>">
                     <i class="bi bi-<?= $stats['revenue_change'] >= 0 ? 'arrow-up' : 'arrow-down' ?>"></i>
-                    <?= abs($stats['revenue_change']) ?>% vs periodo anterior
+                    <?= abs($stats['revenue_change']) ?>% vs período anterior
                 </div>
             <?php endif; ?>
         </div>
@@ -81,7 +81,7 @@
             <div class="d-flex align-items-center justify-content-between">
                 <div>
                     <div class="stat-value">R$ <?= number_format($stats['average_ticket'] ?? 0, 2, ',', '.') ?></div>
-                    <div class="stat-label">Ticket Medio</div>
+                    <div class="stat-label">Ticket Médio</div>
                 </div>
                 <div class="stat-icon bg-warning bg-opacity-10 text-warning">
                     <i class="bi bi-receipt"></i>
@@ -226,7 +226,7 @@
     <div class="col-12">
         <div class="table-card">
             <div class="card-header">
-                <h5 class="mb-0">Vendas dos Ultimos 30 Dias</h5>
+                <h5 class="mb-0">Vendas dos Últimos 30 Dias</h5>
             </div>
             <div class="card-body">
                 <canvas id="salesChart" height="100"></canvas>

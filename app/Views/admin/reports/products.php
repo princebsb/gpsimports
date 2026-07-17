@@ -35,7 +35,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="text-center text-muted">Nenhum dado disponivel</td>
+                            <td colspan="5" class="text-center text-muted">Nenhum dado disponível</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

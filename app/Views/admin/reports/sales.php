@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Relatorio de Vendas</h1>
+    <h1>Relatório de Vendas</h1>
     <a href="<?= base_url('admin/relatorios') ?>" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i>Voltar
     </a>
@@ -68,7 +68,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="3" class="text-center text-muted">Nenhuma venda no periodo</td>
+                            <td colspan="3" class="text-center text-muted">Nenhuma venda no período</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

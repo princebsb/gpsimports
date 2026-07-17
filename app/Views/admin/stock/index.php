@@ -3,13 +3,13 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Gestao de Estoque</h1>
+    <h1>Gestão de Estoque</h1>
     <div class="btn-group">
         <a href="<?= base_url('admin/estoque/alertas') ?>" class="btn btn-outline-warning">
             <i class="bi bi-exclamation-triangle me-1"></i>Alertas
         </a>
         <a href="<?= base_url('admin/estoque/movimentacoes') ?>" class="btn btn-outline-secondary">
-            <i class="bi bi-clock-history me-1"></i>Historico
+            <i class="bi bi-clock-history me-1"></i>Histórico
         </a>
     </div>
 </div>

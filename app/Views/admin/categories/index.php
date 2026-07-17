@@ -20,7 +20,7 @@
                         <th>Slug</th>
                         <th>Produtos</th>
                         <th>Status</th>
-                        <th style="width: 150px;">Acoes</th>
+                        <th style="width: 150px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -113,7 +113,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Descricao</label>
+                        <label class="form-label">Descrição</label>
                         <textarea name="description" id="categoryDescription" class="form-control" rows="3"></textarea>
                     </div>
 

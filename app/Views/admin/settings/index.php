@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Configuracoes Gerais</h1>
+    <h1>Configurações Gerais</h1>
 </div>
 
 <div class="row">
@@ -120,7 +120,7 @@
 
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary btn-lg">
-                    <i class="bi bi-check-lg me-2"></i>Salvar Configuracoes
+                    <i class="bi bi-check-lg me-2"></i>Salvar Configurações
                 </button>
             </div>
         </form>

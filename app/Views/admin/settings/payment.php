@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Configuracoes de Pagamento</h1>
+    <h1>Configurações de Pagamento</h1>
 </div>
 
 <div class="row">
@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Desconto PIX - Ate R$ 5.000 (%)</label>
+                            <label class="form-label">Desconto PIX - Até R$ 5.000 (%)</label>
                             <input type="number" name="pix_discount" class="form-control" step="0.1" value="<?= $settings['pix_discount'] ?? 5 ?>">
                         </div>
                         <div class="col-md-4 mb-3">
@@ -87,20 +87,20 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Cartao de Credito</h5>
+                    <h5 class="mb-0">Cartão de Crédito</h5>
                 </div>
                 <div class="card-body">
                     <div class="form-check mb-3">
                         <input type="checkbox" name="credit_card_enabled" class="form-check-input" id="ccEnabled" value="1" <?= ($settings['credit_card_enabled'] ?? true) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="ccEnabled">Cartao de Credito Habilitado</label>
+                        <label class="form-check-label" for="ccEnabled">Cartão de Crédito Habilitado</label>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Maximo de Parcelas</label>
+                            <label class="form-label">Máximo de Parcelas</label>
                             <input type="number" name="credit_card_max_installments" class="form-control" value="<?= $settings['credit_card_max_installments'] ?? 12 ?>">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Valor Minimo da Parcela</label>
+                            <label class="form-label">Valor Mínimo da Parcela</label>
                             <input type="number" name="credit_card_min_installment" class="form-control" step="0.01" value="<?= $settings['credit_card_min_installment'] ?? 10 ?>">
                         </div>
                     </div>

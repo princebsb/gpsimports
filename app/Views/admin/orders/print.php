@@ -221,7 +221,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="section-title">Endereco de Entrega</div>
+                <div class="section-title">Endereço de Entrega</div>
                 <div class="address-box">
                     <strong><?= esc($order['shipping_name'] ?? '') ?></strong>
                     <?= esc($order['shipping_street'] ?? '') ?>, <?= esc($order['shipping_number'] ?? '') ?>
@@ -245,7 +245,7 @@
                     <th>Produto</th>
                     <th>SKU</th>
                     <th class="text-center">Qtd</th>
-                    <th class="text-right">Preco Unit.</th>
+                    <th class="text-right">Preço Unit.</th>
                     <th class="text-right">Total</th>
                 </tr>
             </thead>
@@ -300,8 +300,8 @@
                 <?php
                 $paymentMethod = $order['payment_method'] ?? 'N/A';
                 $methodLabel = match($paymentMethod) {
-                    'credit_card' => 'Cartao de Credito',
-                    'debit_card' => 'Cartao de Debito',
+                    'credit_card' => 'Cartão de Crédito',
+                    'debit_card' => 'Cartão de Débito',
                     'pix' => 'PIX',
                     'boleto' => 'Boleto',
                     'checkout_pro' => 'Mercado Pago',
@@ -309,7 +309,7 @@
                     default => ucfirst($paymentMethod)
                 };
                 ?>
-                <p><strong>Metodo:</strong> <?= $methodLabel ?></p>
+                <p><strong>Método:</strong> <?= $methodLabel ?></p>
                 <?php if (($order['installments'] ?? 1) > 1): ?>
                     <p><strong>Parcelas:</strong> <?= $order['installments'] ?>x</p>
                 <?php endif; ?>
@@ -317,7 +317,7 @@
             <?php if (!empty($order['tracking_code'])): ?>
                 <div class="col">
                     <div class="section-title">Rastreamento</div>
-                    <p><strong>Codigo:</strong> <?= esc($order['tracking_code']) ?></p>
+                    <p><strong>Código:</strong> <?= esc($order['tracking_code']) ?></p>
                 </div>
             <?php endif; ?>
         </div>
@@ -325,7 +325,7 @@
 
     <?php if (!empty($order['notes'])): ?>
         <div class="section">
-            <div class="section-title">Observacoes</div>
+            <div class="section-title">Observações</div>
             <p><?= nl2br(esc($order['notes'])) ?></p>
         </div>
     <?php endif; ?>

@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Movimentacoes de Estoque</h1>
+    <h1>Movimentações de Estoque</h1>
     <a href="<?= base_url('admin/estoque') ?>" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i>Voltar
     </a>
@@ -22,7 +22,7 @@
                         <th>Antes</th>
                         <th>Depois</th>
                         <th>Motivo</th>
-                        <th>Usuario</th>
+                        <th>Usuário</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,7 +35,7 @@
                                     <?php if ($mov['type'] === 'add'): ?>
                                         <span class="badge bg-success">Entrada</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger">Saida</span>
+                                        <span class="badge bg-danger">Saída</span>
                                     <?php endif; ?>
                                 </td>
                                 <td><?= $mov['quantity'] ?></td>
@@ -47,7 +47,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">Nenhuma movimentacao</td>
+                            <td colspan="8" class="text-center py-5 text-muted">Nenhuma movimentação</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>

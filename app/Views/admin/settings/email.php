@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Configuracoes de Email</h1>
+    <h1>Configurações de Email</h1>
 </div>
 
 <div class="row">
@@ -66,7 +66,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Usuario SMTP</label>
+                            <label class="form-label">Usuário SMTP</label>
                             <input type="text" name="smtp_user" class="form-control" value="<?= esc($settings['smtp_user'] ?? '') ?>">
                         </div>
                         <div class="col-md-6 mb-3">
@@ -94,7 +94,7 @@
 
         <div class="table-card mt-4">
             <div class="card-header">
-                <h5 class="mb-0">Testar Configuracao</h5>
+                <h5 class="mb-0">Testar Configuração</h5>
             </div>
             <div class="card-body">
                 <div class="input-group">

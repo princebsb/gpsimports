@@ -17,12 +17,12 @@
             <div class="table-card mb-4">
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Titulo</label>
+                        <label class="form-label">Título</label>
                         <input type="text" name="title" class="form-control" value="<?= esc($banner['title'] ?? '') ?>">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Subtitulo</label>
+                        <label class="form-label">Subtítulo</label>
                         <input type="text" name="subtitle" class="form-control" value="<?= esc($banner['subtitle'] ?? '') ?>">
                     </div>
 
@@ -57,7 +57,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Posicao</label>
+                        <label class="form-label">Posição</label>
                         <select name="position" class="form-select">
                             <option value="home" <?= ($banner['position'] ?? '') === 'home' ? 'selected' : '' ?>>Home - Principal</option>
                             <option value="category" <?= ($banner['position'] ?? '') === 'category' ? 'selected' : '' ?>>Categoria</option>

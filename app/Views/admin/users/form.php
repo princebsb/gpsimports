@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1><?= isset($user) ? 'Editar Usuario' : 'Novo Usuario' ?></h1>
+    <h1><?= isset($user) ? 'Editar Usuário' : 'Novo Usuário' ?></h1>
     <a href="<?= base_url('admin/usuarios') ?>" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left me-1"></i>Voltar
     </a>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Funcao</label>
+                        <label class="form-label">Função</label>
                         <select name="role" class="form-select">
                             <option value="admin" <?= ($user['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Administrador</option>
                             <option value="manager" <?= ($user['role'] ?? '') === 'manager' ? 'selected' : '' ?>>Gerente</option>

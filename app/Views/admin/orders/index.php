@@ -71,7 +71,7 @@
                 <input type="date" name="date_from" class="form-control" placeholder="De" value="<?= $filters['date_from'] ?? '' ?>">
             </div>
             <div class="col-md-2">
-                <input type="date" name="date_to" class="form-control" placeholder="Ate" value="<?= $filters['date_to'] ?? '' ?>">
+                <input type="date" name="date_to" class="form-control" placeholder="Até" value="<?= $filters['date_to'] ?? '' ?>">
             </div>
             <div class="col-md-1">
                 <button type="submit" class="btn btn-outline-primary w-100">
@@ -96,7 +96,7 @@
                         <th>Pagamento</th>
                         <th>Status</th>
                         <th>Data</th>
-                        <th style="width: 100px;">Acoes</th>
+                        <th style="width: 100px;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -139,8 +139,8 @@
                                     <small class="text-muted">
                                         <?php
                                         echo match($order['payment_method'] ?? '') {
-                                            'credit_card' => 'Cartao Credito',
-                                            'debit_card' => 'Cartao Debito',
+                                            'credit_card' => 'Cartão Crédito',
+                                            'debit_card' => 'Cartão Débito',
                                             'pix' => 'PIX',
                                             'boleto' => 'Boleto',
                                             'checkout_pro' => 'Mercado Pago',
@@ -164,7 +164,7 @@
                                     $statusLabel = match($order['status']) {
                                         'pending' => 'Pendente',
                                         'paid' => 'Pago',
-                                        'processing' => 'Em Preparacao',
+                                        'processing' => 'Em Preparação',
                                         'shipped' => 'Enviado',
                                         'delivered' => 'Entregue',
                                         'cancelled' => 'Cancelado',
@@ -183,7 +183,7 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
-                                            <span class="visually-hidden">Opcoes</span>
+                                            <span class="visually-hidden">Opções</span>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
                                             <li><a class="dropdown-item" href="<?= base_url('admin/pedidos/' . $order['id']) ?>"><i class="bi bi-eye me-2"></i>Ver Detalhes</a></li>

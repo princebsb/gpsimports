@@ -64,7 +64,7 @@
                     <div class="d-flex justify-content-end gap-2 mt-4">
                         <a href="<?= base_url('admin/dashboard') ?>" class="btn btn-outline-secondary">Cancelar</a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-check-lg me-1"></i>Salvar Alteracoes
+                            <i class="bi bi-check-lg me-1"></i>Salvar Alterações
                         </button>
                     </div>
                 </form>
@@ -75,7 +75,7 @@
     <div class="col-lg-4">
         <div class="table-card">
             <div class="card-header">
-                <h5 class="mb-0">Informacoes da Conta</h5>
+                <h5 class="mb-0">Informações da Conta</h5>
             </div>
             <div class="card-body">
                 <div class="text-center mb-4">
@@ -90,7 +90,7 @@
                         <td class="text-end">#<?= $user['id'] ?></td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Funcao</td>
+                        <td class="text-muted">Função</td>
                         <td class="text-end">
                             <?php
                             $roles = ['admin' => 'Administrador', 'manager' => 'Gerente', 'operator' => 'Operador'];
@@ -103,7 +103,7 @@
                         <td class="text-end"><?= date('d/m/Y', strtotime($user['created_at'])) ?></td>
                     </tr>
                     <tr>
-                        <td class="text-muted">Ultimo Acesso</td>
+                        <td class="text-muted">Último Acesso</td>
                         <td class="text-end"><?= !empty($user['last_login']) ? date('d/m/Y H:i', strtotime($user['last_login'])) : '-' ?></td>
                     </tr>
                 </table>

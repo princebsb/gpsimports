@@ -16,19 +16,19 @@
         <div class="col-lg-8">
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Informacoes do Cupom</h5>
+                    <h5 class="mb-0">Informações do Cupom</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Codigo do Cupom <span class="text-danger">*</span></label>
+                            <label class="form-label">Código do Cupom <span class="text-danger">*</span></label>
                             <input type="text" name="code" class="form-control text-uppercase" required
                                    value="<?= esc($coupon['code'] ?? old('code')) ?>"
                                    placeholder="Ex: DESCONTO10">
-                            <small class="text-muted">Codigo que o cliente vai digitar</small>
+                            <small class="text-muted">Código que o cliente vai digitar</small>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Descricao</label>
+                            <label class="form-label">Descrição</label>
                             <input type="text" name="description" class="form-control"
                                    value="<?= esc($coupon['description'] ?? old('description')) ?>"
                                    placeholder="Ex: Cupom de boas-vindas">
@@ -41,7 +41,7 @@
                             <select name="type" class="form-select" id="couponType" required>
                                 <option value="percentage" <?= ($coupon['type'] ?? '') === 'percentage' ? 'selected' : '' ?>>Porcentagem (%)</option>
                                 <option value="fixed" <?= ($coupon['type'] ?? '') === 'fixed' ? 'selected' : '' ?>>Valor Fixo (R$)</option>
-                                <option value="free_shipping" <?= ($coupon['type'] ?? '') === 'free_shipping' ? 'selected' : '' ?>>Frete Gratis</option>
+                                <option value="free_shipping" <?= ($coupon['type'] ?? '') === 'free_shipping' ? 'selected' : '' ?>>Frete Grátis</option>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Desconto Maximo</label>
+                            <label class="form-label">Desconto Máximo</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="number" name="max_discount" class="form-control" step="0.01" min="0"
@@ -67,12 +67,12 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Restricoes</h5>
+                    <h5 class="mb-0">Restrições</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Valor Minimo do Pedido</label>
+                            <label class="form-label">Valor Mínimo do Pedido</label>
                             <div class="input-group">
                                 <span class="input-group-text">R$</span>
                                 <input type="number" name="min_order_value" class="form-control" step="0.01" min="0"
@@ -83,8 +83,8 @@
                             <label class="form-label">Aplicar em</label>
                             <select name="applies_to" class="form-select">
                                 <option value="all" <?= ($coupon['applies_to'] ?? '') === 'all' ? 'selected' : '' ?>>Todos os Produtos</option>
-                                <option value="products" <?= ($coupon['applies_to'] ?? '') === 'products' ? 'selected' : '' ?>>Produtos Especificos</option>
-                                <option value="categories" <?= ($coupon['applies_to'] ?? '') === 'categories' ? 'selected' : '' ?>>Categorias Especificas</option>
+                                <option value="products" <?= ($coupon['applies_to'] ?? '') === 'products' ? 'selected' : '' ?>>Produtos Específicos</option>
+                                <option value="categories" <?= ($coupon['applies_to'] ?? '') === 'categories' ? 'selected' : '' ?>>Categorias Específicas</option>
                             </select>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                     <div class="form-check mb-2">
                         <input type="checkbox" name="exclude_sale_items" class="form-check-input" id="excludeSale" value="1"
                                <?= ($coupon['exclude_sale_items'] ?? false) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="excludeSale">Excluir produtos em promocao</label>
+                        <label class="form-check-label" for="excludeSale">Excluir produtos em promoção</label>
                     </div>
 
                     <div class="form-check">
@@ -128,7 +128,7 @@
         <div class="col-lg-4">
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Publicacao</h5>
+                    <h5 class="mb-0">Publicação</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -140,13 +140,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Data de Inicio</label>
+                        <label class="form-label">Data de Início</label>
                         <input type="datetime-local" name="starts_at" class="form-control"
                                value="<?= isset($coupon['starts_at']) ? date('Y-m-d\TH:i', strtotime($coupon['starts_at'])) : '' ?>">
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Data de Expiracao</label>
+                        <label class="form-label">Data de Expiração</label>
                         <input type="datetime-local" name="expires_at" class="form-control"
                                value="<?= isset($coupon['expires_at']) ? date('Y-m-d\TH:i', strtotime($coupon['expires_at'])) : '' ?>">
                     </div>
@@ -161,7 +161,7 @@
             <?php if (!empty($coupon)): ?>
                 <div class="table-card">
                     <div class="card-body">
-                        <h6 class="mb-3">Estatisticas</h6>
+                        <h6 class="mb-3">Estatísticas</h6>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Vezes Usado:</span>
                             <strong><?= $coupon['usage_count'] ?? 0 ?></strong>

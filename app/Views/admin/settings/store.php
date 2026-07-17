@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Configuracoes da Loja</h1>
+    <h1>Configurações da Loja</h1>
 </div>
 
 <div class="row">
@@ -66,11 +66,11 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Endereco</h5>
+                    <h5 class="mb-0">Endereço</h5>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Endereco Completo</label>
+                        <label class="form-label">Endereço Completo</label>
                         <textarea name="store_address" class="form-control" rows="2"><?= esc($settings['store_address'] ?? '') ?></textarea>
                     </div>
                     <div class="row">
@@ -92,10 +92,10 @@
 
             <div class="table-card mb-4">
                 <div class="card-header">
-                    <h5 class="mb-0">Horario de Funcionamento</h5>
+                    <h5 class="mb-0">Horário de Funcionamento</h5>
                 </div>
                 <div class="card-body">
-                    <textarea name="store_hours" class="form-control" rows="3" placeholder="Segunda a Sexta: 9h as 18h&#10;Sabado: 9h as 13h"><?= esc($settings['store_hours'] ?? '') ?></textarea>
+                    <textarea name="store_hours" class="form-control" rows="3" placeholder="Segunda a Sexta: 9h às 18h&#10;Sábado: 9h às 13h"><?= esc($settings['store_hours'] ?? '') ?></textarea>
                 </div>
             </div>
 

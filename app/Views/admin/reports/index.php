@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="page-header">
-    <h1>Relatorios</h1>
+    <h1>Relatórios</h1>
 </div>
 
 <div class="row g-4">
@@ -13,7 +13,7 @@
                 <div class="card-body text-center py-5">
                     <i class="bi bi-graph-up text-primary" style="font-size: 3rem;"></i>
                     <h4 class="mt-3 text-dark">Vendas</h4>
-                    <p class="text-muted mb-0">Relatorio de vendas por periodo</p>
+                    <p class="text-muted mb-0">Relatório de vendas por período</p>
                 </div>
             </div>
         </a>

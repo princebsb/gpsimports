@@ -33,7 +33,7 @@
 
         <div class="table-card">
             <div class="card-header">
-                <h5 class="mb-0">Enderecos</h5>
+                <h5 class="mb-0">Endereços</h5>
             </div>
             <div class="card-body">
                 <?php if (!empty($addresses)): ?>
@@ -53,7 +53,7 @@
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="text-muted mb-0">Nenhum endereco cadastrado</p>
+                    <p class="text-muted mb-0">Nenhum endereço cadastrado</p>
                 <?php endif; ?>
             </div>
         </div>
