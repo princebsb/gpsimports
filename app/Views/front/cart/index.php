@@ -130,7 +130,18 @@
                         </form>
                         <div id="shippingOptions" class="mt-3">
                             <?php if (!empty($cart['shipping_options'])): ?>
+                                <?php
+                                $cartSubtotal = (float)($cart['subtotal'] ?? 0);
+                                $limitePAC = 4477.36;
+                                $limiteSEDEX = 38057.59;
+                                ?>
                                 <?php foreach ($cart['shipping_options'] as $option): ?>
+                                    <?php
+                                    $isPAC = stripos($option['name'], 'PAC') !== false;
+                                    $isSEDEX = stripos($option['name'], 'SEDEX') !== false;
+                                    $limiteServico = $isPAC ? $limitePAC : ($isSEDEX ? $limiteSEDEX : 0);
+                                    $excedeLimite = $limiteServico > 0 && $cartSubtotal > $limiteServico;
+                                    ?>
                                     <div class="form-check border rounded p-3 mb-2 <?= ($cart['shipping_method'] ?? '') === $option['code'] ? 'border-primary bg-primary bg-opacity-10' : '' ?>">
                                         <input type="radio" name="shipping_method" value="<?= $option['code'] ?>"
                                                class="form-check-input" id="shipping_<?= $option['code'] ?>"
@@ -142,6 +153,12 @@
                                                 <strong>R$ <?= number_format($option['price'], 2, ',', '.') ?></strong>
                                             </div>
                                             <small class="text-muted"><?= $option['deadline'] ?> dias úteis +3 dias úteis (importação)</small>
+                                            <?php if ($excedeLimite): ?>
+                                                <div class="text-warning small mt-1">
+                                                    <i class="bi bi-exclamation-triangle"></i>
+                                                    Seguro: cobertura máxima de R$ <?= number_format($limiteServico, 2, ',', '.') ?>, conforme limite dos Correios.
+                                                </div>
+                                            <?php endif; ?>
                                         </label>
                                     </div>
                                 <?php endforeach; ?>
@@ -318,14 +335,39 @@
         });
     }
 
+    // Limites de seguro dos Correios
+    const LIMITE_PAC = 4477.36;
+    const LIMITE_SEDEX = 38057.59;
+
     // Atualizar opções de frete
-    function updateShippingOptions(options) {
+    function updateShippingOptions(options, subtotal = null) {
         const optionsDiv = document.getElementById('shippingOptions');
         if (!optionsDiv) return;
+
+        // Pegar subtotal atual se não foi passado
+        if (subtotal === null) {
+            const subtotalText = document.getElementById('subtotal')?.textContent || '0';
+            subtotal = parseFloat(subtotalText.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        }
 
         let html = '';
         options.forEach((option, index) => {
             const checked = index === 0 ? 'checked' : '';
+            const isPAC = option.name.toUpperCase().includes('PAC');
+            const isSEDEX = option.name.toUpperCase().includes('SEDEX');
+            const limiteServico = isPAC ? LIMITE_PAC : (isSEDEX ? LIMITE_SEDEX : 0);
+            const excedeLimite = limiteServico > 0 && subtotal > limiteServico;
+
+            let avisoSeguro = '';
+            if (excedeLimite) {
+                avisoSeguro = `
+                    <div class="text-warning small mt-1">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        Seguro: cobertura máxima de ${formatMoney(limiteServico)}, conforme limite dos Correios.
+                    </div>
+                `;
+            }
+
             html += `
                 <div class="form-check border rounded p-3 mb-2 shipping-option ${index === 0 ? 'border-primary bg-primary bg-opacity-10' : ''}" style="cursor: pointer;">
                     <input type="radio" name="shipping_method" value="${option.code}"
@@ -337,6 +379,7 @@
                             <strong class="text-primary">${formatMoney(option.price)}</strong>
                         </div>
                         <small class="text-muted">${option.deadline} dias úteis +3 dias úteis (importação)</small>
+                        ${avisoSeguro}
                     </label>
                 </div>
             `;
@@ -461,32 +504,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.success && data.options.length > 0) {
-                let html = '';
-                let firstOption = null;
-                data.options.forEach((option, index) => {
-                    const checked = index === 0 ? 'checked' : '';
-                    if (index === 0) firstOption = option;
-                    html += `
-                        <div class="form-check border rounded p-3 mb-2 shipping-option ${index === 0 ? 'border-primary bg-primary bg-opacity-10' : ''}" style="cursor: pointer;">
-                            <input type="radio" name="shipping_method" value="${option.code}"
-                                   class="form-check-input" id="shipping_${option.code}" ${checked}
-                                   onchange="selectShipping('${option.code}', ${option.price})">
-                            <label class="form-check-label w-100" for="shipping_${option.code}" style="cursor: pointer;">
-                                <div class="d-flex justify-content-between">
-                                    <span><strong>${option.name}</strong> ${option.company ? '- ' + option.company : ''}</span>
-                                    <strong class="text-primary">${formatMoney(option.price)}</strong>
-                                </div>
-                                <small class="text-muted">${option.deadline} dias úteis +3 dias úteis (importação)</small>
-                            </label>
-                        </div>
-                    `;
-                });
-                optionsDiv.innerHTML = html;
-
-                // Auto-selecionar primeira opção
-                if (firstOption) {
-                    selectShipping(firstOption.code, firstOption.price);
-                }
+                updateShippingOptions(data.options);
             } else {
                 optionsDiv.innerHTML = `<div class="alert alert-warning small mb-0"><i class="bi bi-exclamation-triangle me-1"></i>${data.message || 'Nenhuma opção de frete disponivel'}</div>`;
             }
