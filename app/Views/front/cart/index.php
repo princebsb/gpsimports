@@ -549,7 +549,7 @@
                             row.remove();
 
                             // Se carrinho vazio, mostrar mensagem
-                            if (data.cart_count === 0) {
+                            if (parseInt(data.cart_count) === 0) {
                                 const cartContent = document.getElementById('cartContent');
                                 if (cartContent) {
                                     cartContent.outerHTML = `
