@@ -52,9 +52,18 @@
     </div>
 
     <div class="product-info">
-        <?php if (!empty($product['category_name'])): ?>
-            <div class="product-category"><?= esc($product['category_name']) ?></div>
-        <?php endif; ?>
+        <div class="d-flex justify-content-between align-items-center">
+            <?php if (!empty($product['category_name'])): ?>
+                <div class="product-category"><?= esc($product['category_name']) ?></div>
+            <?php else: ?>
+                <div></div>
+            <?php endif; ?>
+            <?php if (!empty($product['fonte'])): ?>
+                <span class="badge bg-light text-muted border" style="font-size: 0.65rem; padding: 2px 5px;" title="<?= esc($product['fonte']) ?>">
+                    <?= $product['fonte'] === 'megaeletronicos' ? 'ME' : ($product['fonte'] === 'atacadoconnect' ? 'AC' : strtoupper(substr($product['fonte'], 0, 2))) ?>
+                </span>
+            <?php endif; ?>
+        </div>
 
         <h3 class="product-title">
             <a href="<?= base_url('produto/' . $product['slug']) ?>" class="text-decoration-none text-dark">
