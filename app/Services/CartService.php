@@ -170,15 +170,31 @@ class CartService
 
         $updatedCart = $this->getCurrentCart();
 
-        // Recalcular frete se já tiver CEP salvo
+        // Calcular peso total
+        $pesoTotal = 0;
+        foreach ($updatedCart['items'] as $cartItem) {
+            $pesoTotal += (float)($cartItem['weight'] ?? 0.3) * $cartItem['quantity'];
+        }
+        $pesoExcedido = $pesoTotal > 30;
+
+        // Recalcular frete se já tiver CEP salvo e peso não excedido
         $shippingOptions = [];
-        if (!empty($updatedCart['shipping_zipcode'])) {
+        if (!$pesoExcedido && !empty($updatedCart['shipping_zipcode'])) {
             $shippingResult = $this->calculateShipping($updatedCart['shipping_zipcode']);
             if ($shippingResult['success'] && !empty($shippingResult['options'])) {
                 $shippingOptions = $shippingResult['options'];
                 // Atualizar carrinho com novo frete
                 $updatedCart = $this->getCurrentCart();
             }
+        }
+
+        // Se peso excedido, zerar frete
+        if ($pesoExcedido) {
+            $this->cartModel->update($updatedCart['id'], [
+                'shipping_cost' => 0,
+                'shipping_method' => null,
+            ]);
+            $updatedCart = $this->getCurrentCart();
         }
 
         return [
@@ -189,6 +205,8 @@ class CartService
             'subtotal' => $updatedCart['subtotal'] ?? 0,
             'total' => $updatedCart['total'] ?? 0,
             'shipping_options' => $shippingOptions,
+            'peso_total' => $pesoTotal,
+            'peso_excedido' => $pesoExcedido,
         ];
     }
 

@@ -124,19 +124,26 @@
                 foreach ($cart['items'] as $item) {
                     $pesoTotal += (float)($item['weight'] ?? 0.3) * $item['quantity'];
                 }
+                $pesoExcedido = $pesoTotal > 30;
                 ?>
-                <?php if ($pesoTotal > 30): ?>
-                <div class="alert alert-danger small mb-3">
-                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                    <strong>Peso total: <?= number_format($pesoTotal, 2, ',', '.') ?> kg</strong><br>
-                    O limite dos Correios é 30kg por envio. Entre em contato para cotação especial.
-                </div>
-                <?php endif; ?>
 
                 <!-- Shipping -->
                 <div class="card mb-3">
-                    <div class="card-body">
-                        <h6 class="card-title">Calcular Frete</h6>
+                    <div class="card-body" id="shippingCard">
+                        <h6 class="card-title d-flex justify-content-between align-items-center">
+                            Calcular Frete
+                            <small class="text-muted fw-normal" id="pesoDisplay">
+                                <i class="bi bi-box-seam me-1"></i><?= number_format($pesoTotal, 2, ',', '.') ?> kg
+                            </small>
+                        </h6>
+                        <?php if ($pesoExcedido): ?>
+                        <div class="alert alert-danger small mb-0 weight-warning">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                            <strong>Peso total: <?= number_format($pesoTotal, 2, ',', '.') ?> kg</strong><br>
+                            O limite dos Correios é 30kg por envio.<br>
+                            Entre em contato para cotação especial.
+                        </div>
+                        <?php else: ?>
                         <form id="shippingForm">
                             <div class="input-group">
                                 <input type="text" name="zipcode" id="zipcode" class="form-control" placeholder="CEP" maxlength="9" value="<?= $cart['shipping_zipcode'] ?? '' ?>">
@@ -179,6 +186,7 @@
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -254,10 +262,26 @@
                             $falta = $minSubtotal - $subtotal;
                             $canCheckout = $subtotal >= $minSubtotal;
                         }
+
+                        // Bloquear checkout se peso excedido
+                        if ($pesoExcedido) {
+                            $canCheckout = false;
+                        }
                         ?>
 
                         <div id="checkoutBtnContainer">
-                            <?php if (!$canCheckout): ?>
+                            <?php if ($pesoExcedido): ?>
+                                <div class="alert alert-danger small mb-3">
+                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                    <strong>Peso excede o limite de 30kg</strong><br>
+                                    Entre em contato para cotação especial.
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-secondary btn-lg" disabled>
+                                        <i class="bi bi-lock me-1"></i>Finalizar Compra
+                                    </button>
+                                </div>
+                            <?php elseif (!$canCheckout): ?>
                                 <div class="alert alert-warning small mb-3" id="minValueAlert">
                                     <i class="bi bi-exclamation-triangle me-1"></i>
                                     <strong>Valor mínimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
@@ -338,8 +362,13 @@
                 document.getElementById('cartCount').textContent = data.cart_count;
                 updateTotals(data);
 
-                // Atualizar opções de frete se recebidas
-                if (data.shipping_options && data.shipping_options.length > 0) {
+                // Atualizar peso e status do carrinho
+                if (data.peso_total !== undefined) {
+                    updateWeightStatus(data.peso_total, data.peso_excedido);
+                }
+
+                // Atualizar opções de frete se recebidas e peso não excedido
+                if (!data.peso_excedido && data.shipping_options && data.shipping_options.length > 0) {
                     updateShippingOptions(data.shipping_options, data.subtotal);
                 }
 
@@ -348,6 +377,87 @@
                 toastr.error(data.message);
             }
         });
+    }
+
+    // Atualizar status do peso
+    function updateWeightStatus(pesoTotal, pesoExcedido) {
+        const shippingCard = document.getElementById('shippingCard');
+        if (!shippingCard) return;
+
+        // Atualizar display do peso
+        const pesoDisplay = document.getElementById('pesoDisplay');
+        if (pesoDisplay) {
+            pesoDisplay.innerHTML = `<i class="bi bi-box-seam me-1"></i>${pesoTotal.toFixed(2).replace('.', ',')} kg`;
+            pesoDisplay.className = pesoExcedido ? 'text-danger fw-normal' : 'text-muted fw-normal';
+        }
+
+        const shippingForm = document.getElementById('shippingForm');
+        const shippingOptions = document.getElementById('shippingOptions');
+
+        if (pesoExcedido) {
+            // Esconder form de frete e mostrar aviso de peso
+            if (shippingForm) shippingForm.style.display = 'none';
+            if (shippingOptions) shippingOptions.style.display = 'none';
+
+            // Remover aviso antigo se existir
+            const oldWarning = shippingCard.querySelector('.weight-warning');
+            if (oldWarning) oldWarning.remove();
+
+            // Adicionar novo aviso
+            const warningHtml = `
+                <div class="alert alert-danger small mb-0 weight-warning">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    <strong>Peso total: ${pesoTotal.toFixed(2).replace('.', ',')} kg</strong><br>
+                    O limite dos Correios é 30kg por envio.<br>
+                    Entre em contato para cotação especial.
+                </div>
+            `;
+            const cardTitle = shippingCard.querySelector('.card-title');
+            if (cardTitle) {
+                cardTitle.insertAdjacentHTML('afterend', warningHtml);
+            }
+
+            // Atualizar botão de checkout
+            updateCheckoutForWeight(true, pesoTotal);
+        } else {
+            // Remover aviso de peso se existir
+            const oldWarning = shippingCard.querySelector('.weight-warning');
+            if (oldWarning) oldWarning.remove();
+
+            // Mostrar form de frete
+            if (shippingForm) shippingForm.style.display = '';
+            if (shippingOptions) shippingOptions.style.display = '';
+
+            // Restaurar botão de checkout (baseado no valor mínimo)
+            updateCheckoutForWeight(false, pesoTotal);
+        }
+    }
+
+    // Atualizar botão de checkout baseado no peso
+    function updateCheckoutForWeight(pesoExcedido, pesoTotal) {
+        const btnContainer = document.getElementById('checkoutBtnContainer');
+        if (!btnContainer) return;
+
+        if (pesoExcedido) {
+            btnContainer.innerHTML = `
+                <div class="alert alert-danger small mb-3">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    <strong>Peso excede o limite de 30kg</strong><br>
+                    Peso atual: ${pesoTotal.toFixed(2).replace('.', ',')} kg<br>
+                    Entre em contato para cotação especial.
+                </div>
+                <div class="d-grid">
+                    <button class="btn btn-secondary btn-lg" disabled>
+                        <i class="bi bi-lock me-1"></i>Finalizar Compra
+                    </button>
+                </div>
+            `;
+        } else {
+            // Restaurar baseado no valor mínimo
+            const subtotalText = document.getElementById('subtotal')?.textContent || '0';
+            const subtotal = parseFloat(subtotalText.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
+            updateMinValueAlert(subtotal);
+        }
     }
 
     // Limites de seguro dos Correios
