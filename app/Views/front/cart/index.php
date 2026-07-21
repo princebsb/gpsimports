@@ -325,7 +325,7 @@
 
                 // Atualizar opções de frete se recebidas
                 if (data.shipping_options && data.shipping_options.length > 0) {
-                    updateShippingOptions(data.shipping_options);
+                    updateShippingOptions(data.shipping_options, data.subtotal);
                 }
 
                 toastr.success('Quantidade atualizada');
@@ -345,9 +345,10 @@
         if (!optionsDiv) return;
 
         // Pegar subtotal atual se não foi passado
-        if (subtotal === null) {
+        if (subtotal === null || subtotal === undefined) {
             const subtotalText = document.getElementById('subtotal')?.textContent || '0';
-            subtotal = parseFloat(subtotalText.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+            // Remove "R$", espaços e pontos de milhar, troca vírgula por ponto
+            subtotal = parseFloat(subtotalText.replace(/[R$\s.]/g, '').replace(',', '.')) || 0;
         }
 
         let html = '';
