@@ -170,6 +170,17 @@ class CartService
 
         $updatedCart = $this->getCurrentCart();
 
+        // Recalcular frete se já tiver CEP salvo
+        $shippingOptions = [];
+        if (!empty($updatedCart['shipping_zipcode'])) {
+            $shippingResult = $this->calculateShipping($updatedCart['shipping_zipcode']);
+            if ($shippingResult['success'] && !empty($shippingResult['options'])) {
+                $shippingOptions = $shippingResult['options'];
+                // Atualizar carrinho com novo frete
+                $updatedCart = $this->getCurrentCart();
+            }
+        }
+
         return [
             'success' => true,
             'message' => 'Quantidade atualizada.',
@@ -177,6 +188,7 @@ class CartService
             'cart_count' => $updatedCart['items_count'] ?? 0,
             'subtotal' => $updatedCart['subtotal'] ?? 0,
             'total' => $updatedCart['total'] ?? 0,
+            'shipping_options' => $shippingOptions,
         ];
     }
 

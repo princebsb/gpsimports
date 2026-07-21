@@ -305,11 +305,48 @@
                 document.getElementById('item-total-' + itemId).textContent = formatMoney(price * newQty);
                 document.getElementById('cartCount').textContent = data.cart_count;
                 updateTotals(data);
+
+                // Atualizar opções de frete se recebidas
+                if (data.shipping_options && data.shipping_options.length > 0) {
+                    updateShippingOptions(data.shipping_options);
+                }
+
                 toastr.success('Quantidade atualizada');
             } else {
                 toastr.error(data.message);
             }
         });
+    }
+
+    // Atualizar opções de frete
+    function updateShippingOptions(options) {
+        const optionsDiv = document.getElementById('shippingOptions');
+        if (!optionsDiv) return;
+
+        let html = '';
+        options.forEach((option, index) => {
+            const checked = index === 0 ? 'checked' : '';
+            html += `
+                <div class="form-check border rounded p-3 mb-2 shipping-option ${index === 0 ? 'border-primary bg-primary bg-opacity-10' : ''}" style="cursor: pointer;">
+                    <input type="radio" name="shipping_method" value="${option.code}"
+                           class="form-check-input" id="shipping_${option.code}" ${checked}
+                           onchange="selectShipping('${option.code}', ${option.price})">
+                    <label class="form-check-label w-100" for="shipping_${option.code}" style="cursor: pointer;">
+                        <div class="d-flex justify-content-between">
+                            <span><strong>${option.name}</strong> ${option.company ? '- ' + option.company : ''}</span>
+                            <strong class="text-primary">${formatMoney(option.price)}</strong>
+                        </div>
+                        <small class="text-muted">${option.deadline} dias úteis +3 dias úteis (importação)</small>
+                    </label>
+                </div>
+            `;
+        });
+        optionsDiv.innerHTML = html;
+
+        // Auto-selecionar primeira opção
+        if (options.length > 0) {
+            selectShipping(options[0].code, options[0].price);
+        }
     }
 
     // Remove item
