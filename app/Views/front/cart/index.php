@@ -548,20 +548,26 @@
                         setTimeout(() => {
                             row.remove();
 
-                            // Se carrinho vazio, mostrar mensagem
+                            // Se carrinho vazio, recarregar página
                             if (data.cart_count === 0) {
-                                document.querySelector('.table-responsive').innerHTML = `
-                                    <div class="text-center py-5">
-                                        <i class="bi bi-cart-x fs-1 text-muted"></i>
-                                        <p class="mt-3 text-muted">Seu carrinho esta vazio</p>
-                                        <a href="<?= base_url('produtos') ?>" class="btn btn-primary">Continuar Comprando</a>
-                                    </div>
-                                `;
+                                location.reload();
+                                return;
                             }
                         }, 300);
 
                         document.getElementById('cartCount').textContent = data.cart_count;
                         updateTotals(data);
+
+                        // Atualizar peso e status do carrinho
+                        if (data.peso_total !== undefined) {
+                            updateWeightStatus(data.peso_total, data.peso_excedido);
+                        }
+
+                        // Atualizar opções de frete se recebidas e peso não excedido
+                        if (!data.peso_excedido && data.shipping_options && data.shipping_options.length > 0) {
+                            updateShippingOptions(data.shipping_options, data.subtotal);
+                        }
+
                         toastr.success('Item removido');
                     } else {
                         toastr.error(data.message || 'Erro ao remover item');
