@@ -6,7 +6,7 @@
     <h1 class="h3 mb-4">Carrinho de Compras</h1>
 
     <?php if (!empty($cart['items'])): ?>
-        <div class="row">
+        <div class="row" id="cartContent">
             <!-- Cart Items -->
             <div class="col-lg-8 mb-4">
                 <div class="card">
@@ -550,17 +550,19 @@
 
                             // Se carrinho vazio, mostrar mensagem
                             if (data.cart_count === 0) {
-                                document.querySelector('.container.py-4').innerHTML = `
-                                    <h1 class="h3 mb-4">Carrinho de Compras</h1>
-                                    <div class="text-center py-5">
-                                        <i class="bi bi-cart-x display-1 text-muted"></i>
-                                        <h4 class="mt-3">Seu carrinho esta vazio</h4>
-                                        <p class="text-muted">Adicione produtos para continuar comprando</p>
-                                        <a href="<?= base_url('produtos') ?>" class="btn btn-primary">
-                                            <i class="bi bi-bag me-1"></i>Ver Produtos
-                                        </a>
-                                    </div>
-                                `;
+                                const cartContent = document.getElementById('cartContent');
+                                if (cartContent) {
+                                    cartContent.outerHTML = `
+                                        <div class="text-center py-5">
+                                            <i class="bi bi-cart-x display-1 text-muted"></i>
+                                            <h4 class="mt-3">Seu carrinho esta vazio</h4>
+                                            <p class="text-muted">Adicione produtos para continuar comprando</p>
+                                            <a href="<?= base_url('produtos') ?>" class="btn btn-primary">
+                                                <i class="bi bi-bag me-1"></i>Ver Produtos
+                                            </a>
+                                        </div>
+                                    `;
+                                }
                                 return;
                             }
                         }, 300);
