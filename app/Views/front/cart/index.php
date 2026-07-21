@@ -52,7 +52,14 @@
                                                 <?php if (!empty($item['variation_name'])): ?>
                                                     <div class="small text-muted"><?= esc($item['variation_name']) ?></div>
                                                 <?php endif; ?>
-                                                <div class="small text-muted">SKU: <?= esc($item['sku'] ?? '-') ?></div>
+                                                <div class="small text-muted">
+                                                    SKU: <?= esc($item['sku'] ?? '-') ?>
+                                                    <?php if (!empty($item['fonte'])): ?>
+                                                        <span class="badge bg-light text-muted border ms-1" style="font-size: 0.65rem;" title="<?= esc($item['fonte']) ?>">
+                                                            <?= $item['fonte'] === 'megaeletronicos' ? 'ME' : ($item['fonte'] === 'atacadoconnect' ? 'AC' : strtoupper(substr($item['fonte'], 0, 2))) ?>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="input-group input-group-sm justify-content-center" style="width: 120px; margin: 0 auto;">
