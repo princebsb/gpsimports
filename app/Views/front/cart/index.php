@@ -548,9 +548,19 @@
                         setTimeout(() => {
                             row.remove();
 
-                            // Se carrinho vazio, recarregar página
+                            // Se carrinho vazio, mostrar mensagem
                             if (data.cart_count === 0) {
-                                location.reload();
+                                document.querySelector('.container.py-4').innerHTML = `
+                                    <h1 class="h3 mb-4">Carrinho de Compras</h1>
+                                    <div class="text-center py-5">
+                                        <i class="bi bi-cart-x display-1 text-muted"></i>
+                                        <h4 class="mt-3">Seu carrinho esta vazio</h4>
+                                        <p class="text-muted">Adicione produtos para continuar comprando</p>
+                                        <a href="<?= base_url('produtos') ?>" class="btn btn-primary">
+                                            <i class="bi bi-bag me-1"></i>Ver Produtos
+                                        </a>
+                                    </div>
+                                `;
                                 return;
                             }
                         }, 300);
