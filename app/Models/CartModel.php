@@ -85,7 +85,7 @@ class CartModel extends Model
         $db = \Config\Database::connect();
 
         return $db->table('cart_items')
-                  ->select('cart_items.*, products.slug, products.stock, products.manage_stock, products.fonte, products.preco_usd')
+                  ->select('cart_items.*, products.slug, products.stock, products.manage_stock, products.fonte, products.preco_usd, products.weight')
                   ->join('products', 'products.id = cart_items.product_id')
                   ->where('cart_items.cart_id', $cartId)
                   ->get()

@@ -118,6 +118,21 @@
                     </div>
                 </div>
 
+                <!-- Aviso de peso -->
+                <?php
+                $pesoTotal = 0;
+                foreach ($cart['items'] as $item) {
+                    $pesoTotal += (float)($item['weight'] ?? 0.3) * $item['quantity'];
+                }
+                ?>
+                <?php if ($pesoTotal > 30): ?>
+                <div class="alert alert-danger small mb-3">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                    <strong>Peso total: <?= number_format($pesoTotal, 2, ',', '.') ?> kg</strong><br>
+                    O limite dos Correios é 30kg por envio. Entre em contato para cotação especial.
+                </div>
+                <?php endif; ?>
+
                 <!-- Shipping -->
                 <div class="card mb-3">
                     <div class="card-body">
