@@ -196,17 +196,45 @@
                         </div>
 
                         <?php
-                        $minSubtotal = 500.00;
+                        // Verificar se todos os produtos são da fonte atacadoconnect
+                        $allAC = true;
+                        $subtotalUSD = 0;
+                        foreach ($cart['items'] as $item) {
+                            if (($item['fonte'] ?? '') !== 'atacadoconnect') {
+                                $allAC = false;
+                                break;
+                            }
+                            $subtotalUSD += (float)($item['preco_usd'] ?? 0) * $item['quantity'];
+                        }
+
                         $subtotal = (float)($cart['subtotal'] ?? 0);
-                        $falta = $minSubtotal - $subtotal;
+
+                        // Se todos AC, mínimo é 100 USD, senão R$ 500
+                        if ($allAC && !empty($cart['items'])) {
+                            $minUSD = 100.00;
+                            $faltaUSD = $minUSD - $subtotalUSD;
+                            $canCheckout = $subtotalUSD >= $minUSD;
+                            $isUSD = true;
+                        } else {
+                            $minSubtotal = 500.00;
+                            $falta = $minSubtotal - $subtotal;
+                            $canCheckout = $subtotal >= $minSubtotal;
+                            $isUSD = false;
+                        }
                         ?>
 
                         <div id="checkoutBtnContainer">
-                            <?php if ($subtotal < $minSubtotal): ?>
+                            <?php if (!$canCheckout): ?>
                                 <div class="alert alert-warning small mb-3" id="minValueAlert">
                                     <i class="bi bi-exclamation-triangle me-1"></i>
-                                    <strong>Valor minimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
-                                    <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar.
+                                    <?php if ($isUSD): ?>
+                                        <strong>Pedido mínimo: US$ <?= number_format($minUSD, 2, ',', '.') ?></strong>
+                                        <br>Subtotal atual: <strong>US$ <?= number_format($subtotalUSD, 2, ',', '.') ?></strong>
+                                        <br>Falta <strong>US$ <?= number_format($faltaUSD, 2, ',', '.') ?></strong> para finalizar.
+                                    <?php else: ?>
+                                        <strong>Valor mínimo em produtos: R$ <?= number_format($minSubtotal, 2, ',', '.') ?></strong>
+                                        <br>Falta <strong>R$ <?= number_format($falta, 2, ',', '.') ?></strong> para finalizar.
+                                    <?php endif; ?>
                                     <br><small class="text-muted">(sem contar o frete)</small>
                                 </div>
                                 <div class="d-grid">
