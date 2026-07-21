@@ -67,15 +67,12 @@ class MelhorEnvioService
             $totalValue += ($product['price'] ?? 0) * ($product['quantity'] ?? 1);
         }
 
-        // Limite de seguro do PAC é R$ 4.477,36 - limitar para não excluir o serviço
-        $insuranceValue = min($totalValue, 4477.36);
-
         $payload = [
             'from' => ['postal_code' => $this->formatCep($this->cepOrigem)],
             'to' => ['postal_code' => $this->formatCep($cepDestino)],
             'products' => $apiProducts,
             'options' => [
-                'insurance_value' => $insuranceValue,
+                'insurance_value' => $totalValue,
                 'receipt' => false,
                 'own_hand' => false,
             ],
