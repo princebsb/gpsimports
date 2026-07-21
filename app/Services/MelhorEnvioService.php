@@ -168,6 +168,8 @@ class MelhorEnvioService
         foreach ($response as $service) {
             // Skip if error or no price
             if (!empty($service['error']) || empty($service['price'])) {
+                // Log do erro para diagnóstico
+                log_message('debug', 'MelhorEnvio serviço indisponível: ' . ($service['name'] ?? 'unknown') . ' - Erro: ' . ($service['error'] ?? 'sem preço'));
                 continue;
             }
 
