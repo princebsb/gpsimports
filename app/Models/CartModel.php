@@ -193,8 +193,16 @@ class CartModel extends Model
     {
         $db = \Config\Database::connect();
 
+        // Primeiro, corrigir subtotal de cada item (price * quantity)
+        $db->query("
+            UPDATE cart_items
+            SET subtotal = price * quantity
+            WHERE cart_id = ?
+        ", [$cartId]);
+
+        // Agora calcular totais
         $items = $db->table('cart_items')
-                    ->select('SUM(subtotal) as subtotal, COUNT(*) as count, SUM(quantity) as items_count')
+                    ->select('SUM(price * quantity) as subtotal, COUNT(*) as count, SUM(quantity) as items_count')
                     ->where('cart_id', $cartId)
                     ->get()
                     ->getRowArray();
