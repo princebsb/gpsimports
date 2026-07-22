@@ -39,8 +39,6 @@ class CartService
                 if ($customerId && empty($cart['customer_id'])) {
                     $this->cartModel->update($cartId, ['customer_id' => $customerId]);
                 }
-                // Recalcular totais para garantir consistência
-                $this->cartModel->recalculate($cartId);
                 return $this->cartModel->getWithItems($cartId);
             }
         }
@@ -50,8 +48,6 @@ class CartService
             $cart = $this->cartModel->where('customer_id', $customerId)->first();
             if ($cart) {
                 $session->set('cart_id', $cart['id']);
-                // Recalcular totais para garantir consistência
-                $this->cartModel->recalculate($cart['id']);
                 return $this->cartModel->getWithItems($cart['id']);
             }
         }
