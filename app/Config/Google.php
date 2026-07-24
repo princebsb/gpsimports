@@ -27,7 +27,7 @@ class Google extends BaseConfig
      * Google Ads Conversion Label para evento de compra
      * Obtido no Google Ads ao criar a acao de conversao
      */
-    public string $adsConversionLabel = 'XXXXXXXX';
+    public string $adsConversionLabel = 'G4PLCNbOs8wcEPni55RE';
 
     /**
      * Google Tag Manager Container ID
