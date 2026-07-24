@@ -101,6 +101,21 @@ class CartController extends BaseController
             // Salvar carrinho abandonado para recuperacao
             if ($result['success']) {
                 $this->salvarCarrinhoAbandonado();
+
+                // Adicionar dados do produto para Google Analytics tracking
+                $productModel = model('ProductModel');
+                $product = $productModel->find($productId);
+                if ($product) {
+                    $result['tracking'] = [
+                        'item_id' => $product['sku'] ?? $productId,
+                        'item_name' => $product['name'] ?? '',
+                        'item_brand' => $product['brand_name'] ?? 'GPS Imports',
+                        'item_category' => $product['category_name'] ?? '',
+                        'price' => (float) ($product['sale_price'] ?: $product['price']),
+                        'quantity' => $quantity,
+                        'currency' => 'BRL',
+                    ];
+                }
             }
 
             // Sempre retorna JSON (endpoint usado via AJAX)

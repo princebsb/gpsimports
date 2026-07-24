@@ -423,6 +423,29 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<!-- GA4 - Begin Checkout Event -->
+<script>
+    // Enviar evento begin_checkout para GA4
+    if (typeof gtag === 'function') {
+        gtag('event', 'begin_checkout', {
+            currency: 'BRL',
+            value: <?= (float) ($cart['subtotal'] ?? 0) ?>,
+            coupon: '<?= esc($cart['coupon']['code'] ?? '', 'js') ?>',
+            items: [
+                <?php foreach ($cart['items'] ?? [] as $index => $item): ?>
+                {
+                    item_id: '<?= esc($item['sku'] ?? $item['product_id'], 'js') ?>',
+                    item_name: '<?= esc($item['name'], 'js') ?>',
+                    price: <?= (float) $item['price'] ?>,
+                    quantity: <?= (int) $item['quantity'] ?>,
+                    index: <?= $index ?>
+                }<?= $index < count($cart['items']) - 1 ? ',' : '' ?>
+                <?php endforeach; ?>
+            ]
+        });
+    }
+</script>
+
 <script>
     // Formatar moeda brasileira
     function formatMoney(value) {

@@ -326,6 +326,29 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<?php if (!empty($cart['items'])): ?>
+<!-- GA4 - View Cart Event -->
+<script>
+    if (typeof gtag === 'function') {
+        gtag('event', 'view_cart', {
+            currency: 'BRL',
+            value: <?= (float) ($cart['subtotal'] ?? 0) ?>,
+            items: [
+                <?php foreach ($cart['items'] as $index => $item): ?>
+                {
+                    item_id: '<?= esc($item['sku'] ?? $item['product_id'], 'js') ?>',
+                    item_name: '<?= esc($item['name'], 'js') ?>',
+                    price: <?= (float) $item['price'] ?>,
+                    quantity: <?= (int) $item['quantity'] ?>,
+                    index: <?= $index ?>
+                }<?= $index < count($cart['items']) - 1 ? ',' : '' ?>
+                <?php endforeach; ?>
+            ]
+        });
+    }
+</script>
+<?php endif; ?>
+
 <script>
     // Headers para requisicoes AJAX
     const ajaxHeaders = {

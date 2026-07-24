@@ -199,9 +199,17 @@ class CheckoutController extends BaseController
             return redirect()->to('/minha-conta/pedidos');
         }
 
+        // Buscar dados do cliente para Enhanced Conversions
+        $customer = null;
+        if ($customerId) {
+            $customerModel = model('CustomerModel');
+            $customer = $customerModel->find($customerId);
+        }
+
         return view('front/checkout/success', [
             'title' => 'Pedido Confirmado',
             'order' => $order,
+            'customer' => $customer,
         ]);
     }
 

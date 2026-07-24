@@ -2,6 +2,29 @@
 
 <?= $this->section('content') ?>
 
+<?php
+// Google Analytics 4 + Google Ads Conversion Tracking
+helper('google_tracking');
+
+// Verificar se a conversao ja foi enviada
+$tracking = google_tracking();
+$orderId = (int) ($order['id'] ?? 0);
+$conversionSent = $orderId > 0 && $tracking->isConversionLogged($orderId);
+
+// Preparar dados do cliente para Enhanced Conversions
+$customerData = [];
+if (!empty($customer)) {
+    $customerData = [
+        'email' => $customer['email'] ?? '',
+        'phone' => $customer['phone'] ?? '',
+        'name' => $customer['name'] ?? '',
+        'city' => $order['shipping_city'] ?? '',
+        'state' => $order['shipping_state'] ?? '',
+        'zipcode' => $order['shipping_zipcode'] ?? '',
+    ];
+}
+?>
+
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
@@ -108,4 +131,81 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<?php if (!$conversionSent): ?>
+<!-- GA4 Purchase + Google Ads Conversion -->
+<?php
+// Registrar conversao no banco
+if ($orderId > 0) {
+    $tracking->logConversion($orderId, $order['order_number'] ?? (string) $orderId);
+}
+
+// Preparar Enhanced Conversions user data
+$userData = [];
+if (!empty($customerData)) {
+    $userData = $tracking->prepareUserData($customerData);
+}
+$userDataJson = !empty($userData) ? json_encode($userData, JSON_UNESCAPED_UNICODE) : 'null';
+
+// Preparar itens
+$items = [];
+foreach ($order['items'] ?? [] as $index => $item) {
+    $items[] = [
+        'item_id' => $item['sku'] ?? $item['product_id'] ?? '',
+        'item_name' => $item['name'] ?? '',
+        'price' => (float) ($item['price'] ?? 0),
+        'quantity' => (int) ($item['quantity'] ?? 1),
+        'index' => $index,
+    ];
+}
+$itemsJson = json_encode($items, JSON_UNESCAPED_UNICODE);
+
+$googleConfig = google_config();
+?>
+<script>
+(function() {
+    // Verificar se ja foi enviado (cookie de protecao)
+    var cookieName = 'gps_conversion_<?= $orderId ?>';
+    if (document.cookie.indexOf(cookieName + '=1') !== -1) {
+        console.log('GPS Imports: Conversion already sent for order <?= $orderId ?>');
+        return;
+    }
+
+    // Marcar como enviado (cookie expira em 1 dia)
+    document.cookie = cookieName + '=1; max-age=86400; path=/; SameSite=Strict';
+
+    <?php if (!empty($userData)): ?>
+    // Enhanced Conversions - User Data (hashed)
+    gtag('set', 'user_data', <?= $userDataJson ?>);
+    <?php endif; ?>
+
+    // GA4 - Purchase Event
+    gtag('event', 'purchase', {
+        transaction_id: '<?= esc($order['order_number'] ?? $order['id'], 'js') ?>',
+        value: <?= (float) ($order['total'] ?? 0) ?>,
+        currency: 'BRL',
+        tax: <?= (float) ($order['tax'] ?? 0) ?>,
+        shipping: <?= (float) ($order['shipping_cost'] ?? 0) ?>,
+        coupon: '<?= esc($order['coupon_code'] ?? '', 'js') ?>',
+        items: <?= $itemsJson ?>
+    });
+
+    <?php if ($googleConfig->hasGoogleAds() && !empty($googleConfig->adsConversionLabel)): ?>
+    // Google Ads - Conversion Event
+    gtag('event', 'conversion', {
+        'send_to': '<?= $googleConfig->adsConversionId ?>/<?= $googleConfig->adsConversionLabel ?>',
+        'value': <?= (float) ($order['total'] ?? 0) ?>,
+        'currency': 'BRL',
+        'transaction_id': '<?= esc($order['order_number'] ?? $order['id'], 'js') ?>'
+    });
+    <?php endif; ?>
+
+    console.log('GPS Imports: Purchase conversion sent for order <?= esc($order['order_number'] ?? $order['id'], 'js') ?>');
+})();
+</script>
+<?php else: ?>
+<!-- Conversion already logged for order <?= $orderId ?> -->
+<?php endif; ?>
 <?= $this->endSection() ?>

@@ -4,14 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Google tag (gtag.js) - Google Ads -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18297254265"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'AW-18297254265');
-    </script>
+    <?php helper('google_tracking'); ?>
+    <?= gtag_head() ?>
+    <?= gtm_head() ?>
     <meta name="description" content="<?= $meta_description ?? setting('meta_description') ?? 'Loja online com os melhores produtos' ?>">
     <meta name="keywords" content="<?= $meta_keywords ?? setting('meta_keywords') ?? '' ?>">
 
@@ -713,6 +708,7 @@
     <?= $this->renderSection('styles') ?>
 </head>
 <body>
+    <?= gtm_body() ?>
     <!-- Top Bar -->
     <div class="top-bar d-none d-lg-block">
         <div class="container">
@@ -1221,6 +1217,22 @@
                 success: function(response) {
                     if (response.success) {
                         $('#cartCount').text(response.cart_count);
+
+                        // GA4 - Add to Cart Event
+                        if (response.tracking && typeof gtag === 'function') {
+                            gtag('event', 'add_to_cart', {
+                                currency: response.tracking.currency || 'BRL',
+                                value: response.tracking.price * response.tracking.quantity,
+                                items: [{
+                                    item_id: response.tracking.item_id,
+                                    item_name: response.tracking.item_name,
+                                    item_brand: response.tracking.item_brand,
+                                    item_category: response.tracking.item_category,
+                                    price: response.tracking.price,
+                                    quantity: response.tracking.quantity
+                                }]
+                            });
+                        }
 
                         // Show added message
                         $('#cartAddedMessage').text(response.message || 'Produto adicionado ao carrinho!');

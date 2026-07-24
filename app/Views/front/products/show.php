@@ -632,6 +632,25 @@ $schemaCondition = 'https://schema.org/NewCondition';
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<!-- GA4 - View Item Event -->
+<script>
+    // Enviar evento view_item para GA4
+    if (typeof gtag === 'function') {
+        gtag('event', 'view_item', {
+            currency: 'BRL',
+            value: <?= (float) ($product['sale_price'] ?: $product['price']) ?>,
+            items: [{
+                item_id: '<?= esc($product['sku'] ?? $product['id'], 'js') ?>',
+                item_name: '<?= esc($product['name'], 'js') ?>',
+                item_brand: '<?= esc($product['brand_name'] ?? 'GPS Imports', 'js') ?>',
+                item_category: '<?= esc($product['category_name'] ?? '', 'js') ?>',
+                price: <?= (float) ($product['sale_price'] ?: $product['price']) ?>,
+                quantity: 1
+            }]
+        });
+    }
+</script>
+
 <script>
     // Quantity buttons
     function changeQty(delta) {
