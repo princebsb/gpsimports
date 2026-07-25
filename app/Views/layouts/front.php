@@ -978,7 +978,13 @@
                     </ul>
                     <p class="small mb-0">
                         <strong><?= setting('store_razao_social') ?></strong><br>
-                        CNPJ: <?= setting('store_cnpj') ?>
+                        CNPJ: <?= setting('store_cnpj') ?><br>
+                        <?php if (setting('store_address')): ?>
+                            <?= setting('store_address') ?>
+                        <?php else: ?>
+                            R. das Figueiras, Lote 07, Lojas 66-69<br>
+                            Aguas Claras - Brasilia/DF - CEP: 71906-750
+                        <?php endif; ?>
                     </p>
                 </div>
                 <div class="col-6 col-lg-2 mb-4">
