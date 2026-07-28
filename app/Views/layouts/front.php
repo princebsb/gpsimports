@@ -983,7 +983,7 @@
                             <?= setting('store_address') ?>
                         <?php else: ?>
                             R. das Figueiras, Lote 07, Lojas 66-69<br>
-                            Águas Claras, Brasília/DF - CEP: 71906-750
+                            Águas Claras, Brasília/DF - CEP: 71939-360
                         <?php endif; ?>
                     </p>
                 </div>
