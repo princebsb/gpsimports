@@ -54,7 +54,11 @@ class SettingModel extends Model
         $existing = $this->where('key', $key)->first();
 
         if ($existing) {
-            $result = $this->update($existing['id'], ['value' => $value]);
+            // Atualizar valor e grupo
+            $result = $this->update($existing['id'], [
+                'value' => $value,
+                'group' => $group,
+            ]);
         } else {
             $result = $this->insert([
                 'key' => $key,
