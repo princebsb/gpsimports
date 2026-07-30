@@ -102,8 +102,7 @@
                     <p class="card-text small">
                         <i class="bi bi-geo-alt me-1"></i>
                         <?= setting('store_address') ?><br>
-                        <?= setting('store_neighborhood') ?> - <?= setting('store_city') ?>/<?= setting('store_state') ?><br>
-                        CEP: <?= setting('store_zipcode') ?>
+                        <?= setting('store_city') ?>/<?= setting('store_state') ?> - CEP: <?= setting('store_zipcode') ?>
                     </p>
                 </div>
             </div>

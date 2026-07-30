@@ -68,8 +68,7 @@
                             <h6 class="mb-1">Endereço</h6>
                             <p class="text-muted mb-0">
                                 <?= setting('store_address') ?><br>
-                                <?= setting('store_neighborhood') ?> - <?= setting('store_city') ?>/<?= setting('store_state') ?><br>
-                                CEP: <?= setting('store_zipcode') ?>
+                                <?= setting('store_city') ?>/<?= setting('store_state') ?> - CEP: <?= setting('store_zipcode') ?>
                             </p>
                         </div>
                     </div>
