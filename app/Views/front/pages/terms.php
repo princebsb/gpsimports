@@ -69,8 +69,8 @@
                         <h4>12. Contato</h4>
                         <p>Em caso de duvidas sobre estes termos, entre em contato conosco:</p>
                         <ul>
-                            <li>E-mail: <?= esc($settings['contact_email'] ?? 'contato@gpsimports.com.br') ?></li>
-                            <li>Telefone: <?= esc($settings['contact_phone'] ?? '(44) 99999-9999') ?></li>
+                            <li>E-mail: <?= esc(setting('store_email')) ?></li>
+                            <li>Telefone: <?= format_phone(setting('store_whatsapp') ?? '') ?></li>
                         </ul>
                     </div>
                 </div>

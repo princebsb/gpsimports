@@ -714,11 +714,13 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-6">
-                    <i class="bi bi-headset me-1"></i> Atendimento: Seg a Sex 9h as 18h
+                    <i class="bi bi-headset me-1"></i> Atendimento: <?= setting('store_hours') ? preg_replace('/\n.*/', '', setting('store_hours')) : 'Seg a Sex 9h às 18h' ?>
                 </div>
                 <div class="col-6 text-end">
                     <a href="<?= base_url('rastrear-pedido') ?>" class="me-3"><i class="bi bi-geo-alt me-1"></i>Rastrear Pedido</a>
-                    <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank"><i class="bi bi-whatsapp me-1"></i><?= format_phone(setting('store_whatsapp') ?? '') ?: '(11) 99999-9999' ?></a>
+                    <?php if (setting('store_whatsapp')): ?>
+                        <a href="https://wa.me/<?= setting('store_whatsapp') ?>" target="_blank"><i class="bi bi-whatsapp me-1"></i><?= format_phone(setting('store_whatsapp') ?? '') ?></a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -980,10 +982,8 @@
                         <strong><?= setting('store_razao_social') ?></strong><br>
                         CNPJ: <?= setting('store_cnpj') ?><br>
                         <?php if (setting('store_address')): ?>
-                            <?= setting('store_address') ?>
-                        <?php else: ?>
-                            R. das Figueiras, Lote 07, Lojas 66-69<br>
-                            Águas Claras, Brasília/DF - CEP: 71906-750
+                            <?= setting('store_address') ?><br>
+                            <?= setting('store_city') ?>/<?= setting('store_state') ?> - CEP: <?= setting('store_zipcode') ?>
                         <?php endif; ?>
                     </p>
                 </div>

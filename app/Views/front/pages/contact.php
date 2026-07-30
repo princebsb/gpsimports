@@ -100,7 +100,7 @@
                         <i class="bi bi-clock fs-4 text-primary me-3"></i>
                         <div>
                             <h6 class="mb-1">Horário de Atendimento</h6>
-                            <p class="text-muted mb-0">Segunda a Sexta: 9h às 18h</p>
+                            <p class="text-muted mb-0"><?= nl2br(esc(setting('store_hours') ?? 'Segunda a Sexta: 9h às 18h')) ?></p>
                         </div>
                     </div>
 

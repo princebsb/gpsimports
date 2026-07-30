@@ -109,13 +109,13 @@
                         <h4>11. Contato</h4>
                         <p>Para duvidas, solicitacoes ou exercicio de direitos relacionados a esta politica:</p>
                         <ul>
-                            <li><strong>E-mail:</strong> <?= esc($settings['contact_email'] ?? 'privacidade@gpsimports.com.br') ?></li>
-                            <li><strong>Telefone:</strong> <?= esc($settings['contact_phone'] ?? '(44) 99999-9999') ?></li>
-                            <li><strong>Endereco:</strong> <?= esc($settings['address'] ?? 'Parana, Brasil') ?></li>
+                            <li><strong>E-mail:</strong> <?= esc(setting('store_email')) ?></li>
+                            <li><strong>Telefone:</strong> <?= format_phone(setting('store_whatsapp') ?? '') ?></li>
+                            <li><strong>Endereco:</strong> <?= esc(setting('store_address')) ?>, <?= esc(setting('store_city')) ?>/<?= esc(setting('store_state')) ?></li>
                         </ul>
 
                         <h4>12. Encarregado de Dados (DPO)</h4>
-                        <p>Nosso Encarregado de Protecao de Dados pode ser contatado pelo e-mail: <?= esc($settings['contact_email'] ?? 'dpo@gpsimports.com.br') ?></p>
+                        <p>Nosso Encarregado de Protecao de Dados pode ser contatado pelo e-mail: <?= esc(setting('store_email')) ?></p>
                     </div>
                 </div>
             </div>
