@@ -50,6 +50,9 @@ class SettingsController extends BaseController
             $this->settingModel->setValue('site_favicon', $newName, 'general', 'image');
         }
 
+        // Limpar cache de settings
+        \Config\Services::cache()->delete('settings');
+
         return redirect()->back()->with('success', 'Configuracoes salvas com sucesso!');
     }
 
@@ -78,6 +81,9 @@ class SettingsController extends BaseController
                 $this->settingModel->setValue($key, $data[$key], 'store');
             }
         }
+
+        // Limpar cache de settings
+        \Config\Services::cache()->delete('settings');
 
         return redirect()->back()->with('success', 'Configuracoes da loja salvas!');
     }
@@ -109,6 +115,9 @@ class SettingsController extends BaseController
             }
         }
 
+        // Limpar cache de settings
+        \Config\Services::cache()->delete('settings');
+
         return redirect()->back()->with('success', 'Configuracoes de pagamento salvas!');
     }
 
@@ -138,6 +147,9 @@ class SettingsController extends BaseController
             }
         }
 
+        // Limpar cache de settings
+        \Config\Services::cache()->delete('settings');
+
         return redirect()->back()->with('success', 'Configuracoes de frete salvas!');
     }
 
@@ -165,6 +177,9 @@ class SettingsController extends BaseController
                 $this->settingModel->setValue($key, $data[$key], 'email');
             }
         }
+
+        // Limpar cache de settings
+        \Config\Services::cache()->delete('settings');
 
         return redirect()->back()->with('success', 'Configuracoes de email salvas!');
     }
