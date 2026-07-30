@@ -37,10 +37,16 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-8 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">Nome da Loja</label>
                             <input type="text" name="store_name" class="form-control" value="<?= esc($settings['store_name'] ?? '') ?>">
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Razão Social</label>
+                            <input type="text" name="store_razao_social" class="form-control" value="<?= esc($settings['store_razao_social'] ?? '') ?>" placeholder="Ex: GPS Imports Comércio LTDA">
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">CNPJ</label>
                             <input type="text" name="store_cnpj" class="form-control" value="<?= esc($settings['store_cnpj'] ?? '') ?>">

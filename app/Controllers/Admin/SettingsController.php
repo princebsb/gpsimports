@@ -68,7 +68,7 @@ class SettingsController extends BaseController
         $data = $this->request->getPost();
 
         $storeSettings = [
-            'store_name', 'store_email', 'store_phone', 'store_whatsapp',
+            'store_name', 'store_razao_social', 'store_email', 'store_phone', 'store_whatsapp',
             'store_address', 'store_cnpj', 'store_city', 'store_state',
             'store_zipcode', 'store_hours',
         ];
